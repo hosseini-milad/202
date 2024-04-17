@@ -1,5 +1,4 @@
 const express = require("express");
-
 const mainApi = require('./router/mainApi');
 const authApi = require('./router/authApi');
 const reportApi = require('./router/reportApi');
@@ -11,11 +10,20 @@ const cors = require("cors");
 
 const app = express();
 app.use(cors());
+app.use(cookieParser());
 
 app.use('/api', mainApi)
 app.use('/api/auth', authApi)
 app.use('/api/report', reportApi)
 app.use('/api/yas', yasApi)
+
+app.get('/', function (req, res) {
+    // Cookies that have not been signed
+    console.log('Cookies: ', req.cookies)
+  
+    // Cookies that have been signed
+    console.log('Signed Cookies: ', req.signedCookies)
+  })
 
 app.use(express.json());
 

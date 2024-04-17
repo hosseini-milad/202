@@ -9,9 +9,6 @@ const auth = require("../middleware/auth");
 const User = require("../models/auth/users");
 const loginLogSchema = require('../models/auth/logs')
 const LogCreator = require('../middleware/LogCreator')
-const sendMailBrevo = require('../middleware/sendMail');
-const sendMailRegBrevo = require('../middleware/sendMailReg');
-const sendMailChangeEmailBrevo = require('../middleware/sendMailChange');
 const task = require('../models/main/task');
 const customers = require('../models/auth/customers');
 var Kavenegar = require('kavenegar');
@@ -193,7 +190,7 @@ router.post('/forget',jsonParser, async (req,res)=>{
       if (user) {
         const newOtp=createOTP(user.cName)
         await User.updateOne({email: email },{$set:{otp:newOtp}})
-        const sendMailResult = await sendMailBrevo(email,newOtp)
+        //const sendMailResult = await sendMailBrevo(email,newOtp)
         //console.log(sendMailResult)
         if(sendMailResult.error)
           res.status(400).json({error:sendMailResult.error});
@@ -257,8 +254,7 @@ router.post('/register',auth,jsonParser, async (req,res)=>{
         const createTask =await task.create({userId:user._id,
           state:"lead",date:Date.now()})
         //await User.updateOne({email: data.email },{$set:{otp:newOtp}})
-        const sendMailResult = await sendMailRegBrevo(data.email,'',
-            data.access==="customer"?newOtp:req.body.password,newOtp)
+        
         //console.log(sendMailResult)
         res.status(201).json({user:user,message:"User Created"})
         return;
@@ -405,7 +401,7 @@ router.post('/change-email',auth,jsonParser, async (req,res)=>{
     const logData = await LogCreator(userOwner,"change email",
     "user email change by administrator to: "+data.email)
       
-      const sendMailResult = await sendMailChangeEmailBrevo(data.email,newOtp)
+      
       const newData=await User.updateOne({_id:req.body.userId},
           {$set:{...data,otp:newOtp}})
       res.status(200).json({user:userOwner,message:"User Email Updated"})

@@ -1,5 +1,7 @@
 var express = require('express');
 require("dotenv").config();
+const cookieParser = require("cookie-parser")
+
 require("./middleware/database").connect();
 var expressWinston = require('express-winston');
 var winston = require('winston'); // for transports.Console
@@ -10,6 +12,7 @@ const CustomTransport = require('./middleware/winstonTransport');
 const customTransport = new CustomTransport();
 const cors = require("cors");
 app.use(cors());
+app.use(cookieParser());
  
 const mainApi = require('./router/mainApi')
 require('winston-daily-rotate-file');

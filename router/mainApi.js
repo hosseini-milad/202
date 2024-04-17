@@ -17,7 +17,7 @@ const CRMPanelApi = require('./panelCrmApi')
 const panelOrderApi = require('./panelOrderApi')
 const panelProductApi = require('./panelProductApi')
 const panelFaktorApi = require('./faktorApi')
-const sepidarFetch = require('../middleware/Sepidar');
+const sepidarFetch = require('../middleware/SepidarPost');
 const products = require('../models/product/products');
 const productPrice = require('../models/product/productPrice');
 const productCount = require('../models/product/productCount');
@@ -25,7 +25,10 @@ const customers = require('../models/auth/customers');
 const schedule = require('node-schedule');
 const bankAccounts = require('../models/product/bankAccounts');
 const updateLog = require('../models/product/updateLog');
-const { ONLINE_URL} = process.env;
+const RahkaranLogin = require('../middleware/RahkaranLogin');
+const RahkaranGET = require('../middleware/RahkaranGet');
+const RahkaranPOST = require('../middleware/RahkaranPOST');
+const { ONLINE_URL,RAHKARAN_URL} = process.env;
  
 router.get('/main', async (req,res)=>{
     try{
@@ -67,41 +70,68 @@ router.use('/panel/crm',CRMPanelApi)
     response = await fetch(ONLINE_URL+"/sepidar-bank",
         {method: 'GET'});
  })
-router.get('/sepidar-product', async (req,res)=>{
-    const url=req.body.url
+ 
+router.get('/auth-server', async (req,res)=>{
     try{
-        const sepidarResult = await sepidarFetch("data","/api/Items")
-        
-        if(sepidarResult.error||!sepidarResult.length){
-            res.json({error:"error occure",
-                data:sepidarResult,message:"خطا در بروزرسانی"})
-            return
+        const loginResult = await RahkaranLogin()
+        var cookieSGPT = '';
+        if(loginResult){
+            cookieSGPT = loginResult.split('SGPT=')[1]
+            cookieSGPT = cookieSGPT.split(';')[0]
         }
-        //await products.deleteMany({})
+        console.log(cookieSGPT)
+        res.cookie("sg-dummy","-")
+        res.cookie("sg-auth-SGPT",cookieSGPT)
+        res.json({result:loginResult,
+            message:"احراز هویت انجام شد"})
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    }
+})
+
+router.post('/set-cookie', async (req,res)=>{
+    res.cookie("name","data Sample Here")
+    res.send("Cookie set")
+
+})
+router.get('/get-cookie', async (req,res)=>{
+    const cookieData = req.cookies
+    res.send(cookieData)
+
+})
+router.post('/get-product', async (req,res)=>{
+    const cookieData = req.cookies
+    try{
+        const sepidarResult = await RahkaranPOST("/Sales/ProductManagement/Services/ProductManagementService.svc/GetProducts",
+        {"PageSize":5},cookieData)
+        const query=[]
         
         var newProduct = [];
         var updateProduct = 0
         var notUpdateProduct = 0
-        
-        for(var i = 0;i<sepidarResult.length;i++){
+        for(var i=0;i<sepidarResult.length;i++){
+            var product = sepidarResult[i]
+            var productQuery={
+                title:  product.name,
+                sku: product.number,
+                ItemID:product.id,
+                active:product.stateTitle=="فعال"?true:false,
+                catId:product.partNature,
+                catTitle:product.partNatureTitle
+            }
             const productResult = await products.updateOne({
-                ItemID:sepidarResult[i].ItemID
-            },{$set:{
-                sku:sepidarResult[i].Code,
-                title:sepidarResult[i].Title,
-                date:new Date()}})
+                ItemID:product.id},{$set:productQuery})
+        
             var modified = productResult.modifiedCount
             var matched = productResult.matchedCount
             if(matched){ notUpdateProduct++}
             if(modified){updateProduct++}
             if(!matched){
-                console.log(sepidarResult[i].Code)
-            const createResult = await products.create({
-                sku:sepidarResult[i].Code,
-                title:sepidarResult[i].Title,
-                ItemID:sepidarResult[i].ItemID,
-                date:new Date()})
-                newProduct.push(sepidarResult[i].Code)
+            const createResult = await products.create(
+                productQuery
+            )
+                newProduct.push(productQuery.sku)
             }
         }
         
@@ -111,6 +141,61 @@ router.get('/sepidar-product', async (req,res)=>{
         })
         res.json({sepidar:{new:newProduct,update:updateProduct,notUpdate:notUpdateProduct},
             message:"محصولات بروز شدند"})
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    }
+})
+router.post('/get-customers', async (req,res)=>{
+    const cookieData = req.cookies
+    try{
+        const sepidarResult = await RahkaranPOST("/Sales/PartyManagement/Services/PartyManagementService.svc/GetCustomerList",
+        req.body,cookieData)
+        const query=[]
+        var newCustomer = [];
+        var updateCustomer = 0
+        var notUpdateCustomer = 0
+        for(var i=0;i<sepidarResult.length;i++){
+            var customer = sepidarResult[i]
+            var customerQuery={
+                username: customer.DLCode,
+                cName: customer.CompanyName,
+                sName:"",
+                phone: customer.Tel,
+                password: "123",
+                mobile:customer.Mobile,
+                email: customer.ID+"@202.com",
+                access:"customer",
+                meliCode:customer.NationalID,
+                customerID:customer.ID,
+                Address:customer.Addresses&&customer.Addresses[0]&&
+                    customer.Addresses[0].Details,
+                cityId:customer.Addresses&&customer.Addresses[0]&&
+                customer.Addresses[0].CityRef
+            }
+            const customerResult = await customers.updateOne({
+                customerID:customer.ID},{$set:customerQuery})
+        
+            var modified = customerResult.modifiedCount
+            var matched = customerResult.matchedCount
+            if(matched){ notUpdateCustomer++}
+            if(modified){updateCustomer++}
+            if(!matched){
+            const createResult = await customers.create(
+                customerQuery
+            )
+            newCustomer.push(customerQuery.customerID)
+            }
+        }
+        
+        await updateLog.create({
+            updateQuery: "sepidar-customer" ,
+            date:Date.now()
+        })
+        res.json({sepidar:{new:newCustomer.length,
+            update:updateCustomer,
+            notUpdate:notUpdateCustomer},
+            message:"کاربران بروز شدند"})
     }
     catch(error){
         res.status(500).json({message: error.message})

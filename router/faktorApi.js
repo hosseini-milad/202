@@ -18,7 +18,7 @@ const cartLog = require('../models/product/cartLog');
 const users = require('../models/auth/users');
 const quickCart = require('../models/product/quickCart');
 const bankAccounts = require('../models/product/bankAccounts');
-const sepidarFetch = require('../middleware/Sepidar');
+const sepidarFetch = require('../middleware/SepidarPost');
 const products = require('../models/product/products');
 const tasks = require('../models/crm/tasks');
 const CreateTask = require('../middleware/CreateTask');
@@ -125,8 +125,7 @@ router.post('/find-products',auth, async (req,res)=>{
                 {title:{$regex: search, $options : 'i'}}
             ]}:{sku:{$exists:true}}
         },
-        filter?{$match:{sku:{$in:[/fs/i,/cr/i,/pr/i]}}}:
-            {$match:{sku:{$exists:true}}},
+        
         {$lookup:{
             from : "productprices", 
             localField: "ItemID", 
@@ -144,7 +143,7 @@ router.post('/find-products',auth, async (req,res)=>{
         var currentCart = await FindCurrentCart(cartList)
         const qCartList = await qCart.find(stockId?{stockId:stockId}:{})
         var index = 0
-        for(var i=0;i<searchProducts.length;i++){
+    {/*for(var i=0;i<searchProducts.length;i++){
             var count = (searchProducts[i].countData.find(item=>item.Stock==stockId))
             var desc = ''
             var cartCount = findCartCount(searchProducts[i].sku,currentCart.concat(qCartList),stockId)
@@ -159,8 +158,8 @@ router.post('/find-products',auth, async (req,res)=>{
                     count:count,description:desc})
                 if(index===15)break
             }
-        }
-        try{    res.json({products:searchProductResult})
+        }*/}
+        try{    res.json({products:searchProducts})
     }
     catch(error){
         res.status(500).json({message: error.message})
@@ -658,7 +657,7 @@ router.post('/update-cart',jsonParser, async (req,res)=>{
         var status = "";
         //const cartData = await cart.find({userId:userId})
         const qCartData = await quickCart.findOne({userId:userId})
-        const availItems = await checkAvailable(req.body.cartItem,stockId)
+        const availItems = 1//await checkAvailable(req.body.cartItem,stockId)
         if(!availItems){
             res.status(400).json({error:"موجودی کافی نیست"}) 
             return
@@ -1359,7 +1358,7 @@ router.post('/customer-find', async (req,res)=>{
         aggregate([{$match:
             {$or:[
                 {username:{$regex: search, $options : 'i'}},
-                {Code:{$regex: search, $options : 'i'}}
+                {cName:{$regex: search, $options : 'i'}}
             ]}
         }])
         //if(!searchCustomer.length){
@@ -1368,7 +1367,7 @@ router.post('/customer-find', async (req,res)=>{
             aggregate([{$match:
                 {$or:[
                     {username:{$regex: search, $options : 'i'}},
-                    {Code:{$regex: search, $options : 'i'}}
+                    {cName:{$regex: search, $options : 'i'}}
                 ]}
             }])
         //}

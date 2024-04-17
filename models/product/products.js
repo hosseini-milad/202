@@ -10,9 +10,11 @@ const ProductSchema = new Schema({
     ItemID:{ type: String , unique: true},
     brandId:String,
     catId:String,
+    catTitle:String,
     config:String,
     filters:{type:Object,default:{}},
     uploadImage:String,
+    active:Boolean,
     imageUrl: {
         type:String
     },

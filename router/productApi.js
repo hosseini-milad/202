@@ -18,7 +18,7 @@ const users = require('../models/auth/users');
 const quickCart = require('../models/product/quickCart');
 const {StockId,SaleType} = process.env;
 const bankAccounts = require('../models/product/bankAccounts');
-const sepidarFetch = require('../middleware/Sepidar');
+const sepidarFetch = require('../middleware/SepidarPost');
 const NormalTax = require('../middleware/NormalTax');
 const openOrders = require('../models/orders/openOrders');
 
