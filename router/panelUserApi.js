@@ -522,6 +522,17 @@ router.get('/allow-menu',auth,jsonParser,async (req,res)=>{
     } 
 })
 
+var storage = multer.diskStorage(
+    {
+        destination: 'dataset',
+        filename: function ( req, file, cb ) {
+            cb( null, "Deep"+ '-' + Date.now()+ '-'+file.originalname);
+        }
+    }
+  );
+  const uploadImg = multer({ storage: storage ,
+    limits: { fileSize: "5mb" }})
+
 router.post('/upload',uploadImg.single('upload'), async(req, res, next)=>{
     const folderName = req.body.folderName?req.body.folderName:"temp"
     try{
