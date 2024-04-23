@@ -6,6 +6,7 @@ const CartSchema = new Schema({
     cartItems:  { type : Array , "default" : [] },
     initDate: { type: Date, default: Date.now },
     cartNo:{ type: String },
+    rahNo:{ type: String },
     progressDate: { type: Date },
     userId:{ type: String },
     manageId:{ type: String },

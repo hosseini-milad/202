@@ -26,6 +26,9 @@ const NewCode = require('../middleware/NewCode');
 const customers = require('../models/auth/customers');
 const brand = require('../models/product/brand');
 const FindCurrentCart = require('../middleware/CurrentCart');
+const CreateRahkaran = require('../middleware/CreateRahkaran');
+const RahkaranPOST = require('../middleware/RahkaranPOST');
+const RahkaranLogin = require('../middleware/RahkaranLogin');
 const {TaxRate} = process.env
 
 router.post('/products', async (req,res)=>{
@@ -974,6 +977,7 @@ const findNullCount=async(items,cart)=>{
     }
 }
 router.post('/quick-to-cart',jsonParser, async (req,res)=>{
+    const cookieData = req.cookies
     const userId=req.body.userId?req.body.userId:req.headers['userid']
     const data={
         userId:userId,
@@ -986,6 +990,7 @@ router.post('/quick-to-cart',jsonParser, async (req,res)=>{
         //const cartAll = await cart.find()
         
         const qCartData = await quickCart.findOne({userId:userId})
+        //console.log(qCartData)
         data.payValue=qCartData&&qCartData.payValue
         data.description = qCartData&&qCartData.description
         data.discount = qCartData&&qCartData.discount
@@ -994,7 +999,28 @@ router.post('/quick-to-cart',jsonParser, async (req,res)=>{
         //data.cartItems =pureCartPrice(quickCartItems,qCartData.payValue)
         data.cartNo = await NewCode("c")
         data.stockId = qCartData&&qCartData.stockId
-        cartLog.create({...data,ItemID:req.body.cartID,action:"quick to cart"})
+        //cartLog.create({...data,ItemID:req.body.cartID,action:"quick to cart"})
+        //await cart.create(data)
+        const rahKaranFaktor = await CreateRahkaran(data)
+        var rahkaranResult =  await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/PlaceQuotation",
+            rahKaranFaktor,cookieData)
+        if(!rahkaranResult) {
+            const loginData = await RahkaranLogin()
+            var cookieSGPT = '';
+            if(loginData){
+                cookieSGPT = loginData.split('SGPT=')[1]
+                cookieSGPT = cookieSGPT.split(';')[0]
+            }
+        // console.log(cookieSGPT)
+            res.cookie("sg-dummy","-")
+            res.cookie("sg-auth-SGPT",cookieSGPT)
+            console.log(`sg-auth-SGPT=${cookieSGPT}`)
+            rahkaranResult =await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/PlaceQuotation",
+            rahKaranFaktor,{"sg-auth-SGPT":cookieSGPT})
+        }
+            
+        console.log({message:rahkaranResult})
+        data.rahNo = rahkaranResult
         await cart.create(data)
             status = "create cart"
         await quickCart.deleteOne({userId:data.userId})
