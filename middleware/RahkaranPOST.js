@@ -10,6 +10,7 @@ const RahkaranPOST=async(url,data,cookie)=>{
         
         return('')
     }
+    //console.log(cookie)
     var response = ''; 
     const postOptions = {
         credentials: 'include',
@@ -26,7 +27,7 @@ const RahkaranPOST=async(url,data,cookie)=>{
     }
     catch(error){ 
         console.log(error)
-        return(error)
+        return('')
     }
   }
 function CookieToText(cookie){

@@ -151,6 +151,21 @@ router.post('/get-customers', async (req,res)=>{
     try{
         const sepidarResult = await RahkaranPOST("/Sales/PartyManagement/Services/PartyManagementService.svc/GetCustomerList",
         req.body,cookieData)
+        
+        if(!sepidarResult) {
+            const loginData = await RahkaranLogin()
+            var cookieSGPT = '';
+            if(loginData){
+                cookieSGPT = loginData.split('SGPT=')[1]
+                cookieSGPT = cookieSGPT.split(';')[0]
+            }
+        // console.log(cookieSGPT)
+            res.cookie("sg-dummy","-")
+            res.cookie("sg-auth-SGPT",cookieSGPT)
+            console.log(`sg-auth-SGPT=${cookieSGPT}`)
+            sepidarResult =RahkaranPOST("/Sales/PartyManagement/Services/PartyManagementService.svc/GetCustomerList",
+            req.body,{"sg-auth-SGPT":cookieSGPT})
+        }
         const query=[]
         var newCustomer = [];
         var updateCustomer = 0
