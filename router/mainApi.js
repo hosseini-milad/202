@@ -159,7 +159,8 @@ router.post('/get-customers', async (req,res)=>{
             var customer = sepidarResult[i]
             var customerQuery={
                 username: customer.DLCode,
-                cName: customer.CompanyName,
+                cName: customer.CompanyName?customer.CompanyName:
+                    customer.FirstName+ " " + customer.LastName,
                 sName:"",
                 phone: customer.Tel,
                 password: "123",
