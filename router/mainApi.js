@@ -177,7 +177,9 @@ router.post('/get-customers', async (req,res)=>{
                 cName: customer.CompanyName?customer.CompanyName:
                     (customer.FirstName+ " " + customer.LastName),
                 sName:"",
-                phone: customer.Tel,
+                phone: customer.Tel?customer.Tel:
+                    (customer.Addresses&&customer.Addresses[0]&&
+                    customer.Addresses[0].Tel),
                 password: "123",
                 mobile:customer.Mobile,
                 email: customer.ID+"@202.com",

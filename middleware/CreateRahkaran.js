@@ -5,24 +5,15 @@ var ObjectID = require('mongodb').ObjectID;
 
 const CreateRahkaran=async(data)=>{
     const userData = await customers.findOne({_id:ObjectID(data.userId)})
-    
-    const postData = 
-        {
-            "addressId":"",
-          "brokerId":62,
-            "currencyId":"1",
-            "customerId":userData.customerID,
-            "date":`/Date(${data.progressDate})/`,
-            "description":null,
-            "id":"-1",
-            "inventoryId":"13",
-            "items":[
-                {
+    var items = []
+    for(var i=0;i<data.cartItems.length;i++)
+        items.push(
+            {
                 "description":null,
                     "id":"-1",
                     "index":1,
-                    "productId":data.cartItems[0].id,
-                    "quantity":data.cartItems[0].count,
+                    "productId":data.cartItems[i].id,
+                    "quantity":data.cartItems[i].count,
                     "salesAreaId":"1",
                     "unitId":"7",
                     "additionAmount":"0",
@@ -41,7 +32,19 @@ const CreateRahkaran=async(data)=>{
                     "productPackRef":null,
                     "referenceID":null,
                     "referenceType":null,
-                    "shippingPointID":null}],
+                    "shippingPointID":null}
+    )
+    const postData = 
+        {
+            "addressId":"",
+          "brokerId":62,
+            "currencyId":"1",
+            "customerId":userData.customerID,
+            "date":`/Date(${data.progressDate})/`,
+            "description":null,
+            "id":"-1",
+            "inventoryId":"13",
+            "items":items,
             "payerType":1,
             "payerTypeTitle": "مشتری",
             "paymentAgreementId":3,
