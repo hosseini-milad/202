@@ -56,7 +56,6 @@ const CreateRahkaran=async(data)=>{
             "reductionAmount":"0",
             "agentID":null,
             "oneTimeCustomerID":null,
-            "payerAccountID":12652,
             "recipientType":1,
             "state":1,
             "shippingPointID":null
