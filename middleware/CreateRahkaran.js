@@ -10,7 +10,7 @@ const CreateRahkaran=async(data)=>{
         items.push(
             {
                 "description":null,
-                    "id":"-1",
+                    "id":i,
                     "index":i,
                     "productId":data.cartItems[i].id,
                     "quantity":data.cartItems[i].count,
