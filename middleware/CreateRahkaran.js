@@ -11,7 +11,7 @@ const CreateRahkaran=async(data)=>{
             {
                 "description":null,
                     "id":"-1",
-                    "index":1,
+                    "index":i,
                     "productId":data.cartItems[i].id,
                     "quantity":data.cartItems[i].count,
                     "salesAreaId":"1",
