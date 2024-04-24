@@ -149,9 +149,9 @@ router.post('/get-product', async (req,res)=>{
 router.post('/get-customers', async (req,res)=>{
     const cookieData = req.cookies
     try{
-        const sepidarResult = await RahkaranPOST("/Sales/PartyManagement/Services/PartyManagementService.svc/GetCustomerList",
+        var sepidarResult = await RahkaranPOST("/Sales/PartyManagement/Services/PartyManagementService.svc/GetCustomerList",
         req.body,cookieData)
-        
+
         if(!sepidarResult) {
             const loginData = await RahkaranLogin()
             var cookieSGPT = '';
