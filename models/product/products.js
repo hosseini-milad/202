@@ -18,10 +18,7 @@ const ProductSchema = new Schema({
     imageUrl: {
         type:String
     },
-    imgGallery:String,
-    imgGalleryUrl:{
-        type:String 
-    },
+    thumbUrl:String,
     perBox:Number,
     price:String,
     categories:String
