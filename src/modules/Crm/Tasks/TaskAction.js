@@ -60,7 +60,8 @@ function TaskAction(props){
         if(data.result.InvoiceID){
         return(
         <div className="taskAction">
-            <button type="button" className="btn-crm btn-crm-accept">
+            <button type="button" className="btn-crm btn-crm-accept"
+            onClick={()=>window.location.href="/print/sepidar/"+data.result.InvoiceID}>
                 چاپ سپیدار
             </button>
             <button type="button" className="btn-crm btn-crm-info"
@@ -71,6 +72,9 @@ function TaskAction(props){
         else
         return(
             <div className="taskAction">
+                <button type="button" className="btn-crm btn-crm-info"
+                onClick={()=>window.location.href="/orders/print/"+data.orderNo}>
+                <p>چاپ سفارش</p></button>
                 <button type="button" className="btn-crm btn-crm-accept"
                     onClick={()=>updateTask("sepidar")}><p>ثبت مجدد سپیدار</p></button>
                 <p>{"Error: "+data.result.Message}</p>

@@ -51,7 +51,9 @@ import Classes from './pages/Classes';
 import ClassDetailHolder from './modules/Classes/ClassData/ClassDetailHolder';
 import PolicyDetailHolder from './modules/Policy/PolicyData/PolicyDetailHolder';
 import Policy from './pages/Policy';
+import Users from './pages/Users';
 import FaktorSitePrint from './modules/Print/PrintSiteHolder';
+import PrintSepidar from './modules/Print/PrintSepidar';
 
 const cookies = new Cookies();
 const style = document.getElementById('style-direction');
@@ -92,6 +94,8 @@ root.render(
         <Route path="/orders/business" element={<OrderHolder lang={"fa"}/>}/>
         <Route path="/orders/print/:orderId" element={<FaktorSitePrint lang={"fa"}/>}/>
         <Route path="/orders/invoice/:orderId" element={<FaktorSitePrint lang={"fa"}/>}/>
+        <Route path="/print/sepidar/:orderId" element={<PrintSepidar lang={"fa"}/>}/>
+        <Route path="/fishprint/sepidar/:orderId" element={<PrintSepidar lang={"fa"}/>}/>
 
         <Route path="/services" element={<Layout><Services lang={lang}/></Layout>}/>
         <Route path="/services/detail/:orderId" element={<Layout><ServiceDetailHolder lang={lang}/></Layout>}/>
@@ -108,6 +112,8 @@ root.render(
         <Route path="/class/detail/:orderId" element={<Layout><ClassDetailHolder lang={lang}/></Layout>}/>
         <Route path="/policy" element={<Layout><Policy lang={lang}/></Layout>}/>
         <Route path="/policy/detail/:orderId" element={<Layout><PolicyDetailHolder lang={lang}/></Layout>}/>
+
+        <Route path="users" element={<Layout><Users lang={lang}/></Layout>}/>
         
         <Route path="/config/sepidar" element={<Layout><Sepidar lang={lang}/></Layout>}/>
         <Route path="/sliders" element={<Layout><Sliders lang={lang}/></Layout>}/>

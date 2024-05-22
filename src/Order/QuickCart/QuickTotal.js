@@ -17,19 +17,22 @@ function QuickTotal(props){
           body:JSON.stringify({userId:user?user.Code?user.Code:
               user._id:(token&&token.userId)})
         }
-        console.log(postOptions)
+        //console.log(postOptions)
       fetch(env.siteApi + "/panel/faktor/quick-to-cart",postOptions)
       .then(res => res.json())
       .then(
           (result) => {
-              if(result){
+              if(!result.error){
                   props.setError({message:"کالا اضافه شد",color:"green"})
                   setTimeout(()=>props.setError({message:"",color:"brown"}),2000)
                   props.setCart(result)
                   setLoading(0)
               }
-              else
-                  props.setCart('') 
+              else{
+                props.setError({message:result.error,color:"brown"})
+                  setTimeout(()=>props.setError({message:"",color:"brown"}),5000)
+              }
+                  
           },
           (error) => {
               console.log(error)
@@ -38,10 +41,7 @@ function QuickTotal(props){
   const defAction=()=>{
     props.action({message:"acting"})
   }
-  if(!qCart||!qCart.totalCount){
-    return(<></>)
-  }
-  else return(
+  return(
     <div className="total-amount">
       <div className="t-wrapper">
         <p>تعداد</p>

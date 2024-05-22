@@ -11,6 +11,28 @@ const tabletrans ={
         english: "Classes",
         persian: "کلاس ها"
     },
+    productTitle:{
+        english: "Product Title",
+        persian: "عنوان محصول"
+    },
+    
+    activeText:{
+        english: "Active",
+        persian: "فعال"
+    },
+    deactiveText:{
+        english: "Deactive",
+        persian: "غیر فعال"
+    },
+    delete:{
+        english: "delete",
+        persian: "حذف"
+    },
+    edit:{
+        english: "Edit",
+        persian: "ویرایش"
+    },
+
     dkmehrDashboard:{
         english: "DKMehr Dashboard",
         persian: "داشبورد داده کاوان"
@@ -74,6 +96,10 @@ const tabletrans ={
     payStatus:{
         english: "Payment status",
         persian: "وضعیت پرداخت"
+    },
+    action:{
+        english: "Action",
+        persian: "عملیات"
     },
     price:{
         english: "Price",
@@ -169,6 +195,10 @@ const tabletrans ={
     general:{
         english:"General",
         persian:"عمومی"
+    },
+    supplementary:{
+        english:"ُSupplementary",
+        persian:"تکمیلی"
     },
     billing:{
         english:"Billing",

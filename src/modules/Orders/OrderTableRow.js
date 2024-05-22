@@ -4,6 +4,7 @@ import PayStatus from "../Components/PayStatus"
 import  { normalPriceCount, rxFindCount } from "../../env"
 import OrderQuickDetail from "./OrderComponent/OrderQuickDetail"
 import tabletrans from "../../translate/tables"
+import OrderQuickCart from "./OrderComponent/OrderQuickCart"
 
 
 function OrderTableRow(props){
@@ -12,7 +13,8 @@ function OrderTableRow(props){
   const activeAcc = props.index===props.detail
   const order=props.order
   const lang=props.lang;
-
+  const cart = props.cart
+console.log(order);
     return(<React.Fragment>
         <tr 
             className={activeAcc?"activeAccordion":"accordion"}>
@@ -21,9 +23,12 @@ function OrderTableRow(props){
               onChange={(e)=>setCheckState(checkState?false:true)}/></td>
             <td>
                 <div className="order-id">
-                  <p onClick={()=> window.location.href=
-                    "/orders/detail/"+order.orderNo}>
-                    {order.orderNo}</p>
+                  {cart?<p onClick={()=> window.location.href=
+                    "/orders/detail/"+order.cartNo}>
+                    {order.cartNo}</p>:
+                    <p onClick={()=> window.location.href=
+                      "/orders/detail/"+order.orderNo}>
+                      {order.orderNo}</p>}
                 </div>
             </td>
             <td>
@@ -52,18 +57,25 @@ function OrderTableRow(props){
                 </div>
               </td>
               <td>
+              {cart?<div className="or-date">
+                  <p className="date">{new Date(order.initDate)
+                  .toLocaleDateString(props.lang==="persian"?'fa':'en')}</p>
+                  <p className="time">{new Date(order.initDate)
+                  .toLocaleTimeString(props.lang==="persian"?'fa':'en')}</p>
+                </div>:
                 <div className="or-date">
                   <p className="date">{new Date(order.date)
                   .toLocaleDateString(props.lang==="persian"?'fa':'en')}</p>
                   <p className="time">{new Date(order.date)
                   .toLocaleTimeString(props.lang==="persian"?'fa':'en')}</p>
                 </div>
+                  }
               </td>
 
 
               <td>
                 <div className="order-price">
-                  <p>{normalPriceCount(order.orderPrice)}</p>
+                  <p>{normalPriceCount(order.totalCart.totalPrice)}</p>
                 </div>
               </td>
               <td>
@@ -77,8 +89,8 @@ function OrderTableRow(props){
                 onClick={()=>props.showDetail(activeAcc?"-1":props.index)} ></i>
                 <i className="tableIcon fas fa-edit" onClick={()=>
                   window.location.href="/orders/detail/"+order.rxOrderNo}></i>
-                <i className="tableIcon fas fa-ellipsis-v" 
-                  onClick={()=>setOpenOption(openOption?0:1)}></i>
+                {/* <i className="tableIcon fas fa-ellipsis-v" 
+                  onClick={()=>setOpenOption(openOption?0:1)}></i> */}
               </div>
               {openOption?<div className="sub-more-menu">
                 <div className="sub-option sub-delete">
@@ -93,7 +105,10 @@ function OrderTableRow(props){
             </td>
           </tr>
           {activeAcc?<tr className="sub-order">
-        <td colSpan="9"><OrderQuickDetail order={order.orderItems}/></td></tr>
+        <td colSpan="10">{order.orderItems?<OrderQuickDetail 
+          order={order.orderItems}/>:
+          <OrderQuickCart order={order.cartItems}/>}
+          </td></tr>
           :<React.Fragment></React.Fragment>}
           </React.Fragment>
     )

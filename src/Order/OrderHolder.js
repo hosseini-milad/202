@@ -7,6 +7,7 @@ import PreOrderHolder from "./PreOrder/PreOrderList"
 import env, { defPay } from "../env"
 import Cookies from 'universal-cookie';
 import ShowError from "../components/Modal/ShowError"
+import PreQuickHolder from "./PreOrder/PreQuickList"
 const cookies = new Cookies();
 var shopVar = JSON.parse(localStorage.getItem(env.shopExpert));
 
@@ -22,6 +23,7 @@ function OrderHolder(props){
   const [error,setError] = useState({message:'',color:"brown"})
   
   useEffect(()=>{
+    console.log(Math.random())
     const postOptions={
         method:'post',
         headers: { 'Content-Type': 'application/json' ,
@@ -124,6 +126,8 @@ function OrderHolder(props){
         payValue={payValue} setPayValue={setPayValue}
         cart={cart&&cart.quickCart} setCart={setCart} setError={setError}
         cartDetail={cart&&cart.qCartDetail}/>:<></>}
+      <PreQuickHolder token={token} user={user}
+        cart={cart}/>
       <PreOrderHolder token={token} user={user}
         cart={cart}/>
     </main>

@@ -15,19 +15,14 @@ function CustomerTableRow(props){
               <div className="cu-avatar">
               <img src="/img/avatar/avatar_1.jpg" alt="avatar"/>
                 <div className="cu-name">
-                  <p className="name">{user.username?user.username:user.cName}</p>
-                  <p className="email">کد مشتری: {user.cCode}</p>
+                  <p className="name">{user.cName}</p>
+                  <p className="email">کد مشتری: {user.username}</p>
                 </div>
               </div>
             </td>
             <td>
-              <div className="cu-phone">
-                <p className="phone-num">{user.phone}</p>
-              </div>
-            </td>
-            <td>
-              <div className="cu-company">
-                <p>{user.mobile}</p>
+              <div className="cu-avatar">
+                <p>{user.Address}</p>
               </div>
             </td>
             <td>
@@ -44,8 +39,8 @@ function CustomerTableRow(props){
               <div className="more-btn">
                 <i className="tableIcon fas fa-edit" onClick={()=>
                   window.location.href="/customers/detail/"+user._id}></i>
-                <i className="tableIcon fas fa-ellipsis-v" 
-                  onClick={()=>setOpenOption(openOption?0:1)}></i>
+                {/* <i className="tableIcon fas fa-ellipsis-v" 
+                  onClick={()=>setOpenOption(openOption?0:1)}></i> */}
               </div>
               {openOption?<div className="sub-more-menu">
                 <div className="sub-option sub-delete">

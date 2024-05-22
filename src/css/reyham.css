@@ -45,10 +45,10 @@
     line-height: .8rem;
     color:rgba(0,0,0,.5);
     font-family: vazir;
-    font-size: 12px;
+    font-size:1rem;
     overflow: initial;
     background: #fff;
-    padding: 2px 5px;
+    padding:0 6px;
 }
 .filterComponent{
     min-width: 200px;
@@ -88,7 +88,7 @@
 .page-counter {
     direction: ltr;
 }
-.user-list td ,.cu-name p{
+.cu-name p{
     text-align: initial;
 }
 .user-list th:nth-child(2){
@@ -99,6 +99,7 @@
 }
 .cu-avatar img {
     margin: auto 8px;
+    margin-right: 0;
 }
 .dense-btn {
     width: 45%;
@@ -807,6 +808,7 @@
 }
 .hesabfaPrice{
   display: grid;
+  min-width: 200px;
 }
 .hesabfaPrice h3{
   padding-bottom: 6px;
@@ -921,7 +923,6 @@
 }
 
 
-
 .userInfo{
   display: flex;
   min-height: 100px;
@@ -954,7 +955,49 @@
   padding: 7px 20px !important;
   bottom: 14px;
 }
-
+.card-form{
+  padding: 1rem;
+}
+.customerTab{
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+.customerTab small{
+  font-size: 13px;
+  background-color: #fff;
+  width:50%;
+  color:#002A54;
+  text-align: center;
+  padding: 3px;
+  cursor: pointer;
+}
+.customerTab .active{
+  background-color: var(--dark-blue-sec);
+  color: #fff;
+  cursor: initial;
+}
+.sharePart{
+  display: flex;
+}
+.sharePart i{
+  margin: 0px;
+  padding: 8px 13px;
+  height: 40px;
+  border-radius: 17px;
+  margin-right: 5px;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.sharePart i:hover{
+  background-color: #eee;
+}
+.print-btn-crm{
+  border: 1px solid gray;
+  border-radius: 4px;
+  height: 40px;
+  width: 100%;
+}
 
 @media screen and (max-width: 650px){
   .order-wrapper .col {
@@ -987,3 +1030,11 @@
   }
 }
 
+.switch-btn{
+  border: none;
+  outline: none;
+  background-color: grey;
+  color: white;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+}

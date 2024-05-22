@@ -149,10 +149,14 @@ function OrderPopUp(props){
                         props.customer[0].username:"-"} 
                     <sub>({props.creator?props.creator[0].username:"-"})</sub>
                     <span> شماره سفارش: {data.orderNo}</span>
+                    <div className="address-status">
+                         آدرس:  
+                    {(props.customer&&props.customer[0])?
+                        props.customer[0].Address:"-"} </div>
                     </div>
                 <i className="fa fa-remove closeModal" 
                     onClick={props.close}></i>
-                <div className="sharif" style={{padding: "48px 10px 10px"}}>
+                <div className="sharif" style={{padding: "70px 10px 10px"}}>
                     <main className="sharif-order-main">
                         {content?<QuickCartHolder token={token} 
                         user={content.cart&&content.cart.userId}

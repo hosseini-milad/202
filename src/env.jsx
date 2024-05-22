@@ -1,15 +1,15 @@
 
 const env={
-    siteApi:'http://localhost:6090/api',
-    //siteApi:'https://shopadmin.sharifoilco.com/api',
+    //siteApi:'http://localhost:2020/api',
+    siteApi:'http://202admin.dkmehr.com/api',
     
-    siteApiUrl:'http://localhost:6090',
-    //siteApiUrl:'https://shopadmin.sharifoilco.com',
-    cookieName:'shop-login',
+    //siteApiUrl:'http://localhost:2020',
+    siteApiUrl:'http://202admin.dkmehr.com',
+    cookieName:'202-login',
     //cookieName:'panel-login',
     //cookieName:'mehr-login',
     
-    cookieLang:'shop-lang',
+    cookieLang:'202-lang',
     //cookieLang:'panel-lang',
     //cookieLang:'mehr-lang',
 
@@ -240,6 +240,9 @@ export const findFPage=(user)=>{
       return("dashboard")
   }
   return("login")
+}
+export const notNull=(item)=>{
+  return(item)
 }
 
 export default env

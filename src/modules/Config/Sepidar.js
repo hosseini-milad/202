@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import env from "../../env"
 import errortrans from "../../translate/error"
 import ShowError from "../../components/Modal/ShowError";
@@ -7,7 +7,27 @@ function Sepidar(props){
     const direction = props.lang?props.lang.dir:errortrans.defaultDir;
     const lang = props.lang?props.lang.lang:errortrans.defaultLang;
     const [error,setError] = useState({message:'',color:"brown"})
+    const [updateTime,setUpdateTime] = useState()
     console.log(error)
+    useEffect(()=>{
+        fetch(env.siteApi + "/sepidar-update-log")
+      .then(res => res.json())
+      .then(
+        (result) => {
+            const logList = result.log
+            var lastLog = {
+                product:logList.find(item=>item.updateQuery==="sepidar-product"),
+                quantity:logList.find(item=>item.updateQuery==="sepidar-quantity"),
+                price:logList.find(item=>item.updateQuery==="sepidar-price"),
+                customer:logList.find(item=>item.updateQuery==="sepidar-customer")
+            }
+            console.log(lastLog)
+            setUpdateTime(lastLog)
+        },
+        (error) => {
+            console.log(error)
+        })
+    },[])
     const updateSepidar=(db)=>{
         const postOptions={
             method:'get',
@@ -24,7 +44,7 @@ function Sepidar(props){
             }
             else{
                 setError({message:result.message,color:"green"})
-                setTimeout(()=>setError({message:'',color:"brown"}),3000)
+                setTimeout(()=>window.location.reload(),3000)
             }
         },
         (error) => {
@@ -59,7 +79,10 @@ function Sepidar(props){
                     <td><input type="button" value="بروزرسانی"
                     className="btn bg-gradient-info my-4 mb-2"
                     onClick={()=>updateSepidar(filter.enTitle)}/></td>
-                    <td>{new Date(filter.date).toLocaleDateString('fa')}</td>
+                    <td>{updateTime&&
+                    new Date(updateTime[filter.enTitle].date).toLocaleDateString('fa')}<br/>
+                    <smal>{updateTime&&
+                    new Date(updateTime[filter.enTitle].date).toLocaleTimeString('fa')}</smal></td>
                     <td>
                         <div className="profiles-icons">
                         <i className="fa-solid fa-pen-to-square fa-sm" style={{color: "#c0c0c0"}}></i>

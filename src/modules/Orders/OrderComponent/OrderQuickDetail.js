@@ -5,7 +5,7 @@ import OrderQuickRow from "./OrderQuickRow"
 function OrderQuickDetail(props){
     const order = props.order
     const [itemDetail,setItemDetail]=useState()
-    //console.log(order)
+    console.log(order)
     return(
       <>
             {order?<div className="sub-order-table">

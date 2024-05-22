@@ -3,6 +3,46 @@ const formtrans ={
         english: "Name",
         persian: "نام"
     },
+    clothSize:{
+        english: "Cloth Size",
+        persian: "سایز لباس"
+    },
+    birthDay:{
+        english: "Birth Day",
+        persian: "روز تولد"
+    },
+    senfiCode:{
+        english: "senfi code",
+        persian: "کد صنفی"
+    },
+    newPassword:{
+        english: "New Password",
+        persian: "رمز جدید"
+    },
+    confirmPassword:{
+        english: "Confirm Password",
+        persian: "تایید رمز جدید"
+    },
+    StockId:{
+        english: "Stock Id",
+        persian: "شناسه صنفی"
+    },
+    zone:{
+        english: "zone",
+        persian: "منطقه"
+    },
+    roleId:{
+        english: "RoleId",
+        persian: "کد نقش"
+    },
+    workTime:{
+        english: "Work Time",
+        persian: "ساعت کاری"
+    },
+    fname:{
+        english: "Last Name",
+        persian: "نام خانوادگی"
+    },
     title:{
         english: "Title",
         persian: "نام"
@@ -19,6 +59,30 @@ const formtrans ={
         english: "Phone Number",
         persian: "شماره تماس"
     },
+    EmergencyContact:{
+        english: "Emergency Contact",
+        persian: "شماره تماس ضروری"
+    },
+    userRelatedContacts:{
+        english: "User Related Contacts",
+        persian: "شماره تماس افراد مرتبط"
+    },
+    nif:{
+        english: "location",
+        persian: "موقعیت مکانی"
+    },
+    mobile:{
+        english: "Mobile",
+        persian: "شماره همراه"
+    },
+    status:{
+        english: "Status",
+        persian: "وضعیت"
+    },
+    statusOfRealOrJur:{
+        english: "Real",
+        persian: "حقیقی"
+    },
     emailAddress:{
         english: "Email Address",
         persian: "آدرس ایمیل"
@@ -26,6 +90,10 @@ const formtrans ={
     customercode:{
         english: "Customer Code",
         persian: "کد مشتری"
+    },
+    postalCode:{
+        english: "Postal Code",
+        persian: "کد پستی"
     },
     meliCode:{
         english: "Meli Code",
@@ -54,6 +122,10 @@ const formtrans ={
     saveChanges:{
         english: "Save Changes",
         persian: "ذخیره تغییرات"
+    },
+    saveAndClose:{
+        english: "Save And Close",
+        persian: "ذخیره و بازگشت"
     },
     brandCode:{
         english: "Brand Code",
@@ -171,6 +243,35 @@ const formtrans ={
         english: "Message",
         persian: "پیام"
     },
+
+    // form users
+
+    addUser:{
+        english:"Add User",
+        persian: "کاربر جدید"
+    },
+    
+    users:{
+        english:"Users",
+        persian: "کاربران"
+    },
+    role:{
+        english:"Role",
+        persian: "نقش"
+    },
+    group:{
+        english:"Group",
+        persian: "گروه"
+    },
+    lastAccess:{
+        english:"Last Access",
+        persian: "آخرین دسترسی"
+    },
+    searchUser:{
+        english:"Search Users ...",
+        persian: "جستجوی کاربر"
+    },
+    
 
 }
 export default formtrans

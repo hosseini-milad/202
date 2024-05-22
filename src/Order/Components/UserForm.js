@@ -2,13 +2,22 @@ import { useState } from "react"
 import StyleInput from "../../components/Button/Input"
 import Switch from "react-switch";
 import ImageUserHolder from "./ImageUserHolder";
+import CustomerXtra from "./CustomerXtra";
 
 function UserForm(props){
+    const [userTab,setUserTab] = useState(0)
     const def = props.def
     //console.log(def)
-    return(
+    return(<>
+        <div className="customerTab">
+          <small className={userTab===0?"active":""}
+          onClick={()=>setUserTab(0)}>اطلاعات اصلی</small>
+          <small className={userTab===1?"active":""}
+          onClick={()=>setUserTab(1)}>اطلاعات تکمیلی</small>
+        </div>
         <div className="card-form">
-            <div className="card-input">
+            {userTab?<CustomerXtra setData={props.setData} def={def}/>
+            :<div className="card-input">
                 <StyleInput title={"نام"} direction={"rtl"} 
                 class="userInput" defaultValue={def?def.cName:''}
                 action={(e)=>props.setData(prevState => ({
@@ -91,8 +100,8 @@ function UserForm(props){
                     setKasbUrl={props.setShopUrl3} init={10}
                     def={def} titles={["تصویر محل کسب 2","تصویر محل کسب 3","تصویر محل کسب 1*"]}/>
                 </div>
-            </div>
-        </div>
+            </div>}
+        </div></>
     )
 }
 export default UserForm
