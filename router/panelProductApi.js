@@ -187,7 +187,7 @@ router.post('/list-product',jsonParser,async (req,res)=>{
             { $match:data.title?{title:new RegExp('.*' + data.title + '.*')}:{}},
             { $match:data.sku?{sku:new RegExp('.*' + data.sku + '.*')}:{}},
             { $match:data.category?{category:data.category}:{}},
-            { $match:{catId:{$nin:["1"]}}},
+            { $match:data.active?{catId:{$nin:["1","2","3","5"]}}:{}},
             { $match:data.active?{enTitle:{ $exists: true}}:{}},
             {$lookup:{from : "brands", 
             localField: "brandId", foreignField: "brandCode", as : "brandInfo"}},
