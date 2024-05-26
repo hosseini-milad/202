@@ -1,0 +1,21 @@
+.api-document-group {
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.api-document-group__top {
+  border-bottom: 1px solid rgba(179, 177, 177, 0.5);
+  padding-bottom: 20px;
+}
+
+.api-document-group__name {
+  margin-bottom: 0.25rem;
+}
+
+.api-document-group__description {
+  font-size: 1rem;
+}
+
+.api-document-group__body {
+  padding: 1rem 0;
+}

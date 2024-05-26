@@ -11,6 +11,18 @@ const tabletrans ={
         english: "Classes",
         persian: "کلاس ها"
     },
+    document:{
+        english: "Document",
+        persian: "مستندات"
+    },
+    addDoc:{
+        english: "add Document",
+        persian: "افزودن مستندات"
+    },
+    url:{
+        english: "url",
+        persian: "آدرس"
+    },
     productTitle:{
         english: "Product Title",
         persian: "عنوان محصول"

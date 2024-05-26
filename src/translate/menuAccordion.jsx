@@ -173,6 +173,14 @@ const menutrans ={
             icon:"fa-user",
             href:"/users",
             url:"users"
+        },
+        {
+            english: "Documents",
+            persian: "مستندات",
+            index:1,
+            icon:"fa-learn",
+            href:"/documents/list",
+            url:"documents"
         }
     ]
     }

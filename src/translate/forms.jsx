@@ -31,6 +31,26 @@ const formtrans ={
         english: "zone",
         persian: "منطقه"
     },
+    url:{
+        english: "url",
+        persian: "آدرس"
+    },
+    content:{
+        english: "Content",
+        persian: "محتوا"
+    },
+    kind:{
+        english: "Kind",
+        persian: "نوع"
+    },
+    request:{
+        english: "Request",
+        persian: "درخواست"
+    },
+    response:{
+        english: "Response",
+        persian: "پاسخ"
+    },
     roleId:{
         english: "RoleId",
         persian: "کد نقش"

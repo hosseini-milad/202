@@ -54,6 +54,9 @@ import Policy from './pages/Policy';
 import Users from './pages/Users';
 import FaktorSitePrint from './modules/Print/PrintSiteHolder';
 import PrintSepidar from './modules/Print/PrintSepidar';
+import DocDetailHolder from './modules/Documents/DocPanel/DocData/DocDetailHolder';
+import DocumentList from './pages/DocumentList';
+import Documents from './pages/Document';
 
 const cookies = new Cookies();
 const style = document.getElementById('style-direction');
@@ -118,6 +121,9 @@ root.render(
         <Route path="/config/sepidar" element={<Layout><Sepidar lang={lang}/></Layout>}/>
         <Route path="/sliders" element={<Layout><Sliders lang={lang}/></Layout>}/>
         <Route path="/sliders/detail/:orderId" element={<Layout><SliderDetailHolder lang={lang}/></Layout>}/>
+        <Route path="/documents" element={<Layout><Documents lang={lang}/></Layout>}/>
+        <Route path="/documents/list" element={<Layout><DocumentList lang={lang}/></Layout>}/>
+        <Route path="/documents/detail/:docId" element={<Layout><DocDetailHolder lang={lang}/></Layout>}/>
 
       </Routes>:
         <Routes>

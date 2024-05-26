@@ -17,6 +17,7 @@
     "npm": "^10.2.3",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
+    "react-code-blocks": "^0.1.6",
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^18.2.0",
     "react-image-file-resizer": "^0.4.8",

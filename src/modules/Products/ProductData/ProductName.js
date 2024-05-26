@@ -78,7 +78,7 @@ function ProductName(props){
             <h4>{tabletrans.details[props.lang]}</h4>
             <p>{tabletrans.titleShort[props.lang]}</p>
             <ProductImportButton setProductChange={props.setProductChange}
-                  sku={content.sku} setUpdateContent={props.setUpdateContent}
+                  sku={content&&content.sku} setUpdateContent={props.setUpdateContent}
                   setContent={props.setContent} setImage={setImage} setThumb={setThumb}/>
           </div>
           <div className="row-box">

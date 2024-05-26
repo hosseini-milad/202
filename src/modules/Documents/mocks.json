@@ -1,0 +1,248 @@
+[
+  {
+    "name": "Authorization",
+    "description": "Authentication Api for Client",
+    "apis": [
+      {
+        "id": 1,
+        "type": "post",
+        "path": "/api/auth/login",
+        "description": "Login using username password",
+        "parameters": [
+          {
+            "name": "phone",
+            "type": "string",
+            "required": true,
+            "description": "Client username"
+          },
+          {
+            "name": "password",
+            "type": "string($uuid)",
+            "required": true,
+            "description": "Client Password"
+          }
+        ],
+        "request": "body: {\n\t\"username\":$username,\n\t\"password\":$password\n}",
+        "response": {
+          "tabData": [{
+              "token": "$token"
+              
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "Dashboard",
+    "description": "Dashboard Part Api for Client",
+    "apis": [
+      {
+        "id": 1,
+        "type": "get",
+        "path": "/api/panel/report/report-client",
+        "description": "Dashboard-Report",
+        "parameters": [
+          {
+            
+          }
+        ],
+        "request": "headers: {\n\t'Content-Type': 'application/json',\n\t\"x-access-token\":$token,\n\t\"userId\":$userId\n}",
+        "response": {
+          "tabData": [{
+              "title": "یارانه ای",
+              "text": "جمع اعتبار یارانه ای",
+              "value": "240",
+              "sub": "جمع تحویل شده",
+              "subValue": "210"
+            }
+          ]
+        }
+      },
+      {
+        "id": 3,
+        "type": "post",
+        "path": "/api/report/dashboard-detail",
+        "description": "Show Dashboard Detail",
+        "parameters": [
+          {
+            "name": "integrationId",
+            "type": "string($uuid)",
+            "required": true,
+            "description": "Unique identifier for your integration."
+          },
+          {
+            "name": "arbitraryCode",
+            "type": "string($uuid)",
+            "required": false,
+            "description": "Optional code for referencing the location."
+          },
+          {
+            "name": "data",
+            "type": "object",
+            "required": true,
+            "description": "Object containing location details (name, address, etc.)."
+          }
+        ],
+        "request": "fetch('/administrative-divisions/locations', { method: 'POST', body: JSON.stringify({ integrationId: 'your-integration-id', arbitraryCode: 'optional-code', data: { ...location data... } }), headers: { 'Content-Type': 'application/json' } })\n.then(response => response.json())\n.catch(handleError)",
+        "response": "{\"id\": 3, \"name\": \"San Francisco Office\", \"parentId\": 1}"
+      }
+    ]
+  },
+    {
+      "name": "Learn",
+      "description": "Learn Part Api for Client",
+      "apis": [
+        {
+          "id": 1,
+          "type": "get",
+          "path": "/api/learn/get-list",
+          "description": "List learn docs",
+          "parameters": [
+            {
+              "name": "title",
+              "type": "string",
+              "required": true,
+              "description": "Unique Title for "
+            },
+            {
+              "name": "arbitraryCode",
+              "type": "string($uuid)",
+              "required": false,
+              "description": "Optional code for filtering results."
+            }
+          ],
+          "request": "fetch('/administrative-divisions', { params: { integrationId: 'your-integration-id', arbitraryCode: 'optional-code' } })\n.then(response => response.json())\n.catch(handleError)",
+          "response": "{\"data\": [{\"id\": 1, \"name\": \"California\", \"parentId\": null}, {\"id\": 2, \"name\": \"New York\", \"parentId\": null}, ... ]}"
+        },
+        {
+          "id": 251,
+          "type": "post",
+          "path": "/administrative-divisions/locations",
+          "description": "Creates a new administrative division location.",
+          "parameters": [
+            {
+              "name": "integrationId",
+              "type": "string($uuid)",
+              "required": true,
+              "description": "Unique identifier for your integration."
+            },
+            {
+              "name": "arbitraryCode",
+              "type": "string($uuid)",
+              "required": false,
+              "description": "Optional code for referencing the location."
+            },
+            {
+              "name": "data",
+              "type": "object",
+              "required": true,
+              "description": "Object containing location details (name, address, etc.)."
+            }
+          ],
+          "request": "fetch('/administrative-divisions/locations', { method: 'POST', body: JSON.stringify({ integrationId: 'your-integration-id', arbitraryCode: 'optional-code', data: { ...location data... } }), headers: { 'Content-Type': 'application/json' } })\n.then(response => response.json())\n.catch(handleError)",
+          "response": "{\"id\": 3, \"name\": \"San Francisco Office\", \"parentId\": 1}"
+        },
+        {
+          "id": 391,
+          "type": "delete",
+          "path": "/administrative-divisions/locations/{locationId}",
+          "description": "Deletes a specific administrative division location.",
+          "parameters": [
+            {
+              "name": "integrationId",
+              "type": "string($uuid)",
+              "required": true,
+              "description": "Unique identifier for your integration."
+            },
+            {
+              "name": "locationId",
+              "type": "integer",
+              "required": true,
+              "description": "ID of the location to be deleted."
+            }
+          ],
+          "request": "fetch('/administrative-divisions/locations/123', { method: 'DELETE', headers: { 'Authorization': 'Bearer your-access-token' } })\n.then(response => response.text())\n.catch(handleError)",
+          "response": "Location deleted successfully."
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "description": "This API provides functionalities for managing users within the system.",
+      "apis": [
+        {
+          "id": 361,
+          "type": "get",
+          "path": "/users",
+          "description": "Retrieves all users.",
+          "parameters": [
+            {
+              "name": "integrationId",
+              "type": "string($uuid)",
+              "required": true,
+              "description": "Unique identifier for your integration."
+            },
+            {
+              "name": "search",
+              "type": "string",
+              "required": false,
+              "description": "Optional search term for filtering users by name or email."
+            }
+          ],
+          "request": "fetch('/users?integrationId=your-integration-id&search=john.doe')\n.then(response => response.json())\n.catch(handleError)",
+          "response": "{\"data\": [{\"id\": 1, \"name\": \"John Doe\", \"email\": \"john.doe@example.com\"}, ... ]}"
+        },
+        {
+          "id": 331,
+          "type": "post",
+          "path": "/users",
+          "description": "Creates a new user.",
+          "parameters": [
+            {
+              "name": "integrationId",
+              "type": "string($uuid)",
+              "required": true,
+              "description": "Unique identifier for your integration."
+            },
+            {
+              "name": "data",
+              "type": "object",
+              "required": true,
+              "description": "Object containing user details (name, email, password, etc.)."
+            }
+          ],
+          "request": "fetch('/users', { method: 'POST', body: JSON.stringify({ integrationId: 'your-integration-id', data: { ...user data... } }), headers: { 'Content-Type': 'application/json' } })\n.then(response => response.json())\n.catch(handleError)",
+          "response": "{\"id\": 10, \"name\": \"Jane Smith\", \"email\": \"jane.smith@example.com\"}"
+        },
+        {
+          "id": 901,
+          "type": "post",
+          "path": "/users/{userId}",
+          "description": "Updates an existing user.",
+          "parameters": [
+            {
+              "name": "integrationId",
+              "type": "string($uuid)",
+              "required": true,
+              "description": "Unique identifier for your integration."
+            },
+            {
+              "name": "userId",
+              "type": "integer",
+              "required": true,
+              "description": "ID of the user to be updated."
+            },
+            {
+              "name": "data",
+              "type": "object",
+              "required": true,
+              "description": "Object containing updated user details."
+            }
+          ],
+          "request": "fetch('/users/5', { method: 'PUT', body: JSON.stringify({ integrationId: 'your-integration-id', data: { ...updated user data... } }), headers: { 'Content-Type': 'application/json' } })\n.then(response => response.json())\n.catch(handleError)",
+          "response": "{\"id\": 5, \"name\": \"John Doe (Updated)\", \"email\": \"john.doe@example.com\"}"
+        }
+      ]
+    }
+  ]
