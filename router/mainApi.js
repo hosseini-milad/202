@@ -174,7 +174,7 @@ router.post('/get-customers', async (req,res)=>{
             var customer = sepidarResult[i]
             var phone = customer.Tel
             try{
-                if(!phone) customer.Addresses[0].Tel
+                if(!phone) phone =customer.Addresses[0].Tel
             }
             catch{}
             var customerQuery={
