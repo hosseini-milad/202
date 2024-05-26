@@ -1,23 +1,24 @@
-const productPrice = require("../models/product/productPrice")
-const NormalTax = require("./NormalTax")
-const {StockId,SaleType} = process.env;
+const cart = require("../models/product/cart")
 
-var tax = process.env.TaxRate
 
-const CalcCart=async(cartDetails)=>{
-    var totalPrice = 0
-    var totalCount = 0
-    for(var c=0;c<cartDetails.length;c++){
-    //const ItemId = 
-    const priceData = await productPrice.findOne(
-        {ItemID:cartDetails[c].ItemId,saleType:SaleType},
-        {price:1,_id:0})
-    
-    cartDetails[c].price=NormalTax(priceData.price)
-    totalPrice += cartDetails[c].price*cartDetails[c].count
-    totalCount += parseInt(cartDetails[c].count)
+const CalcCart=async(userId)=>{
+    const cartDetail = await cart.find({userId:userId})
+    var cartPrice = 0;
+    var cartTotal = 0;
+    for(var i=0;i<cartDetail.length;i++){
+        var price = parseInt(cartDetail[i].price)
+
+        if(!price){
+            cartDetail[i].price = 1250000
+            price = 1250000
+        }
+        var totalPrice = price*parseInt(cartDetail[i].count)
+        cartDetail[i].totalPrice = totalPrice
+        cartPrice += totalPrice
+        cartTotal += parseInt(cartDetail[i].count)
     }
-    return({totalPrice:totalPrice,totalCount:totalCount})
+    return({cart:cartDetail,cartDetail:
+        {cartPrice:cartPrice,cartCount:cartTotal}})
 }
 
 module.exports =CalcCart

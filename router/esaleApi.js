@@ -24,6 +24,8 @@ const NormalTax = require('../middleware/NormalTax');
 const openOrders = require('../models/orders/openOrders');
 const Filters = require('../models/product/Filters');
 const factory = require('../models/product/factory');
+const cart = require('../models/product/cart');
+const CalcCart = require('../middleware/CalcCart');
 
 /*Product*/
 router.post('/fetch-product',jsonParser,async (req,res)=>{
@@ -127,164 +129,53 @@ router.post('/list-category',jsonParser,async (req,res)=>{
         res.status(500).json({message: error.message})
     } 
 })
-router.post('/editCats',jsonParser,async(req,res)=>{
-    var catId= req.body.catId?req.body.catId:''
-    if(catId === "new")catId=''
-        const data = {
-            title:  req.body.title,
-            link: req.body.link,
-            type:req.body.type,
-            value:req.body.value,
-            parent:req.body.parent,
-            description:req.body.description,
-            sku: req.body.sku, 
-            catCode:req.body.catCode,
-            price: req.body.price,
-            quantity: req.body.quantity,
-            sort: req.body.sort,
-            iconUrl:  req.body.iconUrl,
-            imageUrl:  req.body.imageUrl,
-            thumbUrl:  req.body.thumbUrl
-        }
-        var catResult = ''
-        if(catId) catResult=await category.updateOne({_id:ObjectID(catId)},
-            {$set:data})
-        else
-        catResult= await category.create(data)
-        try{
-        
-        res.json({result:catResult,success:catId?"Updated":"Created"})
-    }
-    catch(error){
-        res.status(500).json({message: error.message})
-    }
-})
-/*Filters*/
-router.post('/fetch-filter',jsonParser,async (req,res)=>{
-    var filterId = req.body.filterId?req.body.filterId:''
+/*Carts*/
+router.get('/get-cart',auth,jsonParser,async (req,res)=>{
+    const userId = req.headers["userid"]
     try{
-        if(!filterId){
-            res.json({filter:{}})
-            return 
-        }
-        const categoryData = await category.find()
-        const filterData = await Filters.findOne({_id: ObjectID(filterId)})
-       res.json({filter:filterData,category:categoryData})
+        const myCart = await CalcCart(userId)
+        res.json(myCart)
     }
     catch(error){
         res.status(500).json({message: error.message})
     } 
 })
-router.post('/list-filter',jsonParser,async (req,res)=>{
-    var pageSize = req.body.pageSize?req.body.pageSize:"10";
-    var offset = req.body.offset?(parseInt(req.body.offset)):0;
-    try{const data={
-        category:req.body.category,
-        title:req.body.title,
-        enTitle:req.body.enTitle,
-        type:req.body.type,
-    }
-        const filterList = await Filters.aggregate([
-            { $match:data.title?{title:new RegExp('.*' + data.title + '.*')}:{}},
-            { $match:data.category?{category:data.category}:{}},
-            { $match:data.type?{type:data.type}:{}},
-            ])
-            const filters = filterList.slice(offset,
-                (parseInt(offset)+parseInt(pageSize)))  
-            const typeUnique = [...new Set(filterList.map((item) => item.category))];
-            
-           res.json({filter:filters,type:typeUnique,
-            size:filterList.length})
-    }
-    catch(error){
-        res.status(500).json({message: error.message})
-    } 
-})
-router.post('/edit-filter',jsonParser,async(req,res)=>{
-    var filterId= req.body.filterId?req.body.filterId:''
-    if(filterId === "new")filterId=''
-    try{ 
-        const data = {
-            category:req.body.category,
-            title:req.body.title,
-            enTitle:req.body.enTitle,
-            type:req.body.type,
-            optionsP:req.body.optionsP,
-            optionsN:req.body.optionsN,
-            sort:req.body.sort
-        }
-        var filterResult = ''
-        if(filterId) filterResult=await Filters.updateOne({_id:filterId},
-            {$set:data})
-        else
-        filterResult= await Filters.create(data)
-        
-        res.json({result:filterResult,success:filterId?"Updated":"Created"})
-    }
-    catch(error){
-        res.status(500).json({message: error.message})
-    }
-})
-
-/*Factory*/
-router.post('/fetch-factory',jsonParser,async (req,res)=>{
-    var factoryId = req.body.factoryId?req.body.factoryId:''
+router.post('/add-cart',auth,jsonParser,async (req,res)=>{
+    const userId = req.headers["userid"]
+    const data = req.body
     try{
-        if(!factoryId){
-            res.json({filter:{}})
-            return
+        if(!data.sku){
+            res.status(400).json({message:"کد محصول وارد نشده است"})
         }
-        const filterData = await factory.findOne({_id: ObjectID(factoryId)})
-       res.json({filter:filterData})
-    }
-    catch(error){
-        res.status(500).json({message: error.message})
-    } 
-})
-router.post('/list-factory',jsonParser,async (req,res)=>{
-    var pageSize = req.body.pageSize?req.body.pageSize:"10";
-    var offset = req.body.offset?(parseInt(req.body.offset)):0;
-    try{const data={
-        category:req.body.category,
-        title:req.body.title,
-        enTitle:req.body.enTitle,
-        type:req.body.type,
-    }
-        const filterList = await factory.aggregate([
-            { $match:data.title?{title:new RegExp('.*' + data.title + '.*')}:{}},
-            { $match:data.category?{category:data.category}:{}},
-            { $match:data.type?{type:data.type}:{}},
-            ])
-            const filters = filterList.slice(offset,
-                (parseInt(offset)+parseInt(pageSize)))  
-            const typeUnique = [...new Set(filterList.map((item) => item.category))];
-              
-           res.json({filter:filters,type:typeUnique,
-            size:filterList.length})
-    }
-    catch(error){
-        res.status(500).json({message: error.message})
-    } 
-})
-router.post('/edit-factory',jsonParser,async(req,res)=>{
-    var factoryId= req.body.factoryId?req.body.factoryId:''
-    if(factoryId === "new")factoryId=''
-    try{ 
-        const data = {
-            title:req.body.title,
-            enTitle:req.body.enTitle
-        }
-        var filterResult = ''
-        if(factoryId) filterResult=await factory.updateOne({_id:factoryId},
-            {$set:data})
-        else
-        filterResult= await factory.create(data)
+        const cartFound = await cart.findOne({userId:userId,sku:data.sku})
+        var newCount = cartFound?parseInt(cartFound.count):0
+        newCount += parseInt(data.count)
+        data.count = newCount
+        cartFound?await cart.updateOne({userId:userId,sku:data.sku},{$set:data}):
+        await cart.create({...data,userId:userId})
         
-        res.json({result:filterResult,success:factoryId?"Updated":"Created"})
+        const myCart = await CalcCart(userId)
+        res.json({...myCart,message:"آیتم اضافه شد"})
     }
     catch(error){
         res.status(500).json({message: error.message})
+    } 
+})
+router.post('/remove-cart-item',auth,jsonParser,async (req,res)=>{
+    const userId = req.headers["userid"]
+    const sku = req.body.sku
+    try{
+        if(!sku){
+            res.status(400).json({message:"کد محصول وارد نشده است"})
+        }
+        const cartFound = await cart.deleteOne({userId:userId,sku:sku})
+        
+        const myCart = await CalcCart(userId)
+        res.json({...myCart,message:"آیتم حذف شد"})
     }
+    catch(error){
+        res.status(500).json({message: error.message})
+    } 
 })
 
 module.exports = router;
