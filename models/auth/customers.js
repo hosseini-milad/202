@@ -6,6 +6,7 @@ const customerSchema = new mongoose.Schema({
   cName: { type: String},
   sName:{ type: String},
   phone: { type: String},
+  otp: { type: String},
   password: { type: String },
   mobile:{type: String },
   email: { type: String},
@@ -21,7 +22,7 @@ const customerSchema = new mongoose.Schema({
   
   imageUrl1:{ type: String },
   imageUrl2:{ type: String },
-
+  token:{type:String},
   date:{type:Date} 
 });
 

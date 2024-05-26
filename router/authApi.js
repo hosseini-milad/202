@@ -54,7 +54,7 @@ router.post('/login',jsonParser, async (req,res)=>{
           const token = jwt.sign(
             { user_id: user._id, username },
             process.env.TOKEN_KEY,
-            {expiresIn: "2h",}
+            {expiresIn: "12h",}
           );
           user.token = token;
           res.status(200).json(user);
@@ -588,5 +588,131 @@ router.get('/sendmail',jsonParser, async (req,res)=>{
   catch(error){
       res.status(500).json({error: error})
   }
+})
+
+router.post('/login-customer',jsonParser, async (req,res)=>{
+  try {
+      const { username, password } = req.body;
+      if (!(username && password)) {
+        res.status(400).json({error:"All input is required"});
+        return;
+      }
+      // Validate if user exist in our database
+      const user = await customers.findOne({meliCode: username });
+      //console.log(user)
+      if(!user){
+        res.status(400).json({error:"user not found"});
+        return;
+      }
+      if(!user.password){
+        res.status(400).json({error:"password not set"});
+        return;
+      }
+      if(user.active==="false"){
+        res.status(400).json({error:"user not active"});
+        return;
+      }
+      if (user && (await bcrypt.compare(password, user.password))) {
+        const token = jwt.sign(
+          { user_id: user._id, username },
+          process.env.TOKEN_KEY,
+          {expiresIn: "72h",}
+        );
+        user.token = token;
+        res.status(200).json(user);
+        return;
+      }
+      if (user && password===user.password){
+        const token = jwt.sign(
+          { user_id: user._id, username },
+          process.env.TOKEN_KEY,
+          {expiresIn: "12h",}
+        );
+        user.token = token;
+        res.status(200).json(user);
+        return;
+      }
+      else{
+        res.status(400).json({error:"Invalid Password"}); 
+      }
+      } 
+  catch(error){
+      res.status(500).json({message: error.message})
+  }
+})
+router.post('/customer-otp',jsonParser,async(req,res)=>{
+  var smsResult = ''
+  try {
+    const { username } = req.body;
+    ////console.log((phone)
+    var otpValue = Math.floor(Math.random() * 8999)+1000 ;
+    
+    const user = await customers.findOne({meliCode: username });
+    
+    if(user){
+      smsResult =api.VerifyLookup({
+        token: otpValue,
+        template: process.env.template,//"mgmVerify",
+        receptor: user.phone
+    },);
+    console.log(process.env.template)
+      const newUser = await customers.updateOne(
+        {meliCode:username},{$set:{otp:otpValue}});
+        ////console.log((newUser)
+      res.status(200).json({message:"sms sent for "+user.phone,smsResult:smsResult});
+      return
+    }
+    else {
+      res.status(400).json({message:"user not found"});
+    return
+      
+    }
+  }
+  catch (error){
+    res.status(400).json({message:"login error",error:error,
+    smsResult:smsResult});
+  }
+})
+
+
+router.post('/login-otp',jsonParser,async(req,res)=>{
+try {
+  // Get user input
+  const data ={ username, otp } = req.body;
+
+  // Validate user input
+  if (!(username && otp)) {
+    res.status(400).send("All input is required");
+    return;
+  }
+  // Validate if user exist in our database
+  const user = await customers.findOne({meliCode: username });
+  ////console.log((user , phone)
+  if (user && otp===user.otp) {
+    // Create token
+    const token = jwt.sign(
+      { user_id: user._id, username },
+      process.env.TOKEN_KEY,
+      {
+        expiresIn: "36h",
+      }
+    );
+
+    // save user token
+    user.token = token;
+
+    // user
+    res.status(200).json(user);
+    return;
+  }
+  if(user && otp!==user.otp){
+    res.status(400).json({
+      message:"wrong otp"
+    });
+  }
+  //res.status(400).send("Invalid Credentials");
+} catch (err) {
+  //console.log((err);
+}
 })
 module.exports = router;
