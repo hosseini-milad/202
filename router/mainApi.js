@@ -172,14 +172,17 @@ router.post('/get-customers', async (req,res)=>{
         var notUpdateCustomer = 0
         for(var i=0;i<sepidarResult.length;i++){
             var customer = sepidarResult[i]
+            var phone = customer.Tel
+            try{
+                if(!phone) customer.Addresses[0].Tel
+            }
+            catch{}
             var customerQuery={
                 username: customer.DLCode,
                 cName: customer.CompanyName?customer.CompanyName:
                     (customer.FirstName+ " " + customer.LastName),
-                sName:"",
-                phone: customer.Tel?customer.Tel:
-                    (customer.Addresses&&customer.Addresses[0]&&
-                    customer.Addresses[0].Tel),
+                sName:customer.LastName,
+                phone: phone,
                 password: "123",
                 mobile:customer.Mobile,
                 email: customer.ID+"@202.com",
