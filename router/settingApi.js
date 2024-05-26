@@ -8,6 +8,11 @@ const LogCreator = require('../middleware/LogCreator');
 const users = require('../models/auth/users');
 const slider = require('../models/main/slider');
 
+const docCat = require('../model/Params/docCat');
+const docSchema = require('../model/Params/document');
+const CreateMock = require('../middleware/CreateMocks');
+
+
 router.post('/sliders', async (req,res)=>{
     try{
         const SlidersList = await slider.find()
@@ -89,4 +94,80 @@ router.post('/changeOrder',auth,jsonParser, async (req,res)=>{
         res.status(500).json({message: error.message})
     }
 })
+
+
+/*Document*/
+router.post('/list-doc',jsonParser,async (req,res)=>{
+    try{
+        var result = await docSchema.find();
+       
+        res.json({filter:result})
+        return
+        
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    } 
+})
+
+router.get('/list-mocks',jsonParser,async (req,res)=>{
+    try{
+        var documents = await docSchema.find();
+        var docCats = await docCat.find();
+        const mocks = await CreateMock(docCats,documents)
+        res.json(mocks)
+        return
+        
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    } 
+})
+router.post('/fetch-doc',jsonParser,async (req,res)=>{
+    const docId = req.body.docId
+    try{
+        var result = docId?await docSchema.findOne({_id:ObjectID(docId)}):'';
+        res.json(result)
+        return
+        
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    } 
+})
+
+router.post('/update-doc',jsonParser,async (req,res)=>{
+    var docId = req.body.docId
+    if(docId==="new") docId = ""
+    const data = req.body
+
+    try{
+        var result = docId?await docSchema.updateOne({_id:ObjectID(docId)},{$set:data}):
+        await docSchema.create(data);
+        res.json(result)
+        return
+        
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    } 
+})
+router.post('/delete-doc',jsonParser,auth,async (req,res)=>{
+    var docId = req.body.docId
+    if(!docId) {
+        res.status(400).json({message:"not found"})
+        return
+    }
+
+    try{
+        var result = await docSchema.deleteOne({_id:ObjectID(docId)})
+        res.json(result)
+        return
+        
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    } 
+})
+
 module.exports = router;
