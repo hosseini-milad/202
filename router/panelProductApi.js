@@ -194,26 +194,11 @@ router.post('/list-product',jsonParser,async (req,res)=>{
             ])
             const products = productList.slice(offset,
                 (parseInt(offset)+parseInt(pageSize)))  
-            var quantity = []
-            var price = []
-            for(var i=0;i<products.length;i++){
-                const countData = await productCount.findOne(
-                    {ItemID:products[i].ItemID,Stock:StockId})
-                var openCount = 0
-                const openList = await openOrders.find({sku:products[i].sku,payStatus:"paid"})
-                for(var c=0;c<openList.length;c++) openCount+= parseInt(openList[c].count)
-                const priceData = await productPrice.findOne(
-                    {ItemID:products[i].ItemID,saleType:SaleType})
-                products[i].price = priceData?priceData.price:''
-                products[i].taxPrice=NormalTax(products[i].price)
-                products[i].count = countData?countData.quantity:''
-                products[i].openOrderCount = openCount
-            }
+            
             const typeUnique = [...new Set(productList.map((item) => item.category))];
             
            res.json({filter:products,type:typeUnique,
-            size:productList.length,
-            quantity:quantity,price:price})
+            size:productList.length})
     }
     catch(error){
         res.status(500).json({message: error.message})
