@@ -120,8 +120,8 @@ function ProductDetailHolder(props) {
               ) : (
                 <></>
               )}
-              {/*<ProductPrice direction={direction} lang={lang} content={content} 
-          productChange={productChange} setProductChange={setProductChange}/>*/}
+              <ProductPrice direction={direction} lang={lang} content={content} 
+          productChange={productChange} setProductChange={setProductChange}/>
               <div className="create-btn-wrapper">
                 <div className="dense-btn">
                   <input

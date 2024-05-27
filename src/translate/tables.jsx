@@ -11,6 +11,10 @@ const tabletrans ={
         english: "Classes",
         persian: "کلاس ها"
     },
+    weight:{
+        english: "Weight",
+        persian: "وزن"
+    },
     document:{
         english: "Document",
         persian: "مستندات"

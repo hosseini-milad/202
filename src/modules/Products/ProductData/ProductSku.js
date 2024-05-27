@@ -35,14 +35,12 @@ function ProductSKU(props){
                     ...prevState,
                     sku:e
                   }))}/>
-                  <div className="edit-btn autoFilter" onClick={autoFetch}>
-                      Auto Filter</div>
-                {/*<StyleInput title={tabletrans.quantity[props.lang]} direction={props.direction}
-                 class={"formInput"} defaultValue={content?content.quantity:''} 
+                 <StyleInput title="وزن" direction={props.direction}
+                 class={"formInput"} defaultValue={def?def.weight:''} 
                  action={(e)=>props.setProductChange(prevState => ({
                     ...prevState,
-                    quantity:e
-                  }))}/>*/}
+                    weight:e
+                  }))}/> 
                 <StyleSelect title={tabletrans.brand[props.lang]} direction={props.direction}
                  class={"formInput halfWidth"} defaultValue={content?content.brandData:''} 
                  options={brand?brand:[]} label={"title"}

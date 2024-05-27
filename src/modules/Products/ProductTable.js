@@ -17,19 +17,11 @@ function ProductTable(props){
               <i></i>
             </th>
             <th>
-              <p>{tabletrans.brand[lang]}</p>
-              <i></i>
-            </th>
-            <th>
-              <p>{tabletrans.item[lang]}</p>
+              <p>{tabletrans.weight[lang]}</p>
               <i></i>
             </th>
             <th>
             <p>{tabletrans.price[lang]}</p>
-              <i></i>
-            </th>
-            <th>
-            <p>{tabletrans.taxPrice[lang]}</p>
               <i></i>
             </th>
             <th>
@@ -44,8 +36,7 @@ function ProductTable(props){
           {productList&&productList.filter?
             productList.filter.map((product,i)=>(
             <ProductTableRow detail={detail} showDetail={showDetail} 
-            product={product} index={i} key={i} lang={lang} stockId={props.store}
-            count={productList.quantity[i]} price={productList.price[i]}/>
+            product={product} index={i} key={i} lang={lang} stockId={props.store}/>
           )):''}
           
         </tbody>

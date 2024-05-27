@@ -1,10 +1,10 @@
 
 const env={
     //siteApi:'http://localhost:2020/api',
-    siteApi:'http://202admin.dkmehr.com/api',
+    siteApi:'http://adminesale.202.ir/api',
     
     //siteApiUrl:'http://localhost:2020',
-    siteApiUrl:'http://202admin.dkmehr.com',
+    siteApiUrl:'http://adminesale.202.ir',
     cookieName:'202-login',
     //cookieName:'panel-login',
     //cookieName:'mehr-login',

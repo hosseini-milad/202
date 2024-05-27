@@ -31,28 +31,12 @@ function ProductTableRow(props){
               </td>
               <td>
                 <div className="order-num">
-                  <p>{product.brandInfo&&product.brandInfo[0]?
-                    product.brandInfo[0].title:product.brandId}</p>
+                  <p>{product.weight}</p>
                 </div>
-              </td>
-              <td>
-                <div className="order-num">
-                  {/*{stockId?<span>{newStockCount}</span>:
-                  <><span>{product.count?product.count:"ناموجود"}</span>
-                  <small> {product.openOrderCount?"(متنظر تایید: "+
-                           product.openOrderCount+")":''}</small></>}
-                  */}
-                  <span>{product.count?product.count:"ناموجود"}</span>
-                  </div>
               </td>
               <td>
                 <div className="order-price">
                   <p>{normalPriceCount(product.price&&product.price)}</p>
-                </div>
-              </td>
-              <td>
-                <div className="order-price">
-                  <p>{normalPriceCount(product.taxPrice&&product.taxPrice)}</p>
                 </div>
               </td>
               <td>

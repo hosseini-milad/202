@@ -2,7 +2,8 @@ import StyleInput from "../../../components/Button/Input"
 import tabletrans from "../../../translate/tables"
 
 function ProductPrice(props){
-    const content = props.content
+    const content = props.content?props.content.filter:''
+    console.log(content)
     return(
         <div className="pd-row">
           <div className="row-title">
