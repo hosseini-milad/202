@@ -105,16 +105,18 @@ router.get('/get-cookie', async (req,res)=>{
 router.post('/get-product', async (req,res)=>{
     const cookieData = req.cookies
     try{
-        const sepidarResult = await RahkaranPOST("/Sales/ProductManagement/Services/ProductManagementService.svc/GetProducts",
+        const sepidarResultRaw = await RahkaranPOST("/Sales/ProductManagement/Services/ProductManagementService.svc/GetProducts",
         {"PageSize":5},cookieData)
         const query=[]
         var newProduct = [];
         var updateProduct = 0
         var notUpdateProduct = 0
+        var unitIds = []
+        var sepidarResult=sepidarResultRaw&&sepidarResultRaw.result
         for(var i=0;i<sepidarResult.length;i++){
             var product = sepidarResult[i]
             var unitId = product.units&&product.units[0]&&product.units[0].unitRef
-            
+            unitIds.push(unitId)
             var productQuery={
                 title:  product.name,
                 sku: product.number,
@@ -144,6 +146,7 @@ router.post('/get-product', async (req,res)=>{
             date:Date.now()
         })
         res.json({sepidar:{new:newProduct,update:updateProduct,notUpdate:notUpdateProduct},
+            unitIds:unitIds,
             message:"محصولات بروز شدند"})
     }
     catch(error){
