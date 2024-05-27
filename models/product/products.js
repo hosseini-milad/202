@@ -22,6 +22,7 @@ const ProductSchema = new Schema({
     thumbUrl:String,
     perBox:Number,
     price:String,
+    weight:String,
     categories:String
 })
 module.exports = mongoose.model('product',ProductSchema);
