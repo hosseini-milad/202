@@ -69,8 +69,8 @@ router.post('/list-product',jsonParser,async (req,res)=>{
             { $match:data.category?{category:data.category}:{}},
             { $match:(data.active&&data.active=="deactive")?{}:{catId:{$nin:["1","3","4","5"]}}},
             
-            {$lookup:{from : "brands", 
-            localField: "brandId", foreignField: "brandCode", as : "brandInfo"}},
+            {$lookup:{from : "units", 
+            localField: "unitId", foreignField: "id", as : "unitInfo"}},
             ])
             const products = productList.slice(offset,
                 (parseInt(offset)+parseInt(pageSize)))  
