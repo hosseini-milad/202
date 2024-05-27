@@ -16,16 +16,16 @@ const ProductSchema = require('../models/product/products');
 const BrandSchema = require('../models/product/brand')
 const category = require('../models/product/category');
 const { env } = require('process');
-const filterNumber = require('../middleware/Functions');
-
-const productCount = require('../models/product/productCount');
-const productPrice = require('../models/product/productPrice');
-const NormalTax = require('../middleware/NormalTax');
-const openOrders = require('../models/orders/openOrders');
 const Filters = require('../models/product/Filters');
-const factory = require('../models/product/factory');
+const customerSchema = require('../models/auth/customers');
 const cart = require('../models/product/cart');
 const CalcCart = require('../middleware/CalcCart');
+const CalcFaktor = require('../middleware/CalcFaktor');
+const CreateRahkaran = require('../middleware/CreateRahkaran');
+const RahkaranPOST = require('../middleware/RahkaranPOST');
+const RahkaranLogin = require('../middleware/RahkaranLogin');
+const faktor = require('../models/product/faktor');
+const faktorItems = require('../models/product/faktorItem');
 
 /*Product*/
 router.post('/fetch-product',jsonParser,async (req,res)=>{
@@ -147,10 +147,18 @@ router.post('/add-cart',auth,jsonParser,async (req,res)=>{
         if(!data.sku){
             res.status(400).json({message:"کد محصول وارد نشده است"})
         }
+        const productData = await ProductSchema.findOne({sku:data.sku})
+        
+        if(!productData){
+            res.status(400).json({message:"محصول یافت نشد"})
+        }
         const cartFound = await cart.findOne({userId:userId,sku:data.sku})
         var newCount = cartFound?parseInt(cartFound.count):0
         newCount += parseInt(data.count)
         data.count = newCount
+        data.ItemID = productData.ItemID
+        data.unitId = productData.unitId
+        data.price = productData.price
         cartFound?await cart.updateOne({userId:userId,sku:data.sku},{$set:data}):
         await cart.create({...data,userId:userId})
         
@@ -172,6 +180,95 @@ router.post('/remove-cart-item',auth,jsonParser,async (req,res)=>{
         
         const myCart = await CalcCart(userId)
         res.json({...myCart,message:"آیتم حذف شد"})
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    } 
+})
+
+router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
+    const cookieData = req.cookies
+    const userId = req.headers["userid"]
+    try{
+        const userData = await customerSchema.findOne({_id:ObjectID(userId)})
+        if(!userData){
+            res.status(400).json({message:"مشتری یافت نشد "})
+        }
+        const myCart = await CalcCart(userId)
+
+        const faktorData = await CalcFaktor(myCart,userData)
+        if(!faktorData){
+            res.status(400).json({message:"خطا در سبد خرید"})
+        }
+        //console.log(faktorData.faktorData,faktorData.faktorItems,userData)
+        const rahKaranFaktor = await CreateRahkaran(faktorData.faktorData,faktorData.faktorItems,userData)
+        //console.log(rahKaranFaktor)
+        var rahkaranResult =  await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/PlaceQuotation",
+            rahKaranFaktor,cookieData)
+        if(!rahkaranResult) {
+            const loginData = await RahkaranLogin()
+            var cookieSGPT = '';
+            if(loginData){
+                cookieSGPT = loginData.split('SGPT=')[1]
+                cookieSGPT = cookieSGPT.split(';')[0]
+            }
+        // console.log(cookieSGPT)
+            res.cookie("sg-dummy","-")
+            res.cookie("sg-auth-SGPT",cookieSGPT)
+            console.log(`sg-auth-SGPT=${cookieSGPT}`)
+            rahkaranResult =await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/PlaceQuotation",
+            rahKaranFaktor,{"sg-auth-SGPT":cookieSGPT})
+        }
+        if(rahkaranResult&&rahkaranResult.status!="200"){
+            res.status(400).json({message:rahkaranResult})
+            return
+        }
+        const newFaktor = await faktor.create({...faktorData.faktorData,
+            InvoiceID:rahkaranResult.result})
+        const newFaktorItems = await faktorItems.create(faktorData.faktorItems)
+        const cartFound = await cart.deleteMany({userId:userId})
+
+        
+        res.json({rahkaranResult,message:"سفارش ثبت شد"})
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    } 
+})
+
+router.post('/list-faktor',auth,jsonParser,async (req,res)=>{
+    const userId = req.headers["userid"]
+    try{
+        const myFaktors = await faktor.find({userId:userId})
+        
+        res.json({data:myFaktors,success:true,message:"لیست سفارشات"})
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    } 
+})
+router.post('/fetch-faktor',auth,jsonParser,async (req,res)=>{
+    const userId = req.headers["userid"]
+    const faktorNo = req.body.faktorNo
+    try{
+        if(!faktorNo){
+            res.status(400).json({message:"کد سفارش وارد نشده است"})
+        }
+        const myFaktors = await faktor.findOne({userId:userId,faktorNo:faktorNo})
+        if(!myFaktors){
+            res.status(400).json({message:"سفارش یافت نشد "})
+        }
+        const myFaktorItems = await faktorItems.aggregate([
+            {$match:{faktorNo:faktorNo}},
+            {$lookup:{
+                from : "products", 
+                localField: "sku", 
+                foreignField: "sku", 
+                as : "productData"
+            }}
+        ])
+        res.json({data:myFaktors, faktorItems:myFaktorItems,
+            success:true,message:"اطلاعات سفارشات"})
     }
     catch(error){
         res.status(500).json({message: error.message})

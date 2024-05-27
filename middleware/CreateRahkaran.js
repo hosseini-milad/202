@@ -1,27 +1,23 @@
-const ProfileAccess = require("../models/auth/ProfileAccess");
-const customers = require("../models/auth/customers");
 
-var ObjectID = require('mongodb').ObjectID;
-
-const CreateRahkaran=async(data)=>{
-    const userData = await customers.findOne({_id:ObjectID(data.userId)})
+const CreateRahkaran=async(faktorData,faktorItems,userData)=>{
+    
     var items = []
-    for(var i=0;i<data.cartItems.length;i++)
+    for(var i=0;i<faktorItems.length;i++)
         items.push(
             {
                 "description":null,
                     "index":i,
-                    "productId":data.cartItems[i].id,
-                    "quantity":data.cartItems[i].count,
+                    "productId":faktorItems[i].ItemID,
+                    "quantity":faktorItems[i].count,
                     "salesAreaId":"1",
-                    "unitId":"7",
+                    "unitId":faktorItems[i].unitId,//7
                     "additionAmount":"0",
-                    "fee":"750000",
+                    "fee":faktorItems[i].price?faktorItems[i].price:"740000",
                     "freeProductPolicyConditionRowId":null,
                     "freeProductPolicyId":null,
-                    "netPrice":"75000",
+                    "netPrice":faktorItems[i].price?faktorItems[i].price:"740000",
                     "parentItemIndex":null,
-                    "price":"750000",
+                    "price":faktorItems[i].price?faktorItems[i].price:"740000",
                     "reductionAmount":"0",
                     "type":1,
                     "inventoryID":null,
@@ -39,7 +35,7 @@ const CreateRahkaran=async(data)=>{
           "brokerId":62,
             "currencyId":"1",
             "customerId":userData.customerID,
-            "date":`/Date(${data.progressDate})/`,
+            "date":`/Date(${faktorData.progressDate})/`,
             "description":null,
             "id":"-1",
             "inventoryId":"13",
@@ -52,9 +48,9 @@ const CreateRahkaran=async(data)=>{
             "salesOfficeId":"10001",
             "salesTypeId":"6",
             "additionAmount":"0",
-            "netPrice":"750000",
+            "netPrice":faktorData.totalPrice,
             "policyResults":[],
-            "price":"740000",
+            "price":faktorData.totalPrice,
             "reductionAmount":"0",
             "agentID":null,
             "oneTimeCustomerID":null,

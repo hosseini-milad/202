@@ -90,7 +90,7 @@ router.get('/auth-server', async (req,res)=>{
     catch(error){
         res.status(500).json({message: error.message})
     }
-})
+}) 
 
 router.post('/set-cookie', async (req,res)=>{
     res.cookie("name","data Sample Here")
@@ -108,15 +108,17 @@ router.post('/get-product', async (req,res)=>{
         const sepidarResult = await RahkaranPOST("/Sales/ProductManagement/Services/ProductManagementService.svc/GetProducts",
         {"PageSize":5},cookieData)
         const query=[]
-        
         var newProduct = [];
         var updateProduct = 0
         var notUpdateProduct = 0
         for(var i=0;i<sepidarResult.length;i++){
             var product = sepidarResult[i]
+            var unitId = product.units&&product.units[0]&&product.units[0].unitRef
+            
             var productQuery={
                 title:  product.name,
                 sku: product.number,
+                unitId:unitId,
                 ItemID:product.id,
                 active:product.stateTitle=="فعال"?true:false,
                 catId:product.partNature,
