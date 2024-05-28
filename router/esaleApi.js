@@ -239,8 +239,18 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
 
 router.post('/list-faktor',auth,jsonParser,async (req,res)=>{
     const userId = req.headers["userid"]
+    const search = req.body.search
     try{
-        const myFaktors = await faktor.find({userId:userId})
+        const myFaktors = await faktor.aggregate([
+            {$match:{userId:userId}},
+            { $match:search?{faktorNo:new RegExp('.*' + search + '.*')}:{}},
+            {$lookup:{
+                from : "faktorItems", 
+                localField: "faktorNo", 
+                foreignField: "faktorNo", 
+                as : "faktorItems"
+            }},
+        ])
         
         res.json({data:myFaktors,success:true,message:"لیست سفارشات"})
     }
