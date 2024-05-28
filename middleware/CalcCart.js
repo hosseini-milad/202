@@ -6,11 +6,10 @@ const CalcCart=async(userId)=>{
     const cartDetail = await cart.find({userId:userId}).lean()
     var cartPrice = 0;
     var cartTotal = 0;
-    console.log("detail: ",cartDetail)
     for(var i=0;i<cartDetail.length;i++){
         var price = parseInt(cartDetail[i].price)
         var productDetail = await products.findOne({sku:cartDetail[i].sku})
-        console.log(cartDetail[i].sku,productDetail)
+        
         cartDetail[i].productDetail=productDetail
         if(!price){
             cartDetail[i].price = 1250000
