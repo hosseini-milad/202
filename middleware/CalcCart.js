@@ -3,7 +3,7 @@ const products = require("../models/product/products");
 
 
 const CalcCart=async(userId)=>{
-    const cartDetail = (await cart.find({userId:userId}))
+    const cartDetail = await cart.find({userId:userId}).lean()
     var cartPrice = 0;
     var cartTotal = 0;
     console.log("detail: ",cartDetail)
