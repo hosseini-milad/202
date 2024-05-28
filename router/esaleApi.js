@@ -132,6 +132,7 @@ router.post('/list-category',jsonParser,async (req,res)=>{
 /*Carts*/
 router.get('/get-cart',auth,jsonParser,async (req,res)=>{
     const userId = req.headers["userid"]
+    console.log("start")
     try{
         const myCart = await CalcCart(userId)
         res.json(myCart)
