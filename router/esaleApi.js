@@ -230,7 +230,8 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
         const cartFound = await cart.deleteMany({userId:userId})
 
         
-        res.json({rahkaranResult,message:"سفارش ثبت شد"})
+        res.json({status:rahkaranResult&&rahkaranResult.status,
+            rahkaranResult,message:"سفارش ثبت شد"})
     }
     catch(error){
         res.status(500).json({message: error.message})
