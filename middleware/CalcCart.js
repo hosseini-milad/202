@@ -10,7 +10,7 @@ const CalcCart=async(userId)=>{
         var productDetail = await products.findOne({sku:cartDetail[i].sku})
         
         cartDetail[i].productDetail=productDetail
-        var price = parseInt(cartDetail[i].price)
+        var price = cartDetail[i].price&&parseInt(cartDetail[i].price)
         if(!price){
             cartDetail[i].price = 1250000
             price = 1250000
