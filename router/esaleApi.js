@@ -245,7 +245,7 @@ router.post('/list-faktor',auth,jsonParser,async (req,res)=>{
             {$match:{userId:userId}},
             { $match:search?{faktorNo:new RegExp('.*' + search + '.*')}:{}},
             {$lookup:{
-                from : "faktorItems", 
+                from : "faktoritems", 
                 localField: "faktorNo", 
                 foreignField: "faktorNo", 
                 as : "faktorItems"
