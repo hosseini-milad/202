@@ -135,7 +135,7 @@ router.get('/get-cart',auth,jsonParser,async (req,res)=>{
     console.log("start")
     try{
         const myCart = await CalcCart(userId)
-        res.json(myCart)
+        res.json({...myCart,message:"سبد خرید"})
     }
     catch(error){
         res.status(500).json({message: error.message})
