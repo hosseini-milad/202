@@ -212,7 +212,7 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
         //console.log(faktorData.faktorData,faktorData.faktorItems,userData)
         const rahKaranFaktor = await CreateRahkaran(faktorData.faktorData,faktorData.faktorItems,userData)
         //console.log(rahKaranFaktor)
-        var faktorData = ''
+        var faktorDetail = ''
         var rahkaranResult =  await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/PlaceQuotation",
             rahKaranFaktor,cookieData)
         if(!rahkaranResult) {
@@ -232,7 +232,7 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
                 res.status(400).json({message:rahkaranResult?rahkaranResult:"سرور راهکاران قطع است"})
                 return
             }
-            faktorData = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
+            faktorDetail = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
             JSON.stringify({
                 "PageSize":1,
                 "MasterEntityID":rahkaranResult.result
@@ -240,7 +240,7 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
         }
         
         const newFaktor = await faktor.create({...faktorData.faktorData,
-            InvoiceID:rahkaranResult.result,rahDetail:faktorData, status:"ثبت شده"})
+            InvoiceID:rahkaranResult.result,rahDetail:faktorDetail, status:"ثبت شده"})
         const newFaktorItems = await faktorItems.create(faktorData.faktorItems)
         const cartFound = await cart.deleteMany({userId:userId})
  
