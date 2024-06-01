@@ -238,6 +238,7 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
                 "PageSize":1,
                 "MasterEntityID":rahkaranResult.result
             }),{"sg-auth-SGPT":cookieSGPT})
+            console.log(faktorDetail)
             faktorItemsDetail = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotationItems",
             JSON.stringify({
                 "PageSize":1,
