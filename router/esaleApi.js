@@ -275,7 +275,7 @@ router.post('/list-faktor',auth,jsonParser,async (req,res)=>{
                 localField: "faktorNo", 
                 foreignField: "faktorNo", 
                 as : "faktorItems"
-            }},
+            }},{$sort:{progressDate:-1}}
         ])
         
         res.status(200).json({data:myFaktors,success:true,message:"لیست سفارشات"})
