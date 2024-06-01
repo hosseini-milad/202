@@ -2,8 +2,8 @@ var tax = process.env.TaxRate
 
 const PriceCount=(price,count)=>{
     if(!price) return(0)
-    const priceFloat = parseFloat(price)
-    const count = parseFloat(count)
+    const priceFloat = 0//parseFloat(price)
+    const count = 0//parseFloat(count)
     const newPrice = priceFloat*count
     return(parseInt(newPrice))
 }
