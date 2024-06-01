@@ -45,7 +45,7 @@ router.post('/fetch-product',jsonParser,async (req,res)=>{
         const filterList = catData&&catData.length&&
             await Filters.find({"category._id":catData._id.toString()})
        
-        res.json({filter:productData,brandList:brandList,categoryList:categoryList,
+        res.status(200).json({filter:productData,brandList:brandList,categoryList:categoryList,
         brandData:brandData,catData:catData,filterList:filterList})
     }
     catch(error){
@@ -81,7 +81,7 @@ router.post('/list-product',jsonParser,async (req,res)=>{
             
             const typeUnique = [...new Set(productList.map((item) => item.category))];
             
-           res.json({data:products,type:typeUnique,
+           res.status(200).json({data:products,type:typeUnique,
             size:productList.length,success:true})
     }
     catch(error){
@@ -101,7 +101,7 @@ router.post('/fetch-category',jsonParser,async (req,res)=>{
         }
         const catData = await category.findOne({_id: ObjectID(catId)})
         const catList = await category.find()
-       res.json({filter:catData,options:catList})
+       res.status(200).json({filter:catData,options:catList})
     }
     catch(error){
         res.status(500).json({message: error.message})
@@ -126,7 +126,7 @@ router.post('/list-category',jsonParser,async (req,res)=>{
                 (parseInt(offset)+parseInt(pageSize)))  
             const typeUnique = [...new Set(cats.map((item) => item.category))];
             
-           res.json({filter:cats,type:typeUnique,
+           res.status(200).json({filter:cats,type:typeUnique,
             size:cats.length})
     }
     catch(error){
@@ -139,7 +139,7 @@ router.get('/get-cart',auth,jsonParser,async (req,res)=>{
     console.log("start")
     try{
         const myCart = await CalcCart(userId)
-        res.json({...myCart,message:"سبد خرید"})
+        res.status(200).json({...myCart,message:"سبد خرید"})
     }
     catch(error){
         res.status(500).json({message: error.message})
@@ -168,7 +168,7 @@ router.post('/add-cart',auth,jsonParser,async (req,res)=>{
         await cart.create({...data,userId:userId})
         
         const myCart = await CalcCart(userId)
-        res.json({...myCart,message:"آیتم اضافه شد"})
+        res.status(200).json({...myCart,message:"آیتم اضافه شد"})
     }
     catch(error){
         res.status(500).json({message: error.message})
@@ -184,7 +184,7 @@ router.post('/remove-cart-item',auth,jsonParser,async (req,res)=>{
         const cartFound = await cart.deleteOne({userId:userId,sku:sku})
         
         const myCart = await CalcCart(userId)
-        res.json({...myCart,message:"آیتم حذف شد"})
+        res.status(200).json({...myCart,message:"آیتم حذف شد"})
     }
     catch(error){
         res.status(500).json({message: error.message})
@@ -238,7 +238,7 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
         const cartFound = await cart.deleteMany({userId:userId})
 
         
-        res.json({status:rahkaranResult&&rahkaranResult.status,
+        res.status(200).json({status:rahkaranResult&&rahkaranResult.status,
             rahkaranResult,message:"سفارش ثبت شد"})
     }
     catch(error){
@@ -261,7 +261,7 @@ router.post('/list-faktor',auth,jsonParser,async (req,res)=>{
             }},
         ])
         
-        res.json({data:myFaktors,success:true,message:"لیست سفارشات"})
+        res.status(200).json({data:myFaktors,success:true,message:"لیست سفارشات"})
     }
     catch(error){
         res.status(500).json({message: error.message})
@@ -287,7 +287,7 @@ router.post('/fetch-faktor',auth,jsonParser,async (req,res)=>{
                 as : "productData"
             }}
         ])
-        res.json({data:myFaktors, faktorItems:myFaktorItems,
+        res.status(200).json({data:myFaktors, faktorItems:myFaktorItems,
             success:true,message:"اطلاعات سفارشات"})
     }
     catch(error){

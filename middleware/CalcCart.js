@@ -1,5 +1,6 @@
 const cart = require("../models/product/cart");
 const products = require("../models/product/products");
+const PriceCount = require("./PriceCount");
 
 
 const CalcCart=async(userId)=>{
@@ -21,7 +22,11 @@ const CalcCart=async(userId)=>{
         cartTotal += parseInt(cartDetail[i].count)
     }
     return({cart:cartDetail,cartDetail:
-        {cartPrice:cartPrice,cartCount:cartTotal}})
+        {cartPrice:cartPrice,
+        cartDiscount:0,
+        cartTax:PriceCount(cartPrice,.1),
+        cartTotal:PriceCount(cartPrice,1.1),
+        cartCount:cartTotal}})
 }
 
 module.exports =CalcCart
