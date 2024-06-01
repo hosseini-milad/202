@@ -233,7 +233,7 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
             return
         }
         const newFaktor = await faktor.create({...faktorData.faktorData,
-            InvoiceID:rahkaranResult.result})
+            InvoiceID:rahkaranResult.result,status:"ثبت شده"})
         const newFaktorItems = await faktorItems.create(faktorData.faktorItems)
         const cartFound = await cart.deleteMany({userId:userId})
 
