@@ -212,6 +212,7 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
         //console.log(faktorData.faktorData,faktorData.faktorItems,userData)
         const rahKaranFaktor = await CreateRahkaran(faktorData.faktorData,faktorData.faktorItems,userData)
         //console.log(rahKaranFaktor)
+        var faktorData = ''
         var rahkaranResult =  await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/PlaceQuotation",
             rahKaranFaktor,cookieData)
         if(!rahkaranResult) {
@@ -227,16 +228,22 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
             console.log(`sg-auth-SGPT=${cookieSGPT}`)
             rahkaranResult =await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/PlaceQuotation",
             rahKaranFaktor,{"sg-auth-SGPT":cookieSGPT})
+            if(!rahkaranResult||rahkaranResult.status!="200"){
+                res.status(400).json({message:rahkaranResult?rahkaranResult:"سرور راهکاران قطع است"})
+                return
+            }
+            faktorData = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
+            JSON.stringify({
+                "PageSize":1,
+                "MasterEntityID":rahkaranResult.result
+            }),{"sg-auth-SGPT":cookieSGPT})
         }
-        if(!rahkaranResult||rahkaranResult.status!="200"){
-            res.status(400).json({message:rahkaranResult?rahkaranResult:"سرور راهکاران قطع است"})
-            return
-        }
+        
         const newFaktor = await faktor.create({...faktorData.faktorData,
-            InvoiceID:rahkaranResult.result,status:"ثبت شده"})
+            InvoiceID:rahkaranResult.result,rahDetail:faktorData, status:"ثبت شده"})
         const newFaktorItems = await faktorItems.create(faktorData.faktorItems)
         const cartFound = await cart.deleteMany({userId:userId})
-
+ 
         
         res.status(200).json({status:rahkaranResult&&rahkaranResult.status,
             rahkaranResult,message:"سفارش ثبت شد"})
