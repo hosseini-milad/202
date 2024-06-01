@@ -6,6 +6,7 @@ const { RAHKARAN_URL} = process.env;
 
 const RahkaranPOST=async(url,data,cookie)=>{
     var cookieData = CookieToText(cookie)
+    
     if(!cookieData){
         
         return('')
@@ -18,10 +19,10 @@ const RahkaranPOST=async(url,data,cookie)=>{
         headers:{"Content-Type":"application/json",
         cookie:cookieData}
     }
-    //console.log(postOptions)
     try{    
         response = await fetch(RAHKARAN_URL+url,postOptions);
         const status = response.status
+        
         const result = await response.json();
         return({status:status,result})
     }

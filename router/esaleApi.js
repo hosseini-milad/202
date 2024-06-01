@@ -10,6 +10,7 @@ var ObjectID = require('mongodb').ObjectID;
 const { OLD_SITE_URL,API_PORT,StockId,SaleType} = process.env;
 var im = require('imagemagick');
 const resizeImg = require('resize-img');
+const unitSchema = require("../models/product/units")
  
 const ServiceSchema = require('../models/product/Services');
 const ProductSchema = require('../models/product/products');
@@ -69,11 +70,14 @@ router.post('/list-product',jsonParser,async (req,res)=>{
             { $match:data.category?{category:data.category}:{}},
             { $match:(data.active&&data.active=="deactive")?{}:{catId:{$nin:["1","3","4","5"]}}},
             
-            {$lookup:{from : "units", 
-            localField: "unitId", foreignField: "id", as : "unitInfo"}},
+            
             ])
             const products = productList.slice(offset,
-                (parseInt(offset)+parseInt(pageSize)))  
+                (parseInt(offset)+parseInt(pageSize))) 
+            for(var i=0;i<products.length;i++){
+                const unit = await unitSchema.findOne({id:products[i].unitId})
+                products[i].unitName = unit?unit.title:''
+            } 
             
             const typeUnique = [...new Set(productList.map((item) => item.category))];
             
@@ -198,8 +202,12 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
         const myCart = await CalcCart(userId)
 
         const faktorData = await CalcFaktor(myCart,userData)
+        
         if(!faktorData){
             res.status(400).json({message:"خطا در سبد خرید"})
+        }
+        if(!faktorData.faktorItems||!faktorData.faktorItems.length){
+            res.status(400).json({message:"سبد خرید خالی است"})
         }
         //console.log(faktorData.faktorData,faktorData.faktorItems,userData)
         const rahKaranFaktor = await CreateRahkaran(faktorData.faktorData,faktorData.faktorItems,userData)
@@ -220,8 +228,8 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
             rahkaranResult =await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/PlaceQuotation",
             rahKaranFaktor,{"sg-auth-SGPT":cookieSGPT})
         }
-        if(rahkaranResult&&rahkaranResult.status!="200"){
-            res.status(400).json({message:rahkaranResult})
+        if(!rahkaranResult||rahkaranResult.status!="200"){
+            res.status(400).json({message:rahkaranResult?rahkaranResult:"سرور راهکاران قطع است"})
             return
         }
         const newFaktor = await faktor.create({...faktorData.faktorData,

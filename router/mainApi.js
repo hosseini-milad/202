@@ -29,6 +29,8 @@ const updateLog = require('../models/product/updateLog');
 const RahkaranLogin = require('../middleware/RahkaranLogin');
 const RahkaranGET = require('../middleware/RahkaranGet');
 const RahkaranPOST = require('../middleware/RahkaranPOST');
+const faktor = require('../models/product/faktor');
+const { Cookie } = require('tough-cookie');
 const { ONLINE_URL,RAHKARAN_URL} = process.env;
  
 router.get('/main', async (req,res)=>{
@@ -106,6 +108,92 @@ router.post('/get-product', async (req,res)=>{
     const cookieData = req.cookies
     try{
         const sepidarResultRaw = await RahkaranPOST("/Sales/ProductManagement/Services/ProductManagementService.svc/GetProducts",
+        {"PageSize":5},cookieData)
+        const query=[]
+        var newProduct = [];
+        var updateProduct = 0
+        var notUpdateProduct = 0
+        var unitIds = []
+        var sepidarResult=sepidarResultRaw&&sepidarResultRaw.result
+        for(var i=0;i<sepidarResult.length;i++){
+            var product = sepidarResult[i]
+            var unitId = product.units&&product.units[0]&&product.units[0].unitRef
+            unitIds.push(unitId)
+            var productQuery={
+                title:  product.name,
+                sku: product.number,
+                unitId:unitId,
+                ItemID:product.id,
+                active:product.stateTitle=="فعال"?true:false,
+                catId:product.partNature,
+                catTitle:product.partNatureTitle
+            }
+            const productResult = await products.updateOne({
+                ItemID:product.id},{$set:productQuery})
+        
+            var modified = productResult.modifiedCount
+            var matched = productResult.matchedCount
+            if(matched){ notUpdateProduct++}
+            if(modified){updateProduct++}
+            if(!matched){
+            const createResult = await products.create(
+                productQuery
+            )
+                newProduct.push(productQuery.sku)
+            }
+        }
+        
+        await updateLog.create({
+            updateQuery: "sepidar-product" ,
+            date:Date.now()
+        })
+        res.json({sepidar:{new:newProduct,update:updateProduct,notUpdate:notUpdateProduct},
+            unitIds:unitIds,
+            message:"محصولات بروز شدند"})
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    }
+})
+router.get('/get-faktors-auth', async (req,res)=>{
+    const loginResult = await fetch(ONLINE_URL+"/auth-server",
+        {method: 'GET'});
+    console.log(loginResult)
+    await fetch(ONLINE_URL+"/get-faktors",
+        {method: 'GET'}); 
+})
+router.get('/get-faktors', async (req,res)=>{
+    const cookieData = req.cookies
+    console.log(req.cookies)
+    try{
+        var faktorList = await faktor.find({status:{$in:["ثبت شده","ویرایش شده","تایید شده","لغو شده"]}})
+        var rahkaranOut=[]
+        for(var i=0;i<faktorList.length;i++){
+        
+            var sepidarResult = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
+            {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":5,},cookieData)
+            if(!sepidarResult) {
+                const loginData = await RahkaranLogin()
+                var cookieSGPT = '';
+                if(loginData){
+                    cookieSGPT = loginData.split('SGPT=')[1]
+                    cookieSGPT = cookieSGPT.split(';')[0]
+                }
+            // console.log(cookieSGPT)
+                res.cookie("sg-dummy","-")
+                res.cookie("sg-auth-SGPT",cookieSGPT)
+                sepidarResult = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
+                {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":5,},{"sg-auth-SGPT":cookieSGPT})
+            }
+            if(sepidarResult)
+                rahkaranOut.push(sepidarResult)
+            else
+                console.log(sepidarResult)
+        }
+
+        res.json(rahkaranOut)
+        return
+        const sepidarResultRaw = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
         {"PageSize":5},cookieData)
         const query=[]
         var newProduct = [];

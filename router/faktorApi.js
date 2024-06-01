@@ -998,6 +998,7 @@ router.post('/quick-to-cart',jsonParser, async (req,res)=>{
         data.cartItems = quickCartItems
         //data.cartItems =pureCartPrice(quickCartItems,qCartData.payValue)
         data.cartNo = await NewCode("c")
+        data.status="ثبت شده"
         data.stockId = qCartData&&qCartData.stockId
         //cartLog.create({...data,ItemID:req.body.cartID,action:"quick to cart"})
         //await cart.create(data)

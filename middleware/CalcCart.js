@@ -8,7 +8,7 @@ const CalcCart=async(userId)=>{
     var cartTotal = 0;
     for(var i=0;i<cartDetail.length;i++){
         var productDetail = await products.findOne({sku:cartDetail[i].sku})
-        
+        cartDetail[i].title=productDetail.title
         cartDetail[i].productDetail=productDetail
         var price = cartDetail[i].price&&parseInt(cartDetail[i].price)
         if(!price){
