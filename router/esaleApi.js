@@ -213,6 +213,7 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
         const rahKaranFaktor = await CreateRahkaran(faktorData.faktorData,faktorData.faktorItems,userData)
         //console.log(rahKaranFaktor)
         var faktorDetail = ''
+        var faktorItemsDetail = []
         var rahkaranResult =  await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/PlaceQuotation",
             rahKaranFaktor,cookieData)
         if(!rahkaranResult) {
@@ -237,10 +238,18 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
                 "PageSize":1,
                 "MasterEntityID":rahkaranResult.result
             }),{"sg-auth-SGPT":cookieSGPT})
+            faktorItemsDetail = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotationItems",
+            JSON.stringify({
+                "PageSize":1,
+                "MasterEntityID":rahkaranResult.result
+            }),{"sg-auth-SGPT":cookieSGPT})
         }
         
         const newFaktor = await faktor.create({...faktorData.faktorData,
-            InvoiceID:rahkaranResult.result,rahDetail:faktorDetail, status:"ثبت شده"})
+            InvoiceID:rahkaranResult.result,
+            rahDetail:faktorDetail,
+            rahItems:faktorItemsDetail,
+             status:"ثبت شده"})
         const newFaktorItems = await faktorItems.create(faktorData.faktorItems)
         const cartFound = await cart.deleteMany({userId:userId})
  

@@ -14,6 +14,8 @@ const FaktorSchema = new Schema({
     totalPrice:{ type: String },
     InvoiceID:{ type: String },
     InvoiceNumber:{ type: String },
+    rahDetail:{ type: Object },
+    rahItems:{ type:Object },
     status:{type:String}
 })
 module.exports = mongoose.model('faktor',FaktorSchema);
