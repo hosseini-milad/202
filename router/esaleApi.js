@@ -234,16 +234,16 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
                 return
             }
             faktorDetail = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
-            JSON.stringify({
+            {
                 "PageSize":1,
                 "MasterEntityID":rahkaranResult.result
-            }),{"sg-auth-SGPT":cookieSGPT})
+            },{"sg-auth-SGPT":cookieSGPT})
             console.log(faktorDetail)
             faktorItemsDetail = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotationItems",
-            JSON.stringify({
+            {
                 "PageSize":1,
                 "MasterEntityID":rahkaranResult.result
-            }),{"sg-auth-SGPT":cookieSGPT})
+            },{"sg-auth-SGPT":cookieSGPT})
         }
         
         const newFaktor = await faktor.create({...faktorData.faktorData,
