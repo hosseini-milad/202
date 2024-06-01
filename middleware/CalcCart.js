@@ -24,8 +24,8 @@ const CalcCart=async(userId)=>{
     return({cart:cartDetail,cartDetail:
         {cartPrice:cartPrice,
         cartDiscount:0,
-        cartTax:0,//PriceCount(cartPrice,.1),
-        cartTotal:cartPrice,//PriceCount(cartPrice,1.1),
+        cartTax:PriceCount(cartPrice,.1),
+        cartTotal:PriceCount(cartPrice,1.1),
         cartCount:cartTotal}})
 }
 
