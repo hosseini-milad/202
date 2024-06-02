@@ -205,6 +205,27 @@ router.post('/remove-cart-item',auth,jsonParser,async (req,res)=>{
         res.status(500).json({message: error.message})
     } 
 })
+router.post('/update-cart-item',auth,jsonParser,async (req,res)=>{
+    const userId = req.headers["userid"]
+    const sku = req.body.sku
+    const count = req.body.count
+    try{
+        if(!sku){
+            res.status(400).json({message:"کد محصول وارد نشده است"})
+        }
+        if(!count){
+            res.status(400).json({message:"تعداد محصول وارد نشده است"})
+        }
+        const cartFound = await cart.updateOne(
+            {userId:userId,sku:sku},{$set:{count:count}})
+        
+        const myCart = await CalcCart(userId)
+        res.status(200).json({...myCart,message:"آیتم بروز شد"})
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    } 
+})
 
 router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
     const cookieData = req.cookies
@@ -292,6 +313,7 @@ router.post('/list-faktor',auth,jsonParser,async (req,res)=>{
                 as : "faktorItems"
             }},{$sort:{progressDate:-1}}
         ])
+        
         
         res.status(200).json({data:myFaktors,success:true,message:"لیست سفارشات"})
     }
