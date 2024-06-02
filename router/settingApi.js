@@ -172,7 +172,7 @@ router.post('/delete-doc',jsonParser,auth,async (req,res)=>{
 })
 
 
-router.post('/list-notif',jsonParser,async (req,res)=>{
+router.post('/list-news',jsonParser,async (req,res)=>{
     try{
         var result = await notif.find();
        
@@ -185,7 +185,7 @@ router.post('/list-notif',jsonParser,async (req,res)=>{
     } 
 })
 
-router.post('/fetch-notif',jsonParser,async (req,res)=>{
+router.post('/fetch-news',jsonParser,async (req,res)=>{
     const notifCode = req.body.notifCode
     try{
         var result = notifCode?await notif.findOne({enTitle:notifCode}):'';
@@ -198,7 +198,7 @@ router.post('/fetch-notif',jsonParser,async (req,res)=>{
     } 
 })
 
-router.post('/update-notif',jsonParser,async (req,res)=>{
+router.post('/update-news',jsonParser,async (req,res)=>{
     var notifCode = req.body.notifCode
     if(notifCode==="new") notifCode = ""
     const data = req.body
@@ -214,7 +214,7 @@ router.post('/update-notif',jsonParser,async (req,res)=>{
         res.status(500).json({message: error.message})
     } 
 })
-router.post('/show-notif',jsonParser,async (req,res)=>{
+router.post('/show-news',jsonParser,async (req,res)=>{
     var userId = req.headers["userid"]
     const notifCode = req.body.notifCode
 
