@@ -26,6 +26,7 @@ const CreateRahkaran = require('../middleware/CreateRahkaran');
 const RahkaranPOST = require('../middleware/RahkaranPOST');
 const RahkaranLogin = require('../middleware/RahkaranLogin');
 const faktor = require('../models/product/faktor');
+const unitItems = require('../models/product/units');
 const faktorItems = require('../models/product/faktorItem');
 
 /*Product*/
@@ -41,7 +42,7 @@ router.post('/fetch-product',jsonParser,async (req,res)=>{
         const categoryList = await category.find({})
         const brandData = brandList.find(item=>item.brandCode==productData.brandId)
         const catData = categoryList.find(item=>item.catCode==productData.catId)
-        console.log(catData)
+        //console.log(catData)
         const filterList = catData&&catData.length&&
             await Filters.find({"category._id":catData._id.toString()})
        
@@ -52,6 +53,15 @@ router.post('/fetch-product',jsonParser,async (req,res)=>{
         res.status(500).json({message: error.message})
     } 
 })
+router.get('/list-units',jsonParser,async (req,res)=>{
+    try{
+        const unitList = await unitItems.find({})
+        res.status(200).json({data:unitList,message:"لیست دسته بندی ها"})
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    }
+})
 router.post('/list-product',jsonParser,async (req,res)=>{
     var pageSize = req.body.pageSize?req.body.pageSize:"10";
     var offset = req.body.offset?(parseInt(req.body.offset)):0;
@@ -59,17 +69,22 @@ router.post('/list-product',jsonParser,async (req,res)=>{
         category:req.body.category,
         title:req.body.title,
         sku:req.body.sku,
-        brand:req.body.brand,
+        unitId:req.body.unitId,
         active:req.body.active,
         offset:req.body.offset,
+        search:req.body.search,
         pageSize:pageSize
     }
         const productList = await ProductSchema.aggregate([
             { $match:data.title?{title:new RegExp('.*' + data.title + '.*')}:{}},
             { $match:data.sku?{sku:new RegExp('.*' + data.sku + '.*')}:{}},
-            { $match:data.category?{category:data.category}:{}},
+            { $match:data.unitId?{unitId:data.unitId}:{}},
             { $match:(data.active&&data.active=="deactive")?{}:{catId:{$nin:["1","3","4","5"]}}},
-            
+            { $match:data.search?{$or:[
+                {title:new RegExp('.*' + data.search + '.*')},
+                {sku:new RegExp('.*' + data.search + '.*')}
+            ]}:{}},
+
             
             ])
             const products = productList.slice(offset,

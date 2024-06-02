@@ -246,7 +246,6 @@ router.post('/get-customers', async (req,res)=>{
     try{
         var sepidarResult = await RahkaranPOST("/Sales/PartyManagement/Services/PartyManagementService.svc/GetCustomerList",
         req.body,cookieData)
-
         if(!sepidarResult) {
             const loginData = await RahkaranLogin()
             var cookieSGPT = '';
@@ -267,6 +266,7 @@ router.post('/get-customers', async (req,res)=>{
         var notUpdateCustomer = 0
         for(var i=0;i<sepidarResult.length;i++){
             var customer = sepidarResult[i]
+            console.log(customer)
             var phone = customer.Tel
             try{
                 if(!phone) phone =customer.Addresses[0].Tel
