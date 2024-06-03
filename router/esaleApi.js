@@ -28,6 +28,7 @@ const RahkaranLogin = require('../middleware/RahkaranLogin');
 const faktor = require('../models/product/faktor');
 const unitItems = require('../models/product/units');
 const faktorItems = require('../models/product/faktorItem');
+const products = require('../models/product/products');
 
 /*Product*/
 router.post('/fetch-product',jsonParser,async (req,res)=>{
@@ -262,7 +263,7 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
         // console.log(cookieSGPT)
             res.cookie("sg-dummy","-")
             res.cookie("sg-auth-SGPT",cookieSGPT)
-            console.log(`sg-auth-SGPT=${cookieSGPT}`)
+            //console.log(`sg-auth-SGPT=${cookieSGPT}`)
             rahkaranResult =await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/PlaceQuotation",
             rahKaranFaktor,{"sg-auth-SGPT":cookieSGPT})
             if(!rahkaranResult||rahkaranResult.status!="200"){
@@ -274,7 +275,7 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
                 "PageSize":1,
                 "MasterEntityID":rahkaranResult.result
             },{"sg-auth-SGPT":cookieSGPT})
-            console.log(faktorDetail)
+            //console.log(faktorDetail)
             faktorItemsDetail = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotationItems",
             {
                 "PageSize":1,
@@ -313,9 +314,18 @@ router.post('/list-faktor',auth,jsonParser,async (req,res)=>{
                 as : "faktorItems"
             }},{$sort:{progressDate:-1}}
         ])
+        var finalFaktor = []
+        for(var i=0;i<myFaktors.length;i++){
+            var faktorList=[]
+            var faktorData = myFaktors[i].faktorItems
+            for(var j=0;j<faktorData.length;j++){
+                var faktorTitle = await products.findOne({sku:faktorData[j].sku})
+                faktorList.push({...faktorData[j],title:faktorTitle.title})
+            }
+            finalFaktor.push({...myFaktors[i],faktorItems:faktorList})
+        }
         
-        
-        res.status(200).json({data:myFaktors,success:true,message:"لیست سفارشات"})
+        res.status(200).json({data:finalFaktor,success:true,message:"لیست سفارشات"})
     }
     catch(error){
         res.status(500).json({message: error.message})
