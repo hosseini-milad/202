@@ -31,6 +31,7 @@ const RahkaranGET = require('../middleware/RahkaranGet');
 const RahkaranPOST = require('../middleware/RahkaranPOST');
 const faktor = require('../models/product/faktor');
 const { Cookie } = require('tough-cookie');
+const ordersLogs = require('../models/orders/ordersLogs');
 const { ONLINE_URL,RAHKARAN_URL} = process.env;
  
 router.get('/main', async (req,res)=>{
@@ -191,52 +192,16 @@ router.get('/get-faktors', async (req,res)=>{
             else
                 console.log(sepidarResult)
         }
-
-        res.json(rahkaranOut)
-        return
-        const sepidarResultRaw = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
-        {"PageSize":5},cookieData)
-        const query=[]
-        var newProduct = [];
-        var updateProduct = 0
-        var notUpdateProduct = 0
-        var unitIds = []
-        var sepidarResult=sepidarResultRaw&&sepidarResultRaw.result
-        for(var i=0;i<sepidarResult.length;i++){
-            var product = sepidarResult[i]
-            var unitId = product.units&&product.units[0]&&product.units[0].unitRef
-            unitIds.push(unitId)
-            var productQuery={
-                title:  product.name,
-                sku: product.number,
-                unitId:unitId,
-                ItemID:product.id,
-                active:product.stateTitle=="فعال"?true:false,
-                catId:product.partNature,
-                catTitle:product.partNatureTitle
-            }
-            const productResult = await products.updateOne({
-                ItemID:product.id},{$set:productQuery})
-        
-            var modified = productResult.modifiedCount
-            var matched = productResult.matchedCount
-            if(matched){ notUpdateProduct++}
-            if(modified){updateProduct++}
-            if(!matched){
-            const createResult = await products.create(
-                productQuery
-            )
-                newProduct.push(productQuery.sku)
+        for(var i=0;i<rahkaranOut.length;i++){
+            if(rahkaranOut[i]&&rahkaranOut[i].State == 2){
+                await ordersLogs.create({status:"تایید شده",orderNo:rahkaranOut[i].ID})
+                await faktor.updateOne({InvoiceID:rahkaranOut[i].ID},
+                    {$set:{status:"تایید شده"}}
+                )
             }
         }
-        
-        await updateLog.create({
-            updateQuery: "sepidar-product" ,
-            date:Date.now()
-        })
-        res.json({sepidar:{new:newProduct,update:updateProduct,notUpdate:notUpdateProduct},
-            unitIds:unitIds,
-            message:"محصولات بروز شدند"})
+        res.json(rahkaranOut)
+        return
     }
     catch(error){
         res.status(500).json({message: error.message})
