@@ -29,6 +29,7 @@ const faktor = require('../models/product/faktor');
 const unitItems = require('../models/product/units');
 const faktorItems = require('../models/product/faktorItem');
 const products = require('../models/product/products');
+const RahNewFaktor = require('../middleware/RahNewFaktor');
 
 /*Product*/
 router.post('/fetch-product',jsonParser,async (req,res)=>{
@@ -253,6 +254,20 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
         var faktorItemsDetail = []
         var rahkaranResult =  await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/PlaceQuotation",
             rahKaranFaktor,cookieData)
+        //var rahkaranFaktor = ''
+        if(rahkaranResult&&rahkaranResult.result){
+            faktorDetail = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
+            {
+                "PageSize":1,
+                "MasterEntityID":rahkaranResult.result
+            },cookieData)
+            //console.log(faktorDetail)
+            faktorItemsDetail = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotationItems",
+            {
+                "PageSize":1,
+                "MasterEntityID":rahkaranResult.result
+            },cookieData)
+        }
         if(!rahkaranResult) {
             const loginData = await RahkaranLogin()
             var cookieSGPT = '';
@@ -282,18 +297,18 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
                 "MasterEntityID":rahkaranResult.result
             },{"sg-auth-SGPT":cookieSGPT})
         }
-        
-        const newFaktor = await faktor.create({...faktorData.faktorData,
-            InvoiceID:rahkaranResult.result,
+        const RahFaktorData = await RahNewFaktor(faktorData,faktorDetail,faktorItemsDetail,userData)
+        const newFaktor = await faktor.create({...RahFaktorData.mainData,
+            //InvoiceID:rahkaranResult.result,
             rahDetail:faktorDetail,
             rahItems:faktorItemsDetail,
              status:"ثبت شده"})
-        const newFaktorItems = await faktorItems.create(faktorData.faktorItems)
-        const cartFound = await cart.deleteMany({userId:userId})
+        const newFaktorItems = await faktorItems.create(RahFaktorData.itemData)
+        //const cartFound = await cart.deleteMany({userId:userId})
  
         
         res.status(200).json({status:rahkaranResult&&rahkaranResult.status,
-            rahkaranResult,message:"سفارش ثبت شد"})
+            rahkaranResult,message:"سفارش ثبت شد",log:RahFaktorData})
     }
     catch(error){
         res.status(500).json({message: error.message})
@@ -357,6 +372,15 @@ router.post('/fetch-faktor',auth,jsonParser,async (req,res)=>{
     catch(error){
         res.status(500).json({message: error.message})
     } 
+})
+router.get('/sliders', async (req,res)=>{
+    try{
+        const SlidersList = await slider.find()
+        res.json({data:SlidersList,message:"slider list"})
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    }
 })
 
 module.exports = router;

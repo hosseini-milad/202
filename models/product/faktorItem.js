@@ -10,6 +10,7 @@ const FaktorItemSchema = new Schema({
     payValue:{ type: String },
     stockId:{type:String},
     description:{type:String},
+    originData:{type:Object},
     price:{type:String},
     totalPrice:{type:String},
     count:{type:Number},

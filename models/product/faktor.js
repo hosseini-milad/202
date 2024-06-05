@@ -8,7 +8,7 @@ const FaktorSchema = new Schema({
     progressDate: { type: Date },
     userId:{ type: String },
     customerID:{ type: String },
-
+    originData:{type:Object},
     totalCount:{ type: String },
     totalDiscount:{ type: String },
     totalPrice:{ type: String },

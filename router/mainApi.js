@@ -184,9 +184,10 @@ router.get('/get-faktors', async (req,res)=>{
                 res.cookie("sg-auth-SGPT",cookieSGPT)
                 sepidarResult = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
                 {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":5,},{"sg-auth-SGPT":cookieSGPT})
+
             }
             if(sepidarResult)
-                rahkaranOut.push(sepidarResult)
+                rahkaranOut.push(sepidarResult.result[0])
             else
                 console.log(sepidarResult)
         }

@@ -22,7 +22,7 @@ const RahkaranPOST=async(url,data,cookie)=>{
     try{    
         response = await fetch(RAHKARAN_URL+url,postOptions);
         const status = response.status
-        console.log(response)
+        
         const result = await response.json();
         return({status:status,result})
     }
