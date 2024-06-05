@@ -30,6 +30,7 @@ const unitItems = require('../models/product/units');
 const faktorItems = require('../models/product/faktorItem');
 const products = require('../models/product/products');
 const RahNewFaktor = require('../middleware/RahNewFaktor');
+const slider = require('../models/main/slider');
 
 /*Product*/
 router.post('/fetch-product',jsonParser,async (req,res)=>{
