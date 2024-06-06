@@ -7,6 +7,8 @@ const FaktorItemSchema = new Schema({
     sku:  { type : String },
     initDate: { type: Date, default: Date.now },
     progressDate: { type: Date },
+    totalAddition:{ type: String },
+    netPrice:{ type: String },
     payValue:{ type: String },
     stockId:{type:String},
     description:{type:String},

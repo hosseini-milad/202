@@ -242,7 +242,7 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
 
         const faktorData = await CalcFaktor(myCart,userData)
         
-        if(!faktorData){
+        if(!faktorData){ 
             res.status(400).json({message:"خطا در سبد خرید"})
         }
         if(!faktorData.faktorItems||!faktorData.faktorItems.length){
@@ -303,7 +303,8 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
             //InvoiceID:rahkaranResult.result,
             rahDetail:faktorDetail,
             rahItems:faktorItemsDetail,
-             status:"ثبت شده"})
+            active:true,
+            status:"ثبت شده"})
         const newFaktorItems = await faktorItems.create(RahFaktorData.itemData)
         //const cartFound = await cart.deleteMany({userId:userId})
  
