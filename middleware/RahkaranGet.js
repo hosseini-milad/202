@@ -13,7 +13,6 @@ const RahkaranGET=async(url)=>{
         return({result:result})
     }
     catch(error){ 
-        console.log(error)
         return(error)
     }
     return(sessionData)

@@ -1,3 +1,5 @@
+const MultiPrice = require("./MultiPrice")
+const NormalTax = require("./NormalTax")
 
 const CreateRahkaran=async(faktorData,faktorItems,userData)=>{
     
@@ -11,7 +13,7 @@ const CreateRahkaran=async(faktorData,faktorItems,userData)=>{
                     "quantity":faktorItems[i].count,
                     "salesAreaId":"1",
                     "unitId":faktorItems[i].unitId,//7
-                    "additionAmount":"0",
+                    "additionAmount":NormalTax(MultiPrice(faktorItems[i].price,faktorItems[i].count)),
                     "fee":faktorItems[i].price?faktorItems[i].price:"740000",
                     "freeProductPolicyConditionRowId":null,
                     "freeProductPolicyId":null,

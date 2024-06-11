@@ -28,6 +28,9 @@ const RahkaranLogin = require('../middleware/RahkaranLogin');
 const faktor = require('../models/product/faktor');
 const unitItems = require('../models/product/units');
 const faktorItems = require('../models/product/faktorItem');
+const products = require('../models/product/products');
+const RahNewFaktor = require('../middleware/RahNewFaktor');
+const slider = require('../models/main/slider');
 
 /*Product*/
 router.post('/fetch-product',jsonParser,async (req,res)=>{
@@ -239,7 +242,7 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
 
         const faktorData = await CalcFaktor(myCart,userData)
         
-        if(!faktorData){
+        if(!faktorData){ 
             res.status(400).json({message:"خطا در سبد خرید"})
         }
         if(!faktorData.faktorItems||!faktorData.faktorItems.length){
@@ -252,6 +255,20 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
         var faktorItemsDetail = []
         var rahkaranResult =  await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/PlaceQuotation",
             rahKaranFaktor,cookieData)
+        //var rahkaranFaktor = ''
+        if(rahkaranResult&&rahkaranResult.result){
+            faktorDetail = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
+            {
+                "PageSize":1,
+                "MasterEntityID":rahkaranResult.result
+            },cookieData)
+            //console.log(faktorDetail)
+            faktorItemsDetail = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotationItems",
+            {
+                "PageSize":1,
+                "MasterEntityID":rahkaranResult.result
+            },cookieData)
+        }
         if(!rahkaranResult) {
             const loginData = await RahkaranLogin()
             var cookieSGPT = '';
@@ -262,7 +279,7 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
         // console.log(cookieSGPT)
             res.cookie("sg-dummy","-")
             res.cookie("sg-auth-SGPT",cookieSGPT)
-            console.log(`sg-auth-SGPT=${cookieSGPT}`)
+            //console.log(`sg-auth-SGPT=${cookieSGPT}`)
             rahkaranResult =await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/PlaceQuotation",
             rahKaranFaktor,{"sg-auth-SGPT":cookieSGPT})
             if(!rahkaranResult||rahkaranResult.status!="200"){
@@ -274,25 +291,26 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
                 "PageSize":1,
                 "MasterEntityID":rahkaranResult.result
             },{"sg-auth-SGPT":cookieSGPT})
-            console.log(faktorDetail)
+            //console.log(faktorDetail)
             faktorItemsDetail = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotationItems",
             {
                 "PageSize":1,
                 "MasterEntityID":rahkaranResult.result
             },{"sg-auth-SGPT":cookieSGPT})
         }
-        
-        const newFaktor = await faktor.create({...faktorData.faktorData,
-            InvoiceID:rahkaranResult.result,
+        const RahFaktorData = await RahNewFaktor(faktorData,faktorDetail,faktorItemsDetail,userData)
+        const newFaktor = await faktor.create({...RahFaktorData.mainData,
+            //InvoiceID:rahkaranResult.result,
             rahDetail:faktorDetail,
             rahItems:faktorItemsDetail,
-             status:"ثبت شده"})
-        const newFaktorItems = await faktorItems.create(faktorData.faktorItems)
-        const cartFound = await cart.deleteMany({userId:userId})
+            active:true,
+            status:"ثبت شده"})
+        const newFaktorItems = await faktorItems.create(RahFaktorData.itemData)
+        //const cartFound = await cart.deleteMany({userId:userId})
  
         
         res.status(200).json({status:rahkaranResult&&rahkaranResult.status,
-            rahkaranResult,message:"سفارش ثبت شد"})
+            rahkaranResult,message:"سفارش ثبت شد",log:RahFaktorData})
     }
     catch(error){
         res.status(500).json({message: error.message})
@@ -313,9 +331,18 @@ router.post('/list-faktor',auth,jsonParser,async (req,res)=>{
                 as : "faktorItems"
             }},{$sort:{progressDate:-1}}
         ])
+        var finalFaktor = []
+        for(var i=0;i<myFaktors.length;i++){
+            var faktorList=[]
+            var faktorData = myFaktors[i].faktorItems
+            for(var j=0;j<faktorData.length;j++){
+                var faktorTitle = await products.findOne({sku:faktorData[j].sku})
+                faktorList.push({...faktorData[j],title:faktorTitle.title})
+            }
+            finalFaktor.push({...myFaktors[i],faktorItems:faktorList})
+        }
         
-        
-        res.status(200).json({data:myFaktors,success:true,message:"لیست سفارشات"})
+        res.status(200).json({data:finalFaktor,success:true,message:"لیست سفارشات"})
     }
     catch(error){
         res.status(500).json({message: error.message})
@@ -347,6 +374,15 @@ router.post('/fetch-faktor',auth,jsonParser,async (req,res)=>{
     catch(error){
         res.status(500).json({message: error.message})
     } 
+})
+router.get('/sliders', async (req,res)=>{
+    try{
+        const SlidersList = await slider.find()
+        res.json({data:SlidersList,message:"slider list"})
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    }
 })
 
 module.exports = router;

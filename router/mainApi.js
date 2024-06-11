@@ -31,6 +31,8 @@ const RahkaranGET = require('../middleware/RahkaranGet');
 const RahkaranPOST = require('../middleware/RahkaranPOST');
 const faktor = require('../models/product/faktor');
 const { Cookie } = require('tough-cookie');
+const ordersLogs = require('../models/orders/ordersLogs');
+const CheckChange = require('../middleware/CheckChange');
 const { ONLINE_URL,RAHKARAN_URL} = process.env;
  
 router.get('/main', async (req,res)=>{
@@ -164,12 +166,12 @@ router.get('/get-faktors-auth', async (req,res)=>{
 })
 router.get('/get-faktors', async (req,res)=>{
     const cookieData = req.cookies
-    console.log(req.cookies)
+    
     try{
         var faktorList = await faktor.find({status:{$in:["ثبت شده","ویرایش شده","تایید شده","لغو شده"]}})
         var rahkaranOut=[]
+        var rahkaranItemOut=[]
         for(var i=0;i<faktorList.length;i++){
-        
             var sepidarResult = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
             {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":5,},cookieData)
             if(!sepidarResult) {
@@ -184,58 +186,43 @@ router.get('/get-faktors', async (req,res)=>{
                 res.cookie("sg-auth-SGPT",cookieSGPT)
                 sepidarResult = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
                 {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":5,},{"sg-auth-SGPT":cookieSGPT})
+
             }
             if(sepidarResult)
-                rahkaranOut.push(sepidarResult)
-            else
-                console.log(sepidarResult)
+                rahkaranOut.push(sepidarResult.result[0])
+            else{}
+                //console.log(sepidarResult)
+            var sepidarItemResult = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotationItems",
+            {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":30,},cookieData)
+            rahkaranItemOut.push(sepidarItemResult)
+            const checkChangeItems = await CheckChange(faktorList[i].InvoiceID,sepidarItemResult)
+            if(checkChangeItems){
+                await ordersLogs.create({status:"ویرایش شده",orderNo:rahkaranOut[i].ID,
+                description:checkChangeItems
+                })
+                await faktor.updateOne({InvoiceID:rahkaranOut[i].ID},
+                    {$set:{status:"ویرایش شده",isEdit:true}}
+                )
+            }
         }
-
-        res.json(rahkaranOut)
+        for(var i=0;i<rahkaranOut.length;i++){
+            if(rahkaranOut[i]&&rahkaranOut[i].State == 2){
+                await ordersLogs.create({status:"تایید شده",orderNo:rahkaranOut[i].ID})
+                await faktor.updateOne({InvoiceID:rahkaranOut[i].ID},
+                    {$set:{status:"تایید شده"}}
+                )
+            }
+            if(rahkaranOut[i]&&rahkaranOut[i].State == 6){
+                
+                const result = await ordersLogs.create({status:"باطل شده",orderNo:rahkaranOut[i].ID})
+                await faktor.updateOne({InvoiceID:rahkaranOut[i].ID},
+                    {$set:{status:"باطل شده",active:false}}
+                )
+                //console.log(result)
+            }
+        }
+        res.json({mainResult:rahkaranOut,itemResult:rahkaranItemOut})
         return
-        const sepidarResultRaw = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
-        {"PageSize":5},cookieData)
-        const query=[]
-        var newProduct = [];
-        var updateProduct = 0
-        var notUpdateProduct = 0
-        var unitIds = []
-        var sepidarResult=sepidarResultRaw&&sepidarResultRaw.result
-        for(var i=0;i<sepidarResult.length;i++){
-            var product = sepidarResult[i]
-            var unitId = product.units&&product.units[0]&&product.units[0].unitRef
-            unitIds.push(unitId)
-            var productQuery={
-                title:  product.name,
-                sku: product.number,
-                unitId:unitId,
-                ItemID:product.id,
-                active:product.stateTitle=="فعال"?true:false,
-                catId:product.partNature,
-                catTitle:product.partNatureTitle
-            }
-            const productResult = await products.updateOne({
-                ItemID:product.id},{$set:productQuery})
-        
-            var modified = productResult.modifiedCount
-            var matched = productResult.matchedCount
-            if(matched){ notUpdateProduct++}
-            if(modified){updateProduct++}
-            if(!matched){
-            const createResult = await products.create(
-                productQuery
-            )
-                newProduct.push(productQuery.sku)
-            }
-        }
-        
-        await updateLog.create({
-            updateQuery: "sepidar-product" ,
-            date:Date.now()
-        })
-        res.json({sepidar:{new:newProduct,update:updateProduct,notUpdate:notUpdateProduct},
-            unitIds:unitIds,
-            message:"محصولات بروز شدند"})
     }
     catch(error){
         res.status(500).json({message: error.message})
@@ -256,7 +243,7 @@ router.post('/get-customers', async (req,res)=>{
         // console.log(cookieSGPT)
             res.cookie("sg-dummy","-")
             res.cookie("sg-auth-SGPT",cookieSGPT)
-            console.log(`sg-auth-SGPT=${cookieSGPT}`)
+            //console.log(`sg-auth-SGPT=${cookieSGPT}`)
             sepidarResult =RahkaranPOST("/Sales/PartyManagement/Services/PartyManagementService.svc/GetCustomerList",
             req.body,{"sg-auth-SGPT":cookieSGPT})
         }
@@ -266,7 +253,7 @@ router.post('/get-customers', async (req,res)=>{
         var notUpdateCustomer = 0
         for(var i=0;i<sepidarResult.length;i++){
             var customer = sepidarResult[i]
-            console.log(customer)
+            //console.log(customer)
             var phone = customer.Tel
             try{
                 if(!phone) phone =customer.Addresses[0].Tel
