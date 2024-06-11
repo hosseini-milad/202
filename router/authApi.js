@@ -674,6 +674,39 @@ router.post('/customer-otp',jsonParser,async(req,res)=>{
   }
 })
 
+router.post('/password',jsonParser,auth,async(req, res) => {
+  //console.log(("UserPassApi")
+try{   
+  if(!req.body.oldpassword||!req.body.password){
+    res.status(400).json({error:"اطلاعات ورودی کافی نیست"});
+    return
+  }
+  const data = { 
+    oldpassword:req.body.oldpassword,
+    password:req.body.password
+  }
+  const users = await customers.findOne({_id: req.headers["userid"] })
+  if(await bcrypt.compare(data.oldpassword, users.password)||
+    users.password == data.oldpassword){
+    const updateUserInfo= await customers.updateOne({_id: req.headers["userid"]},
+      {$set:{password:await bcrypt.hash(data.password, 10)}})
+    res.status(200).json({updateuser:updateUserInfo,
+      message:"رمز عبور تغییر یافت"});
+  }
+  else{
+    res.status(400).json({error:"رمز عبور نامعتبر می باشد"});
+  }
+  ////console.log((users)
+  //if(userData){
+    
+ 
+}
+catch(err){
+  res.status(400).json({err:err});
+}
+}
+)
+
 
 router.post('/login-otp',jsonParser,async(req,res)=>{
 try {
