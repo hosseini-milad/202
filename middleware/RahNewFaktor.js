@@ -23,6 +23,7 @@ const RahNewFaktor=async(faktorData,RahFaktor,rahItems,userData)=>{
     for(var i=0;i<faktorItemData.length;i++){
         faktorItemData[i].originData = {
             count:faktorItemData[i].count,
+            sku:faktorItemData[i].sku,
             price:faktorItemData[i].price,
             totalPrice:faktorItemData[i].totalPrice
         }
