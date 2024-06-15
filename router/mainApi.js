@@ -33,6 +33,7 @@ const faktor = require('../models/product/faktor');
 const { Cookie } = require('tough-cookie');
 const ordersLogs = require('../models/orders/ordersLogs');
 const CheckChange = require('../middleware/CheckChange');
+const sendSmsUser = require('../middleware/sendSms');
 const { ONLINE_URL,RAHKARAN_URL} = process.env;
  
 router.get('/main', async (req,res)=>{
@@ -76,7 +77,13 @@ router.use('/panel/crm',CRMPanelApi)
     response = await fetch(ONLINE_URL+"/sepidar-bank",
         {method: 'GET'});
  })
- 
+ schedule.scheduleJob('0 0/5 * * *', async() => { 
+    console.log("refreshing")
+    response = await fetch(ONLINE_URL+"/get-faktors-auth",
+        {method: 'GET'});
+    response = await fetch(ONLINE_URL+"/get-faktors",
+        {method: 'GET'});
+ })
 router.get('/auth-server', async (req,res)=>{
     try{
         const loginResult = await RahkaranLogin()
@@ -203,6 +210,8 @@ router.get('/get-faktors', async (req,res)=>{
                 await faktor.updateOne({InvoiceID:rahkaranOut[i].ID},
                     {$set:{status:"ویرایش شده",isEdit:true}}
                 )
+                await sendSmsUser(faktorList[i].userId,process.env.OrderEdit,
+                    faktorList[i].InvoiceID)    
             }
         }
         for(var i=0;i<rahkaranOut.length;i++){

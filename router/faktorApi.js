@@ -1003,6 +1003,7 @@ router.post('/quick-to-cart',jsonParser, async (req,res)=>{
         //cartLog.create({...data,ItemID:req.body.cartID,action:"quick to cart"})
         //await cart.create(data)
         const rahKaranFaktor = await CreateRahkaran(data)
+        
         var rahkaranResult =  await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/PlaceQuotation",
             rahKaranFaktor,cookieData)
         if(!rahkaranResult) {
