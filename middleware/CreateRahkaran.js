@@ -11,7 +11,7 @@ const CreateRahkaran=async(faktorData,faktorItems,userData)=>{
                     "index":i,
                     "productId":faktorItems[i].ItemID,
                     "quantity":faktorItems[i].count,
-                    "salesAreaId":"1",
+                    "salesAreaId":"4",
                     "unitId":faktorItems[i].unitId,//7
                     "additionAmount":NormalTax(MultiPrice(faktorItems[i].price,faktorItems[i].count)),
                     "fee":faktorItems[i].price?faktorItems[i].price:"740000",
@@ -46,7 +46,7 @@ const CreateRahkaran=async(faktorData,faktorItems,userData)=>{
             "payerTypeTitle": "مشتری",
             "paymentAgreementId":3,
             "plantId":"8",
-            "salesAreaId":10002,
+            "salesAreaId":4,
             "salesOfficeId":"10001",
             "salesTypeId":"6",
             "additionAmount":"0",
