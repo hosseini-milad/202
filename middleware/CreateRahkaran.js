@@ -22,7 +22,7 @@ const CreateRahkaran=async(faktorData,faktorItems,userData)=>{
                     "price":faktorItems[i].price?faktorItems[i].price:"740000",
                     "reductionAmount":"0",
                     "type":1,
-                    "inventoryID":null,
+                    "inventoryID":10001,
                     "plantID":null,
                     "productPackItemRef":null,
                     "productPackQuantity":"0",
@@ -40,7 +40,7 @@ const CreateRahkaran=async(faktorData,faktorItems,userData)=>{
             "date":`/Date(${faktorData.progressDate})/`,
             "description":null,
             "id":"-1",
-            "inventoryId":"13",
+            "inventoryId":10001,
             "items":items,
             "payerType":1,
             "payerTypeTitle": "مشتری",
@@ -60,7 +60,7 @@ const CreateRahkaran=async(faktorData,faktorItems,userData)=>{
             "state":1,
             "shippingPointID":null
     }
-
+    console.log(postData)
     return(postData)
 }
 module.exports =CreateRahkaran

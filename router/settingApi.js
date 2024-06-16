@@ -171,6 +171,49 @@ router.post('/delete-doc',jsonParser,auth,async (req,res)=>{
     } 
 })
 
+router.post('/list-notif',jsonParser,async (req,res)=>{
+    try{
+        var result = await notif.find();
+       
+        res.json({filter:result})
+        return
+        
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    } 
+})
+
+router.post('/fetch-notif',jsonParser,async (req,res)=>{
+    const notifCode = req.body.notifCode
+    try{
+        var result = notifCode?await notif.findOne({enTitle:notifCode}):'';
+        res.json(result)
+        return
+        
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    } 
+})
+
+router.post('/update-notif',jsonParser,async (req,res)=>{
+    var notifCode = req.body.notifCode
+    if(notifCode==="new") notifCode = ""
+    const data = req.body
+
+    try{
+        var result = notifCode?await notif.updateOne({enTitle:notifCode},{$set:data}):
+        await notif.create(data);
+        res.json(result)
+        return
+        
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    } 
+})
+
 
 router.post('/list-news',jsonParser,async (req,res)=>{
     try{
