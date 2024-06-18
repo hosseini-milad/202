@@ -388,27 +388,40 @@ router.post('/fetch-faktor',auth,jsonParser,async (req,res)=>{
     } 
 })
 router.post('/cancel-faktor',auth,jsonParser,async (req,res)=>{
+    const cookieData = req.cookies
     const userId = req.headers["userid"]
     const faktorNo = req.body.faktorNo
     try{
         if(!faktorNo){
             res.status(400).json({message:"کد سفارش وارد نشده است"})
         }
-        const myFaktors = await faktor.findOne({userId:userId,faktorNo:faktorNo})
-        if(!myFaktors){
+        const myFaktor = await faktor.findOne({userId:userId,faktorNo:faktorNo})
+        if(!myFaktor){
             res.status(400).json({message:"سفارش یافت نشد "})
         }
-        const myFaktorItems = await faktorItems.aggregate([
-            {$match:{faktorNo:faktorNo}},
-            {$lookup:{
-                from : "products", 
-                localField: "sku", 
-                foreignField: "sku", 
-                as : "productData"
-            }}
-        ])
-        res.status(200).json({data:myFaktors, faktorItems:myFaktorItems,
-            success:true,message:"اطلاعات سفارشات"})
+
+        var rahkaranResult =  await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/DeleteQuotation",
+            myFaktor.InvoiceID,cookieData)
+
+        if(!rahkaranResult) {
+                const loginData = await RahkaranLogin()
+                var cookieSGPT = '';
+                if(loginData){
+                    cookieSGPT = loginData.split('SGPT=')[1]
+                    cookieSGPT = cookieSGPT.split(';')[0]
+                }
+            // console.log(cookieSGPT)
+                res.cookie("sg-dummy","-")
+                res.cookie("sg-auth-SGPT",cookieSGPT)
+                //console.log(`sg-auth-SGPT=${cookieSGPT}`)
+                rahkaranResult =await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/DeleteQuotation",
+                    myFaktor.InvoiceID,{"sg-auth-SGPT":cookieSGPT})
+        }
+        //console.log(rahkaranResult)
+        await faktor.updateOne({userId:userId,faktorNo:faktorNo},
+            {$set:{active:false,status:"باطل شده"}})
+        res.status(200).json({rahkaranResult:rahkaranResult,
+            success:true,message:"سفارش لغو شد"})
     }
     catch(error){
         res.status(500).json({message: error.message})
