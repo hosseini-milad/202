@@ -387,6 +387,33 @@ router.post('/fetch-faktor',auth,jsonParser,async (req,res)=>{
         res.status(500).json({message: error.message})
     } 
 })
+router.post('/cancel-faktor',auth,jsonParser,async (req,res)=>{
+    const userId = req.headers["userid"]
+    const faktorNo = req.body.faktorNo
+    try{
+        if(!faktorNo){
+            res.status(400).json({message:"کد سفارش وارد نشده است"})
+        }
+        const myFaktors = await faktor.findOne({userId:userId,faktorNo:faktorNo})
+        if(!myFaktors){
+            res.status(400).json({message:"سفارش یافت نشد "})
+        }
+        const myFaktorItems = await faktorItems.aggregate([
+            {$match:{faktorNo:faktorNo}},
+            {$lookup:{
+                from : "products", 
+                localField: "sku", 
+                foreignField: "sku", 
+                as : "productData"
+            }}
+        ])
+        res.status(200).json({data:myFaktors, faktorItems:myFaktorItems,
+            success:true,message:"اطلاعات سفارشات"})
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    } 
+})
 router.get('/sliders', async (req,res)=>{
     try{
         const SlidersList = await slider.find()

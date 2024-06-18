@@ -17,6 +17,8 @@ const RahNewFaktor=async(faktorData,RahFaktor,rahItems,userData)=>{
         rahFaktorData[0]&&rahFaktorData[0].Price
     faktorMainData.totalAddition = rahFaktorData&&
         rahFaktorData[0]&&rahFaktorData[0].Additions
+    faktorMainData.totalDiscount = rahFaktorData&&
+        rahFaktorData[0]&&rahFaktorData[0].Reductions
     faktorMainData.netPrice = rahFaktorData&&
         rahFaktorData[0]&&rahFaktorData[0].NetPrice
     var faktorItemData =faktorData.faktorItems
@@ -31,6 +33,7 @@ const RahNewFaktor=async(faktorData,RahFaktor,rahItems,userData)=>{
         faktorItemData[i].price=rahFaktorItems[i]&&rahFaktorItems[i].Fee
         faktorItemData[i].totalPrice=rahFaktorItems[i]&&rahFaktorItems[i].Price
         faktorItemData[i].totalAddition=rahFaktorItems[i]&&rahFaktorItems[i].Additions
+        faktorItemData[i].totalDiscount=rahFaktorItems[i]&&rahFaktorItems[i].Reductions
         
         faktorItemData[i].netPrice=rahFaktorItems[i]&&rahFaktorItems[i].NetPrice
     }
