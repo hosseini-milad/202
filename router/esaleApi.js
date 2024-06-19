@@ -420,7 +420,7 @@ router.post('/cancel-faktor',auth,jsonParser,async (req,res)=>{
         //console.log(rahkaranResult)
         await faktor.updateOne({userId:userId,faktorNo:faktorNo},
             {$set:{active:false,status:"باطل شده"}})
-        res.status(200).json({rahkaranResult:rahkaranResult,
+        res.status(200).json({rahkaranResult:rahkaranResult,orderData:myFaktor,
             success:true,message:"سفارش لغو شد"})
     }
     catch(error){
