@@ -290,7 +290,7 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
             rahkaranResult =await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/PlaceQuotation",
             rahKaranFaktor,{"sg-auth-SGPT":cookieSGPT})
             if(!rahkaranResult||rahkaranResult.status!="200"){
-                res.status(400).json({message:rahkaranResult?rahkaranResult:"سرور راهکاران قطع است"})
+                res.status(400).json({message:rahkaranResult?RahErrorHandle(rahkaranResult.result):"سرور راهکاران قطع است"})
                 return
             }
             faktorDetail = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
