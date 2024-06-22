@@ -80,10 +80,23 @@ router.post('/list-product',jsonParser,async (req,res)=>{
         search:req.body.search,
         pageSize:pageSize
     }
+    const categoryDetail = data.category?await category.findOne({catCode:data.category}):''
+    var searchCat=[]
+    if(categoryDetail){
+        if(categoryDetail.parent){
+            searchCat.push(categoryDetail.catCode)
+        }
+        else{
+            const subCat = await category.find({_id:categoryDetail.parent})
+            for(var i=0;i<subCat.length;i++)
+                searchCat.push(subCat[i].catCode)
+        }
+    }
         const productList = await ProductSchema.aggregate([
             { $match:data.title?{title:new RegExp('.*' + data.title + '.*')}:{}},
             { $match:data.sku?{sku:new RegExp('.*' + data.sku + '.*')}:{}},
             { $match:data.unitId?{unitId:data.unitId}:{}},
+            { $match:searchCat.length?{catId:{$in:searchCat}}:{}},
             { $match:(data.active&&data.active=="deactive")?{}:{catId:{$nin:["1","3","4","5"]}}},
             { $match:data.search?{$or:[
                 {title:new RegExp('.*' + data.search + '.*')},
@@ -100,9 +113,10 @@ router.post('/list-product',jsonParser,async (req,res)=>{
             } 
             
             const typeUnique = [...new Set(productList.map((item) => item.category))];
-            
+            const categoryList = data.category?await category.find({parent:categoryDetail._id}):
+                await category.find({parent:{$exists:false}})
            res.status(200).json({data:products,type:typeUnique,
-            size:productList.length,success:true})
+            size:productList.length,success:true,categoryList:categoryList})
     }
     catch(error){
         res.status(500).json({message: error.message})
