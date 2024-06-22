@@ -82,12 +82,13 @@ router.post('/list-product',jsonParser,async (req,res)=>{
     }
     const categoryDetail = data.category?await category.findOne({catCode:data.category}):''
     var searchCat=[]
+    var subCat=''
     if(categoryDetail){
         if(categoryDetail.parent){
             searchCat.push(categoryDetail.catCode)
         }
         else{
-            const subCat = await category.find({parent:String(categoryDetail._id)})
+            subCat = await category.find({parent:categoryDetail._id})
             for(var i=0;i<subCat.length;i++)
                 searchCat.push(subCat[i].catCode)
         }
@@ -115,7 +116,7 @@ router.post('/list-product',jsonParser,async (req,res)=>{
             const typeUnique = [...new Set(productList.map((item) => item.category))];
             const categoryList = data.category?await category.find({parent:categoryDetail._id}):
                 await category.find({parent:{$exists:false}})
-           res.status(200).json({data:products,type:typeUnique,categoryDetail:categoryDetail,
+           res.status(200).json({data:products,type:typeUnique,categoryDetail:subCat,
             size:productList.length,success:true,categoryList:categoryList})
     }
     catch(error){
