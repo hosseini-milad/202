@@ -65,7 +65,7 @@ router.use('/panel/faktor', panelFaktorApi)
 router.use('/esale', esaleApi)
 
 router.use('/panel/crm',CRMPanelApi)
-schedule.scheduleJob('0 0 * * *', async() => { 
+schedule.scheduleJob('5 */2 * * *', async() => { 
     response = await fetch(ONLINE_URL+"/get-product",
         {method: 'GET'});
     response = await fetch(ONLINE_URL+"/get-customers",
