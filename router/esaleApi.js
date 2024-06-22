@@ -87,7 +87,7 @@ router.post('/list-product',jsonParser,async (req,res)=>{
             searchCat.push(categoryDetail.catCode)
         }
         else{
-            const subCat = await category.find({_id:categoryDetail.parent})
+            const subCat = await category.find({_id:ObjectID(categoryDetail.parent)})
             for(var i=0;i<subCat.length;i++)
                 searchCat.push(subCat[i].catCode)
         }
