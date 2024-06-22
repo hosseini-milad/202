@@ -679,7 +679,7 @@ router.post('/customer-otp',jsonParser,async(req,res)=>{
 router.post('/password',jsonParser,auth,async(req, res) => {
   //console.log(("UserPassApi")
 try{   
-  if(!req.body.oldpassword||!req.body.password){
+  if(!req.body.password){
     res.status(400).json({error:"اطلاعات ورودی کافی نیست"});
     return
   }
@@ -688,7 +688,7 @@ try{
     password:req.body.password
   }
   const users = await customers.findOne({_id: req.headers["userid"] })
-  if(await bcrypt.compare(data.oldpassword, users.password)||
+  if(1||await bcrypt.compare(data.oldpassword, users.password)||
     users.password == data.oldpassword){
     const updateUserInfo= await customers.updateOne({_id: req.headers["userid"]},
       {$set:{password:await bcrypt.hash(data.password, 10)}})
