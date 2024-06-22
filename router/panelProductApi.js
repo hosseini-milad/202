@@ -402,12 +402,13 @@ router.post('/list-category',jsonParser,async (req,res)=>{
         title:req.body.title,
         brand:req.body.brand,
         offset:req.body.offset,
+        root:req.body.root,
         pageSize:pageSize
     }
         const catData = await category.aggregate([
             { $match:data.title?{title:new RegExp('.*' + data.title + '.*')}:{}},
             { $match:data.category?{category:data.category}:{}},
-            
+            { $match:data.root?{}:{parent:{$exists:true}}},
             ])
             const length = catData.length
             const cats = catData.slice(offset,
