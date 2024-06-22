@@ -48,12 +48,6 @@ function CatTableRow(props){
                 </div>
               </td>
               <td>
-                <div className="order-num">
-                  <img src={cat?(env.siteApiUrl+cat.thumbUrl):''} 
-                    alt={cat.title}/>
-                </div>
-              </td>
-              <td>
                 <Status status={cat.status} class={"order-status"} 
                   lang={props.lang}/>
               </td>
