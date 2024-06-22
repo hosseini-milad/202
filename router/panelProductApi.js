@@ -409,12 +409,13 @@ router.post('/list-category',jsonParser,async (req,res)=>{
             { $match:data.category?{category:data.category}:{}},
             
             ])
+            const length = catData.length
             const cats = catData.slice(offset,
                 (parseInt(offset)+parseInt(pageSize)))  
             const typeUnique = [...new Set(cats.map((item) => item.category))];
             
            res.json({filter:cats,type:typeUnique,
-            size:catData.length})
+            size:length})
     }
     catch(error){
         res.status(500).json({message: error.message})
