@@ -594,22 +594,22 @@ router.post('/login-customer',jsonParser, async (req,res)=>{
   try {
       const { username, password } = req.body;
       if (!(username && password)) {
-        res.status(400).json({error:"All input is required"});
+        res.status(400).json({error:"ورودی کامل نیست"});
         return;
       }
       // Validate if user exist in our database
       const user = await customers.findOne({meliCode: username });
       //console.log(user)
       if(!user){
-        res.status(400).json({error:"user not found"});
+        res.status(400).json({error:"نام کاربری ارسال نشده است"});
         return;
       }
       if(!user.password){
-        res.status(400).json({error:"password not set"});
+        res.status(400).json({error:"رمز عبور ارسال نشده است"});
         return;
       }
       if(user.active==="false"){
-        res.status(400).json({error:"user not active"});
+        res.status(400).json({error:"کاربر فعال نیست"});
         return;
       }
       if (user && (await bcrypt.compare(password, user.password))) {
@@ -633,7 +633,7 @@ router.post('/login-customer',jsonParser, async (req,res)=>{
         return;
       }
       else{
-        res.status(400).json({error:"Invalid Password"}); 
+        res.status(400).json({error:"رمز عبور اشتباه است"}); 
       }
       } 
   catch(error){
@@ -659,11 +659,13 @@ router.post('/customer-otp',jsonParser,async(req,res)=>{
       const newUser = await customers.updateOne(
         {meliCode:username},{$set:{otp:otpValue}});
         ////console.log((newUser)
-      res.status(200).json({message:"sms sent for "+user.phone,smsResult:smsResult});
+      res.status(200).json({message:"پیامک برا شماره "+user.phone,smsResult:smsResult+
+        "ارسال شد "
+      });
       return
     }
     else {
-      res.status(400).json({message:"user not found"});
+      res.status(400).json({message:"کاربر پیدا نشد"});
     return
       
     }
