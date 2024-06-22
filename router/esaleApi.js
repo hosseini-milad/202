@@ -347,6 +347,8 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
 })
 
 router.post('/list-faktor',auth,jsonParser,async (req,res)=>{
+    var pageSize = req.body.pageSize?req.body.pageSize:"10";
+    var offset = req.body.offset?(parseInt(req.body.offset)):0;
     const userId = req.headers["userid"]
     const search = req.body.search
     try{
@@ -361,14 +363,16 @@ router.post('/list-faktor',auth,jsonParser,async (req,res)=>{
             }},{$sort:{progressDate:-1}}
         ])
         var finalFaktor = []
-        for(var i=0;i<myFaktors.length;i++){
+        const showFaktor = myFaktors.slice(offset,
+            (parseInt(offset)+parseInt(pageSize)))
+        for(var i=0;i<showFaktor.length;i++){
             var faktorList=[]
-            var faktorData = myFaktors[i].faktorItems
+            var faktorData = showFaktor[i].faktorItems
             for(var j=0;j<faktorData.length;j++){
                 var faktorTitle = await products.findOne({sku:faktorData[j].sku})
                 faktorList.push({...faktorData[j],title:faktorTitle.title})
             }
-            finalFaktor.push({...myFaktors[i],faktorItems:faktorList})
+            finalFaktor.push({...showFaktor[i],faktorItems:faktorList})
         }
         
         res.status(200).json({data:finalFaktor,success:true,message:"لیست سفارشات"})
