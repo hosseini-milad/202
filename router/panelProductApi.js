@@ -157,7 +157,7 @@ router.post('/fetch-product',jsonParser,async (req,res)=>{
         } 
         const productData = await ProductSchema.findOne({_id: ObjectID(productId)})
         const brandList = await BrandSchema.find({})
-        const categoryList = await category.find({})
+        const categoryList = await category.find({parent:{$exists:true}})
         const brandData = brandList.find(item=>item.brandCode==productData.brandId)
         const catData = categoryList.find(item=>item.catCode==productData.catId)
         console.log(catData)
