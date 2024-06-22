@@ -601,7 +601,7 @@ router.post('/login-customer',jsonParser, async (req,res)=>{
       const user = await customers.findOne({meliCode: username });
       //console.log(user)
       if(!user){
-        res.status(400).json({error:"نام کاربری ارسال نشده است"});
+        res.status(400).json({error:"کاربر یافت نشد"});
         return;
       }
       if(!user.password){
