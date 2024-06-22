@@ -82,15 +82,17 @@ router.post('/list-product',jsonParser,async (req,res)=>{
     }
     const categoryDetail = data.category?await category.findOne({catCode:data.category}):''
     var searchCat=[]
-    var subCat=''
+    var hasChild=1
     if(categoryDetail){
         if(categoryDetail.parent){
+            hasChild = 0
             searchCat.push(categoryDetail.catCode)
         }
         else{
-            subCat = await category.find({parent:categoryDetail._id})
+            const subCat = await category.find({parent:categoryDetail._id})
             for(var i=0;i<subCat.length;i++)
                 searchCat.push(subCat[i].catCode)
+            if(searchCat.length>0) hasChild = 1
         }
     }
         const productList = await ProductSchema.aggregate([
@@ -114,9 +116,9 @@ router.post('/list-product',jsonParser,async (req,res)=>{
             } 
             
             const typeUnique = [...new Set(productList.map((item) => item.category))];
-            const categoryList = data.category?await category.find({parent:categoryDetail._id}):
+            const categoryList = (data.category&&hasChild)?await category.find({parent:categoryDetail._id}):
                 await category.find({parent:{$exists:false}})
-           res.status(200).json({data:products,type:typeUnique,categoryDetail:searchCat,
+           res.status(200).json({data:products,type:typeUnique,hasChild:hasChild,
             size:productList.length,success:true,categoryList:categoryList})
     }
     catch(error){
