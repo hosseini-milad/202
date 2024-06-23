@@ -1,14 +1,13 @@
 const mongoose = require("mongoose");
 
 const notifSchema = new mongoose.Schema({
-  title: { type: String},
-  enTitle:{type:String,unique:true},
-  content: { type: String},
-  abstract: { type: String},
+  title: { type: String,required:true},
+  orderNo:{ type: String},
+  userId:{ type: String,required:true},
+  status:{type:Boolean,default:1},
+  content: { type: String,required:true},
   link:{type:String, default:"#"},
   imageUrl: { type: String},
-  uploadUrl: { type: String},
-  iconUrl:{ type: String},
   date:{type:Date,default:Date.now()}
 }); 
 

@@ -9,9 +9,11 @@ const LogCreator = require('../middleware/LogCreator');
 const users = require('../models/auth/users');
 const slider = require('../models/main/slider');
 const notif = require('../model/Params/notif');
+const news = require('../model/Params/news');
 const docCat = require('../model/Params/docCat');
 const docSchema = require('../model/Params/document');
 const CreateMock = require('../middleware/CreateMocks');
+const customers = require('../models/auth/customers');
 
 
 router.post('/sliders', async (req,res)=>{
@@ -173,7 +175,7 @@ router.post('/delete-doc',jsonParser,auth,async (req,res)=>{
 
 router.post('/list-notif',jsonParser,async (req,res)=>{
     try{
-        var result = await notif.find();
+        var result = await notif.find().limit(10);
        
         res.json({filter:result})
         return
@@ -197,16 +199,16 @@ router.post('/fetch-notif',jsonParser,async (req,res)=>{
     } 
 })
 
-router.post('/update-notif',jsonParser,async (req,res)=>{
+router.post('/update-notif',jsonParser,auth,async (req,res)=>{
     var notifCode = req.body.notifCode
-    if(notifCode==="new") notifCode = ""
-    const data = req.body
-
+    const userId = req.headers['userid']
+    var data = req.body
+    data.userId = userId
     try{
-        var result = notifCode?await notif.updateOne({enTitle:notifCode},{$set:data}):
+        var result = notifCode?await notif.updateOne({_id:ObjectID(notifCode)},
+            {$set:data}):
         await notif.create(data);
         res.json(result)
-        return
         
     }
     catch(error){
@@ -216,10 +218,36 @@ router.post('/update-notif',jsonParser,async (req,res)=>{
 
 
 router.post('/list-news',jsonParser,async (req,res)=>{
+    const userId = req.headers['userid']
+    var userData = userId&&await customers.findOne({_id:ObjectID(userId)})
+    var lastNews = userData&&userData.showNews
     try{
-        var result = await notif.find();
-       
-        res.json({filter:result})
+        var result = await news.find().sort({date:-1});
+        var lastShow = ''
+        if(result&&(result[0]._id != lastNews)){
+            lastShow = result[0]
+        }
+        res.json({filter:result,lastShow})
+        return
+        
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    } 
+})
+router.post('/read-news',jsonParser,auth,async (req,res)=>{
+    const userId = req.headers['userid']
+    const newsId = req.body.newsId
+    try{
+        
+        if(userId&&newsId){
+            await customers.updateOne({_id:ObjectID(userId)},
+            {$set:{showNews:newsId}})
+        }
+        else{
+            res.status(400).json({message:"کدخبر وارد نشده است"})
+        }
+        res.json({message:"تغییرات اعمال شد"})
         return
         
     }
@@ -229,9 +257,9 @@ router.post('/list-news',jsonParser,async (req,res)=>{
 })
 
 router.post('/fetch-news',jsonParser,async (req,res)=>{
-    const notifCode = req.body.notifCode
+    const newsCode = req.body.newsCode
     try{
-        var result = notifCode?await notif.findOne({enTitle:notifCode}):'';
+        var result = newsCode?await news.findOne({enTitle:newsCode}):'';
         res.json(result)
         return
         
@@ -242,13 +270,13 @@ router.post('/fetch-news',jsonParser,async (req,res)=>{
 })
 
 router.post('/update-news',jsonParser,async (req,res)=>{
-    var notifCode = req.body.notifCode
-    if(notifCode==="new") notifCode = ""
-    const data = req.body
+    var newsCode = req.body.newsCode
+    if(newsCode==="new") newsCode = ""
+    const data = req.body 
 
     try{
-        var result = notifCode?await notif.updateOne({enTitle:notifCode},{$set:data}):
-        await notif.create(data);
+        var result = newsCode?await news.updateOne({enTitle:newsCode},{$set:data}):
+        await news.create(data);
         res.json(result)
         return
         
@@ -259,16 +287,16 @@ router.post('/update-news',jsonParser,async (req,res)=>{
 })
 router.post('/show-news',jsonParser,async (req,res)=>{
     var userId = req.headers["userid"]
-    const notifCode = req.body.notifCode
+    const newsCode = req.body.newsCode
 
     try{
-        const notifResult = await notif.findOne({_id:ObjectID(notifCode)})
-        if(!notifResult){
+        const newsResult = await news.findOne({_id:ObjectID(newsCode)})
+        if(!newsResult){
             res.status(400).json({message: "یافت نشد", error:"Not Found"}) 
             return
         }
-        var result = await user.updateOne({_id:ObjectID(userId)},
-            {$set:{showNotif:notifCode}})
+        var result = await customers.updateOne({_id:ObjectID(userId)},
+            {$set:{showNews:newsCode}})
         
         res.json(result)
         return
