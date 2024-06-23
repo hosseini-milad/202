@@ -3,7 +3,7 @@ import ImageSimple from "../../../components/Button/ImageSimple"
 import env from "../../../env";
 import tabletrans from "../../../translate/tables"
 
-function NotifImage(props){
+function NewsImage(props){
     const [image,setImage]= useState();
     const [upload,setUpload]= useState();
     const [imageUrl,setImageUrl] = useState('')
@@ -109,4 +109,4 @@ function NotifImage(props){
         </div>
     )
 }
-export default NotifImage
+export default NewsImage

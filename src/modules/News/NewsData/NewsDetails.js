@@ -4,7 +4,7 @@ import StyleInput from "../../../components/Button/Input"
 import formtrans from "../../../translate/forms"
 import tabletrans from "../../../translate/tables"
 
-function NotifDetails(props){
+function NewsDetails(props){
     const editorRef = useRef(null);
     const content=props.content 
     const [error,setError] = useState({errorText:'',errorColor:"brown"})
@@ -65,4 +65,4 @@ function NotifDetails(props){
         </div>
     )
 }
-export default NotifDetails
+export default NewsDetails

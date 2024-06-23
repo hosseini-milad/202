@@ -57,8 +57,8 @@ import PrintSepidar from './modules/Print/PrintSepidar';
 import DocDetailHolder from './modules/Documents/DocPanel/DocData/DocDetailHolder';
 import DocumentList from './pages/DocumentList';
 import Documents from './pages/Document';
-import Notif from './pages/Notif';
-import NotifDetailHolder from './modules/Notif/NotifData/NotifDetailHolder';
+import News from './pages/News';
+import NewsDetailHolder from './modules/News/NewsData/NewsDetailHolder';
 
 const cookies = new Cookies();
 const style = document.getElementById('style-direction');
@@ -112,8 +112,8 @@ root.render(
         <Route path="/category" element={<Layout><Category lang={lang}/></Layout>}/>
         <Route path="/category/detail/:orderId" element={<Layout><CatDetailHolder lang={lang}/></Layout>}/>
         <Route path="/transactions" element={<Layout><Transactions lang={lang}/></Layout>}/>
-        <Route path="/news" element={<Layout><Notif lang={lang}/></Layout>}/>
-        <Route path="/news/detail/:notifId" element={<Layout><NotifDetailHolder lang={lang}/></Layout>}/>
+        <Route path="/news" element={<Layout><News lang={lang}/></Layout>}/>
+        <Route path="/news/detail/:newsId" element={<Layout><NewsDetailHolder lang={lang}/></Layout>}/>
         
         <Route path="/class" element={<Layout><Classes lang={lang}/></Layout>}/>
         <Route path="/class/detail/:orderId" element={<Layout><ClassDetailHolder lang={lang}/></Layout>}/>

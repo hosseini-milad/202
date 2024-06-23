@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import env, { normalPriceCount, rxFindCount } from "../../../env"
 
-function NotifQuickDetail(props){
+function NewsQuickDetail(props){
     const cat = props.cat
     
     return(
@@ -26,4 +26,4 @@ function NotifQuickDetail(props){
     </div>
     )
 }
-export default NotifQuickDetail
+export default NewsQuickDetail

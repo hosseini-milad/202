@@ -4,10 +4,10 @@ import Status from "../../Components/Status"
 import errortrans from "../../../translate/error"
 import tabletrans from "../../../translate/tables"
 import formtrans from "../../../translate/forms"
-import NotifDetails from './NotifDetails';
-import NotifImage from './NotifImage';
+import NewsDetails from './NewsDetails';
+import NewsImage from './NewsImage';
 
-function NotifDetailHolder(props){
+function NewsDetailHolder(props){
   const url = window.location.pathname.split('/')[3]
   const direction = props.lang?props.lang.dir:errortrans.defaultDir;
   const lang = props.lang?props.lang.lang:errortrans.defaultLang;
@@ -21,7 +21,7 @@ function NotifDetailHolder(props){
     var postOptions={
       method:'post',
       headers: {'Content-Type': 'application/json'},
-      body:JSON.stringify({notifCode:url})
+      body:JSON.stringify({newsCode:url})
     }
    
 fetch(env.siteApi + "/setting/fetch-news",postOptions)
@@ -47,12 +47,12 @@ fetch(env.siteApi + "/setting/fetch-news",postOptions)
   }
 )
   },[])
-  const saveNotif=()=>{
+  const saveNews=()=>{
     //if(newCustomer) {
       var postOptions={
           method:'post',
           headers: {'Content-Type': 'application/json'},
-          body:JSON.stringify({notifCode:url,
+          body:JSON.stringify({newsCode:url,
             ...catChange})
         }
        //console.log(postOptions)
@@ -85,13 +85,13 @@ return(
       <h4>افزودن خبر</h4>
       {content||url==="new"?<div className="pages-wrapper">
         <div className="item-box">
-          <NotifDetails direction={direction} lang={lang} content={content}
+          <NewsDetails direction={direction} lang={lang} content={content}
             setCatChange={setCatChange} catChange={catChange}/>
-          <NotifImage setCatChange={setCatChange} catChange={catChange} 
+          <NewsImage setCatChange={setCatChange} catChange={catChange} 
             lang={lang} content={content}/> 
           </div>
         <div className="create-btn-wrapper">
-          <div className="save-btn" onClick={saveNotif}>{formtrans.saveChanges[lang]}</div>
+          <div className="save-btn" onClick={saveNews}>{formtrans.saveChanges[lang]}</div>
           <div className="cancel-btn" onClick={()=>window.location.href="/notification"}>{formtrans.cancel[lang]}</div>
         </div>
         
@@ -100,4 +100,4 @@ return(
   </div>
   )
 }
-export default NotifDetailHolder
+export default NewsDetailHolder

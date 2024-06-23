@@ -79,6 +79,12 @@ function ProductFilters(props){
           action={createConditionalAction("title", 3)}
 
         />
+        
+        <StyleInput
+          title="SKU"
+          direction={props.lang.dir}
+          action={createConditionalAction("sku", 3)}
+        />
         <StyleSelect
           title={"موجودی"}
           direction={props.lang.dir}

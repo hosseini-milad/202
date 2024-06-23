@@ -6,10 +6,10 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import env from '../env';
 import tabletrans from '../translate/tables';
-import NotifTable from '../modules/Notif/NotifTable';
+import NewsTable from '../modules/News/NewsTable';
 const cookies = new Cookies();
 
-function Notif(props){
+function News(props){
     const direction = props.lang?props.lang.dir:errortrans.defaultDir;
     const lang = props.lang?props.lang.lang:errortrans.defaultLang;
     const [content,setContent] = useState("")
@@ -77,7 +77,7 @@ function Notif(props){
         <StatusBar lang={lang} token={token} filters={filters}
          status={content.rxStatus} setFilters={setFilters}/>
         <div className="user-list"> 
-          {loading?env.loader:<NotifTable data={content} lang={lang}/>}
+          {loading?env.loader:<NewsTable data={content} lang={lang}/>}
         </div>
         <Paging content={content} setFilters={setFilters} filters={filters} 
           lang={props.lang}/>
@@ -85,4 +85,4 @@ function Notif(props){
     </div>
     )
 }
-export default Notif
+export default News

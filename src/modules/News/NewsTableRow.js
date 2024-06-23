@@ -1,9 +1,9 @@
 import React ,{ useState } from "react"
 import Status from "../Components/Status"
 import  env, { normalPriceCount, rxFindCount } from "../../env"
-import NotifQuickDetail from "./NotifComponent/NotifQuickDetail"
+import NewsQuickDetail from "./NewsComponent/NewsQuickDetail"
 
-function NotifTableRow(props){
+function NewsTableRow(props){
   const [openOption,setOpenOption] = useState(0)
   const [checkState,setCheckState] = useState(false)
   const activeAcc = props.index===props.detail
@@ -83,9 +83,9 @@ function NotifTableRow(props){
             </td>
           </tr>
           {activeAcc?<tr className="sub-order">
-        <td colSpan="9"><NotifQuickDetail data={data}/></td></tr>
+        <td colSpan="9"><NewsQuickDetail data={data}/></td></tr>
           :<React.Fragment></React.Fragment>}
           </React.Fragment>
     )
 }
-export default NotifTableRow
+export default NewsTableRow

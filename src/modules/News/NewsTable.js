@@ -1,8 +1,8 @@
 import { useState } from "react"
 import tabletrans from "../../translate/tables"
-import NotifTableRow from "./NotifTableRow";
+import NewsTableRow from "./NewsTableRow";
 
-function NotifTable(props){
+function NewsTable(props){
   const data = props.data
   const lang=props.lang;
   const [detail,showDetail] = useState(-1)
@@ -46,7 +46,7 @@ function NotifTable(props){
         </thead>
         <tbody>
           {data&&data.filter?data.filter.map((data,i)=>(
-            <NotifTableRow detail={detail} showDetail={showDetail} 
+            <NewsTableRow detail={detail} showDetail={showDetail} 
             data={data} index={i} key={i} lang={lang}/>
           )):''}
           
@@ -55,4 +55,4 @@ function NotifTable(props){
 
     )
 }
-export default NotifTable
+export default NewsTable
