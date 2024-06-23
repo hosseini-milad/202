@@ -34,6 +34,7 @@ const { Cookie } = require('tough-cookie');
 const ordersLogs = require('../models/orders/ordersLogs');
 const CheckChange = require('../middleware/CheckChange');
 const sendSmsUser = require('../middleware/sendSms');
+const CreateNotif = require('../middleware/CreateNotif');
 const { ONLINE_URL,RAHKARAN_URL} = process.env;
  
 router.get('/main', async (req,res)=>{
@@ -204,6 +205,7 @@ router.get('/get-faktors', async (req,res)=>{
                 await faktor.updateOne({InvoiceID:rahkaranOut[i].ID},
                     {$set:{status:"ویرایش شده",isEdit:true}}
                 )
+                await CreateNotif(faktorList[i].InvoiceID,faktorList[i].userId,"ویرایش سفارش ")
                 await sendSmsUser(faktorList[i].userId,process.env.OrderEdit,
                     faktorList[i].InvoiceID)    
             }
@@ -214,6 +216,7 @@ router.get('/get-faktors', async (req,res)=>{
                 await faktor.updateOne({InvoiceID:rahkaranOut[i].ID},
                     {$set:{status:"تایید شده"}}
                 )
+                await CreateNotif(faktorList[i].InvoiceID,faktorList[i].userId,"تایید سفارش ")
             }
             if(rahkaranOut[i]&&rahkaranOut[i].State == 6){
                 
@@ -221,6 +224,7 @@ router.get('/get-faktors', async (req,res)=>{
                 await faktor.updateOne({InvoiceID:rahkaranOut[i].ID},
                     {$set:{status:"باطل شده",active:false}}
                 )
+                await CreateNotif(faktorList[i].InvoiceID,faktorList[i].userId,"لغو سفارش ")
                 //console.log(result)
             }
         }

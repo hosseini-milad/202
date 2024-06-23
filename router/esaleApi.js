@@ -12,7 +12,7 @@ var im = require('imagemagick');
 const resizeImg = require('resize-img');
 const unitSchema = require("../models/product/units")
  
-const ServiceSchema = require('../models/product/Services');
+const notif = require('../model/Params/notif');
 const ProductSchema = require('../models/product/products');
 const BrandSchema = require('../models/product/brand')
 const category = require('../models/product/category');
@@ -33,6 +33,7 @@ const RahNewFaktor = require('../middleware/RahNewFaktor');
 const slider = require('../models/main/slider');
 const RahErrorHandle = require('../middleware/RahErrorHandle');
 const sendSmsUser = require('../middleware/sendSms');
+const CreateNotif = require('../middleware/CreateNotif');
 
 /*Product*/
 router.post('/fetch-product',jsonParser,async (req,res)=>{
@@ -333,6 +334,7 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
             rahItems:faktorItemsDetail,
             active:true,InvoiceID:rahkaranResult.result,
             status:"ثبت شده"})
+            await CreateNotif(rahkaranResult.result,userId,"ثبت سفارش ")
             await sendSmsUser(userId,process.env.OrderSubmit,
                 rahkaranResult.result)    
         const newFaktorItems = await faktorItems.create(RahFaktorData.itemData)
