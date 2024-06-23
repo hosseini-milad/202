@@ -4,7 +4,7 @@ const CategorySchema = new mongoose.Schema({
     title:  String, // String is shorthand for {type: String}
     link:String,
     type:String,
-    
+    id:String,
     catCode:String,
     parent: {type: mongoose.Schema.Types.ObjectId, ref: 'categories'},
     body:   String,

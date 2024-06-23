@@ -434,6 +434,7 @@ router.post('/editCats',jsonParser,async(req,res)=>{
             description:req.body.description,
             sku: req.body.sku, 
             catCode:req.body.catCode,
+            id:req.body.catCode,
             price: req.body.price,
             quantity: req.body.quantity,
             sort: req.body.sort,
