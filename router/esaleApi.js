@@ -77,6 +77,7 @@ router.post('/list-product',jsonParser,async (req,res)=>{
         unitId:req.body.unitId,
         active:req.body.active,
         offset:req.body.offset,
+        panel:req.body.panel,
         search:req.body.search,
         pageSize:pageSize
     }
@@ -99,6 +100,7 @@ router.post('/list-product',jsonParser,async (req,res)=>{
             { $match:data.title?{title:new RegExp('.*' + data.title + '.*')}:{}},
             { $match:data.sku?{sku:new RegExp('.*' + data.sku + '.*')}:{}},
             { $match:data.unitId?{unitId:data.unitId}:{}},
+            { $match:data.panel?{}:{active:true}},
             { $match:searchCat.length?{catId:{$in:searchCat}}:{}},
             { $match:(data.active&&data.active=="deactive")?{}:{catId:{$nin:["1","4","5"]}}},
             { $match:data.search?{$or:[
