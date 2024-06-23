@@ -173,9 +173,10 @@ router.post('/delete-doc',jsonParser,auth,async (req,res)=>{
     } 
 })
 
-router.post('/list-notif',jsonParser,async (req,res)=>{
+router.get('/list-notif',jsonParser,auth,async (req,res)=>{
+    const userId = req.headers['userid']
     try{
-        var result = await notif.find().limit(10);
+        var result = userId&&await notif.find({userId:ObjectID(userId)}).limit(10);
        
         res.json({filter:result})
         return
