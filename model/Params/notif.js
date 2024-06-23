@@ -5,7 +5,7 @@ const notifSchema = new mongoose.Schema({
   orderNo:{ type: String},
   userId:{ type: String,required:true},
   status:{type:Boolean,default:1},
-  content: { type: String,required:true},
+  content: { type: String},
   link:{type:String, default:"#"},
   imageUrl: { type: String},
   date:{type:Date,default:Date.now()}
