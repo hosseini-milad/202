@@ -119,10 +119,14 @@ router.post('/list-product',jsonParser,async (req,res)=>{
             } 
             
             const typeUnique = [...new Set(productList.map((item) => item.category))];
-            const categoryList = (data.category&&hasChild)?await category.find({parent:categoryDetail._id}):
-                await category.find({parent:{$exists:false}})
+            const categoryList = await category.find({parent:{$exists:false}})
+            const subCategoryList = (data.category&&hasChild)?
+                await category.find({parent:categoryDetail._id}):
+                ''
            res.status(200).json({data:products,type:typeUnique,hasChild:hasChild,
-            size:productList.length,success:true,categoryList:categoryList})
+            size:productList.length,success:true,
+            categoryList:categoryList,
+            subCategoryList:subCategoryList})
     }
     catch(error){
         res.status(500).json({message: error.message})
