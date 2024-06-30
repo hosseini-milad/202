@@ -178,7 +178,7 @@ router.get('/list-notif',jsonParser,auth,async (req,res)=>{
     try{
         var result = userId&&await notif.find({userId:ObjectID(userId)}).limit(10);
        const unread = result&&result.find(item=>(item.status==false))
-        res.json({filter:result,unread:unread.length})
+        res.json({filter:result,unread:unread,unreadSize:unread.length})
         return
         
     }
