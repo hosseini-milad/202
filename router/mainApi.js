@@ -72,7 +72,7 @@ schedule.scheduleJob('5 */2 * * *', async() => {
     response = await fetch(ONLINE_URL+"/get-customers",
         {method: 'GET'});
  })
- schedule.scheduleJob('0 0/5 * * *', async() => { 
+ schedule.scheduleJob('*/10 * * * *', async() => { 
     console.log("refreshing")
     response = await fetch(ONLINE_URL+"/get-faktors-auth",
         {method: 'GET'});
