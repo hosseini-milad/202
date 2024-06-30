@@ -338,6 +338,7 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
             rahDetail:faktorDetail,
             rahItems:faktorItemsDetail,
             active:true,InvoiceID:rahkaranResult.result,
+            rahId:faktorDetail.result&&faktorDetail.result[0]&&faktorDetail.result[0].Number,
             status:"ثبت شده"})
             await CreateNotif(rahkaranResult.result,userId,"ثبت سفارش ")
             await sendSmsUser(userId,process.env.OrderSubmit,
