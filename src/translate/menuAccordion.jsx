@@ -175,6 +175,14 @@ const menutrans ={
             url:"users"
         },
         {
+            english: "News",
+            persian: "خبرها",
+            index:1,
+            icon:"fa-bull-horn",
+            href:"/news",
+            url:"news"
+        },
+        {
             english: "Documents",
             persian: "مستندات",
             index:1,

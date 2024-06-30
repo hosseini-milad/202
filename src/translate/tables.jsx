@@ -19,6 +19,10 @@ const tabletrans ={
         english: "Document",
         persian: "مستندات"
     },
+    upload:{
+        english: "Upload",
+        persian: "آپلود"
+    },
     addDoc:{
         english: "add Document",
         persian: "افزودن مستندات"

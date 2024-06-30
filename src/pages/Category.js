@@ -43,7 +43,7 @@ function Category(props) {
       brand: filters.brand,
       dateFrom: filters.date && filters.date.dateFrom,
       dateTo: filters.date && filters.date.dateTo,
-      access: "manager",
+      root: true,
     };
     const postOptions = {
       method: "post",

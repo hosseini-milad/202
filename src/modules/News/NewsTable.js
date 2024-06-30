@@ -1,9 +1,9 @@
 import { useState } from "react"
 import tabletrans from "../../translate/tables"
-import CatTableRow from "./CatTableRow";
+import NewsTableRow from "./NewsTableRow";
 
-function CatTable(props){
-  const cat = props.cat
+function NewsTable(props){
+  const data = props.data
   const lang=props.lang;
   const [detail,showDetail] = useState(-1)
     return(
@@ -13,11 +13,11 @@ function CatTable(props){
           <th className="checkBoxStyle">
               <input type="checkbox" name="" id=""/></th>
             <th>
-              <p>{tabletrans.code[lang]}</p>
+              <p>{tabletrans.order[lang]}</p>
               <i></i>
             </th>
             <th>
-              <p>{tabletrans.category[lang]}</p>
+              <p>{tabletrans.customer[lang]}</p>
               <i></i>
             </th>
             <th>
@@ -25,7 +25,15 @@ function CatTable(props){
               <i></i>
             </th>
             <th>
-              <p>{tabletrans.link[lang]}</p>
+              <p>{tabletrans.brand[lang]}</p>
+              <i></i>
+            </th>
+            <th>
+              <p>{tabletrans.item[lang]}</p>
+              <i></i>
+            </th>
+            <th>
+            <p>{tabletrans.price[lang]}</p>
               <i></i>
             </th>
             <th>
@@ -37,9 +45,9 @@ function CatTable(props){
           </tr>
         </thead>
         <tbody>
-          {cat&&cat.filter?cat.filter.map((cat,i)=>(
-            <CatTableRow detail={detail} showDetail={showDetail} 
-            cat={cat} index={i} key={i} lang={lang}/>
+          {data&&data.filter?data.filter.map((data,i)=>(
+            <NewsTableRow detail={detail} showDetail={showDetail} 
+            data={data} index={i} key={i} lang={lang}/>
           )):''}
           
         </tbody>
@@ -47,4 +55,4 @@ function CatTable(props){
 
     )
 }
-export default CatTable
+export default NewsTable

@@ -1,13 +1,14 @@
 import React ,{ useState } from "react"
 import Status from "../Components/Status"
 import  env, { normalPriceCount, rxFindCount } from "../../env"
-import CatQuickDetail from "./CatComponent/CatQuickDetail"
+import NewsQuickDetail from "./NewsComponent/NewsQuickDetail"
 
-function CatTableRow(props){
+function NewsTableRow(props){
   const [openOption,setOpenOption] = useState(0)
   const [checkState,setCheckState] = useState(false)
   const activeAcc = props.index===props.detail
-  const cat=props.cat
+  console.log(props.data)
+  const data=props.data
     return(<React.Fragment>
         <tr 
             className={activeAcc?"activeAccordion":"accordion"}>
@@ -17,38 +18,47 @@ function CatTableRow(props){
             <td>
                 <div className="order-id">
                   <p onClick={()=> window.location.href=
-                    "/category/detail/"+cat._id}>
-                    {cat.catCode}</p>
+                    "/news/detail/"+data.enTitle}>
+                    {data._id}</p>
                 </div>
             </td>
             <td>
               <div className="cu-avatar">
-                  <img src={cat?(env.siteApiUrl+cat.iconUrl):''} 
-                    alt={cat.title}/>
+                  <img src={env.siteApiUrl+data.imageUrl} alt="avatar"/>
                   <div className="cu-name" onClick={()=>
-                  window.location.href="/category/detail/"+cat._id}>
-                    <p className="name">{cat.title}</p>
-                    <p className="email">{cat.link}</p>
+                  window.location.href="/news/detail/"+data.enTitle}>
+                    <p className="name">{data.title}</p>
+                    <p className="email">{data.enTitle}</p>
                   </div>
-                  {cat.moreInformation?
-                    <i className="fa fa-comment-o" title={cat.moreInformation}></i>:<></>}
+                  {data.abstract?
+                    <i className="fa fa-comment-o" title={data.abstract}></i>:<></>}
                 </div>
               </td>
               <td>
                 <div className="or-date">
-                  <p className="date">{new Date(cat.date)
+                  <p className="date">{new Date(data.date)
                   .toLocaleDateString(props.lang==="persian"?'fa':'en')}</p>
-                  <p className="time">{new Date(cat.date)
+                  <p className="time">{new Date(data.date)
                   .toLocaleTimeString(props.lang==="persian"?'fa':'en')}</p>
                 </div>
               </td>
               <td>
                 <div className="order-num">
-                  <p>{cat.link}</p>
+                  <p>{data.brand}</p>
                 </div>
               </td>
               <td>
-                <Status status={cat.status} class={"order-status"} 
+                <div className="order-num">
+                  <p>{"product"}</p>
+                </div>
+              </td>
+              <td>
+                <div className="order-price">
+                  <p>{normalPriceCount(data.totalPrice)}</p>
+                </div>
+              </td>
+              <td>
+                <Status status={data.status} class={"order-status"} 
                   lang={props.lang}/>
               </td>
             <td>
@@ -56,7 +66,7 @@ function CatTableRow(props){
               <i className={`tableIcon fas ${activeAcc?"fa-chevron-up":"fa-chevron-down"}`} 
                 onClick={()=>props.showDetail(activeAcc?"-1":props.index)} ></i>
                 <i className="tableIcon fas fa-edit" onClick={()=>
-                  window.location.href="/category/detail/"+cat._id}></i>
+                  window.location.href="/news/detail/"+data.enTitle}></i>
                 <i className="tableIcon fas fa-ellipsis-v" 
                   onClick={()=>setOpenOption(openOption?0:1)}></i>
               </div>
@@ -73,9 +83,9 @@ function CatTableRow(props){
             </td>
           </tr>
           {activeAcc?<tr className="sub-order">
-        <td colSpan="9"><CatQuickDetail cat={cat}/></td></tr>
+        <td colSpan="9"><NewsQuickDetail data={data}/></td></tr>
           :<React.Fragment></React.Fragment>}
           </React.Fragment>
     )
 }
-export default CatTableRow
+export default NewsTableRow
