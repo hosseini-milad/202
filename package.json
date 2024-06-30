@@ -12,9 +12,7 @@
     "@mui/styled-engine-sc": "^5.12.0",
     "@tinymce/tinymce-react": "^4.3.0",
     "dayjs": "^1.11.8",
-    "install": "^0.13.0",
     "material-ui-flat-pagination": "^4.1.2",
-    "npm": "^10.2.3",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-code-blocks": "^0.1.6",
@@ -25,7 +23,7 @@
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.10.0",
     "react-rte": "^0.16.3",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "react-switch": "^7.0.0",
     "styled-components": "^5.3.10",
     "stylis-plugin-rtl": "^2.1.1",
@@ -46,7 +44,7 @@
     "workbox-streams": "^6.5.4"
   },
   "scripts": {
-    "start": "set PORT=3030 && react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

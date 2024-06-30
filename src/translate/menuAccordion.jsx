@@ -1,9 +1,9 @@
 const menutrans ={
     title:{
-        english:"SharifOil",
-        persian:"روانکاران شریف",
+        english:"202",
+        persian:"202",
         icon:"fa-eercast",
-        href:"https://sharifoilco.com"
+        href:"https://esale.202.ir"
         
     },
     menu:[
