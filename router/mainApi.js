@@ -115,6 +115,7 @@ router.post('/get-product', async (req,res)=>{
         sepidarResultRaw = await RahkaranPOST("/Sales/ProductManagement/Services/ProductManagementService.svc/GetProducts",
         {"PageSize":5},cookieData)
         const query=[]
+        console.log(sepidarResultRaw)
         var newProduct = [];
         var updateProduct = 0
         var notUpdateProduct = 0
