@@ -129,7 +129,7 @@ router.post('/get-product', async (req,res)=>{
                 unitId:unitId,
                 ItemID:product.id,
                 active:product.stateTitle=="فعال"?true:false,
-                catId:product.partNature,
+                rahcatId:product.partNature, 
                 catTitle:product.partNatureTitle
             }
             const productResult = await products.updateOne({

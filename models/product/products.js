@@ -10,6 +10,7 @@ const ProductSchema = new Schema({
     description:String,
     ItemID:{ type: String , unique: true},
     brandId:String,
+    rahcatId:String,
     catId:String,
     catTitle:String,
     config:String,
