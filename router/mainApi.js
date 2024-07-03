@@ -216,7 +216,7 @@ router.get('/get-faktors', async (req,res)=>{
             if(rahkaranOut[i]&&rahkaranOut[i].State == 2){
                 await ordersLogs.create({status:"تایید شده",orderNo:rahkaranOut[i].ID})
                 await faktor.updateOne({InvoiceID:rahkaranOut[i].ID},
-                    {$set:{status:"تایید شده"}}
+                    {$set:{status:"تایید شده",isEdit:false}}
                 )
                 await CreateNotif(faktorList[i].InvoiceID,faktorList[i].userId,"تایید سفارش ")
             }
@@ -224,7 +224,7 @@ router.get('/get-faktors', async (req,res)=>{
                 
                 const result = await ordersLogs.create({status:"باطل شده",orderNo:rahkaranOut[i].ID})
                 await faktor.updateOne({InvoiceID:rahkaranOut[i].ID},
-                    {$set:{status:"باطل شده",active:false}}
+                    {$set:{status:"باطل شده",active:false,isEdit:false}}
                 )
                 await CreateNotif(faktorList[i].InvoiceID,faktorList[i].userId,"لغو سفارش ")
                 //console.log(result)
