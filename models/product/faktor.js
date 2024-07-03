@@ -13,7 +13,7 @@ const FaktorSchema = new Schema({
     totalDiscount:{ type: String },
     totalPrice:{ type: String },
     totalAddition:{ type: String },
-    isEdit:{type:Boolean},
+    isEdit:{type:Boolean,default:false},
     active:{type:Boolean},
     netPrice:{ type: String },
     InvoiceID:{ type: String },
