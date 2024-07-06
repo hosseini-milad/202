@@ -204,8 +204,8 @@ router.post('/add-cart',auth,jsonParser,async (req,res)=>{
             res.status(400).json({message:"محصول یافت نشد"})
         }
         const cartFound = await cart.findOne({userId:userId,sku:data.sku})
-        var newCount = cartFound?parseInt(cartFound.count):0
-        newCount += parseInt(data.count)
+        var newCount = cartFound?parseFloat(cartFound.count):0//parseInt
+        newCount += parseFloat(data.count)//parseInt
         data.count = newCount
         data.ItemID = productData.ItemID
         data.unitId = productData.unitId
@@ -277,7 +277,8 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
             res.status(400).json({message:"سبد خرید خالی است"})
         }
         //console.log(faktorData.faktorData,faktorData.faktorItems,userData)
-        const rahKaranFaktor = await CreateRahkaran(faktorData.faktorData,faktorData.faktorItems,userData)
+        const rahKaranFaktor = await CreateRahkaran(faktorData.faktorData,
+            faktorData.faktorItems,userData)
         //console.log(rahKaranFaktor)
         var faktorDetail = ''
         var faktorItemsDetail = []

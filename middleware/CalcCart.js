@@ -16,10 +16,10 @@ const CalcCart=async(userId)=>{
             cartDetail[i].price = 1250000
             price = 1250000
         }
-        var totalPrice = price*parseInt(cartDetail[i].count)
+        var totalPrice = price*parseFloat(cartDetail[i].count)//parseInt
         cartDetail[i].totalPrice = totalPrice
         cartPrice += totalPrice
-        cartTotal += parseInt(cartDetail[i].count)
+        cartTotal += parseFloat(cartDetail[i].count)//parseInt
     }
     return({cart:cartDetail,cartDetail:
         {cartPrice:cartPrice,

@@ -14,7 +14,7 @@ const CartSchema = new Schema({
     description:{type:String},
     price:{type:String},
     totalPrice:{type:String},
-    count:{type:Number},
+    count:{type:String},
     discount:{type:String},
 })
 module.exports = mongoose.model('cart',CartSchema);
