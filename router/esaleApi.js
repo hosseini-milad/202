@@ -117,7 +117,7 @@ router.post('/list-product',jsonParser,async (req,res)=>{
             for(var i=0;i<products.length;i++){
                 const unit = await unitSchema.findOne({id:products[i].unitId})
                 products[i].unitName = unit?unit.title:''
-                products[i].stepUnit = (products[i].unitId!=="5")?1:0
+                products[i].stepUnit = (products[i].unitId!=="7")?1:0
             } 
             
             const typeUnique = [...new Set(productList.map((item) => item.category))];
