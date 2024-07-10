@@ -242,7 +242,7 @@ router.get('/get-customers', async (req,res)=>{
     var loginStatus=false
     try{
         var sepidarResult = await RahkaranPOST("/Sales/PartyManagement/Services/PartyManagementService.svc/GetCustomerList",
-        JSON.stringify({PageSize:"1500"}),cookieData)
+        {PageSize:"1500"},cookieData)
         if(!sepidarResult) {
             const loginData = await RahkaranLogin()
             var cookieSGPT = '';
