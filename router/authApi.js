@@ -604,6 +604,9 @@ router.post('/login-customer',jsonParser, async (req,res)=>{
         res.status(400).json({error:"کاربر یافت نشد"});
         return;
       }
+      if(user.rahStatus != 2){
+        res.status(400).json({error:"مشتری فعال نیست"})
+    }
       if(!user.password){
         res.status(400).json({error:"رمز عبور ارسال نشده است"});
         return;
@@ -648,14 +651,19 @@ router.post('/customer-otp',jsonParser,async(req,res)=>{
     var otpValue = Math.floor(Math.random() * 8999)+1000 ;
     
     const user = await customers.findOne({meliCode: username });
-    
+    if(!user){
+      res.status(400).json({message:"مشتری فعال نیست"})
+    }
+    if(user.rahStatus != 2){
+      res.status(400).json({message:"مشتری فعال نیست"})
+    }
     if(user){
       smsResult =api.VerifyLookup({
         token: otpValue,
         template: process.env.template,//"mgmVerify",
         receptor: user.phone
     },);
-    console.log(process.env.template)
+    //console.log(process.env.template)
       const newUser = await customers.updateOne(
         {meliCode:username},{$set:{otp:otpValue}});
         ////console.log((newUser)
