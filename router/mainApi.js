@@ -256,7 +256,7 @@ router.get('/get-customers', async (req,res)=>{
             //console.log(`sg-auth-SGPT=${cookieSGPT}`)
             loginStatus=true
             sepidarResult =RahkaranPOST("/Sales/PartyManagement/Services/PartyManagementService.svc/GetCustomerList",
-            req.body,{"sg-auth-SGPT":cookieSGPT})
+            {"PageSize":1500},{"sg-auth-SGPT":cookieSGPT})
         }
         const query=[]
         var newCustomer = [];
@@ -312,7 +312,7 @@ router.get('/get-customers', async (req,res)=>{
         res.json({sepidar:{new:newCustomer.length,
             update:updateCustomer,
             notUpdate:notUpdateCustomer},
-            result:sepidarResult,
+            result:sepidarResult.length,
             loginStatus:loginStatus,
             message:"کاربران بروز شدند"})
     }
