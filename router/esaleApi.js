@@ -266,6 +266,9 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
         if(!userData){
             res.status(400).json({message:"مشتری یافت نشد "})
         }
+        if(userData.rahStatus != 2){
+            res.status(400).json({message:"مشتری فعال نیست"})
+        }
         const myCart = await CalcCart(userId)
 
         const faktorData = await CalcFaktor(myCart,userData)
