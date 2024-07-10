@@ -605,7 +605,7 @@ router.post('/login-customer',jsonParser, async (req,res)=>{
         return;
       }
       if(user.rahStatus != 2){
-        res.status(400).json({message:"کاربری شما فعال نیست، در صورت نیاز با کارشناس مربوطه تماس بگیرید"})
+        res.status(400).json({error:"کاربری شما فعال نیست، در صورت نیاز با کارشناس مربوطه تماس بگیرید"})
     }
       if(!user.password){
         res.status(400).json({error:"رمز عبور ارسال نشده است"});
@@ -640,7 +640,7 @@ router.post('/login-customer',jsonParser, async (req,res)=>{
       }
       } 
   catch(error){
-      res.status(500).json({message: error.message})
+      res.status(500).json({error: error.message})
   }
 })
 router.post('/customer-otp',jsonParser,async(req,res)=>{
@@ -652,10 +652,10 @@ router.post('/customer-otp',jsonParser,async(req,res)=>{
     
     const user = await customers.findOne({meliCode: username });
     if(!user){
-      res.status(400).json({message:"اطلاعات کاربری یافت نشد"})
+      res.status(400).json({error:"اطلاعات کاربری یافت نشد"})
     }
     if(user.rahStatus != 2){
-      res.status(400).json({message:"کاربری شما فعال نیست، در صورت نیاز با کارشناس مربوطه تماس بگیرید"})
+      res.status(400).json({error:"کاربری شما فعال نیست، در صورت نیاز با کارشناس مربوطه تماس بگیرید"})
     }
     if(user){
       smsResult =api.VerifyLookup({
@@ -673,13 +673,13 @@ router.post('/customer-otp',jsonParser,async(req,res)=>{
       return
     }
     else {
-      res.status(400).json({message:"کاربر پیدا نشد"});
+      res.status(400).json({error:"کاربر پیدا نشد"});
     return
       
     }
   }
   catch (error){
-    res.status(400).json({message:"login error",error:error,
+    res.status(400).json({error:"login error",error:error,
     smsResult:smsResult});
   }
 })
