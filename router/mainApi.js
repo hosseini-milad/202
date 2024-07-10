@@ -239,6 +239,7 @@ router.get('/get-faktors', async (req,res)=>{
 })
 router.post('/get-customers', async (req,res)=>{
     const cookieData = req.cookies
+    var loginStatus=false
     try{
         var sepidarResult = await RahkaranPOST("/Sales/PartyManagement/Services/PartyManagementService.svc/GetCustomerList",
         req.body,cookieData)
@@ -253,6 +254,7 @@ router.post('/get-customers', async (req,res)=>{
             res.cookie("sg-dummy","-")
             res.cookie("sg-auth-SGPT",cookieSGPT)
             //console.log(`sg-auth-SGPT=${cookieSGPT}`)
+            loginStatus=true
             sepidarResult =RahkaranPOST("/Sales/PartyManagement/Services/PartyManagementService.svc/GetCustomerList",
             req.body,{"sg-auth-SGPT":cookieSGPT})
         }
@@ -311,6 +313,7 @@ router.post('/get-customers', async (req,res)=>{
             update:updateCustomer,
             notUpdate:notUpdateCustomer},
             result:sepidarResult,
+            loginStatus:loginStatus,
             message:"کاربران بروز شدند"})
     }
     catch(error){
