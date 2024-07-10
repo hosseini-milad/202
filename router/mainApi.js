@@ -310,6 +310,7 @@ router.post('/get-customers', async (req,res)=>{
         res.json({sepidar:{new:newCustomer.length,
             update:updateCustomer,
             notUpdate:notUpdateCustomer},
+            result:sepidarResult,
             message:"کاربران بروز شدند"})
     }
     catch(error){
