@@ -69,14 +69,14 @@ router.use('/panel/crm',CRMPanelApi)
 schedule.scheduleJob('5 */2 * * *', async() => { 
     response = await fetch(ONLINE_URL+"/get-product",
         {method: 'GET'});
-    response = await fetch(ONLINE_URL+"/get-customers",
-        {method: 'GET'});
  })
  schedule.scheduleJob('*/10 * * * *', async() => { 
     console.log("refreshing")
     response = await fetch(ONLINE_URL+"/get-faktors-auth",
         {method: 'GET'});
     response = await fetch(ONLINE_URL+"/get-faktors",
+        {method: 'GET'});
+    response = await fetch(ONLINE_URL+"/get-customers",
         {method: 'GET'});
  })
 router.get('/auth-server', async (req,res)=>{
@@ -237,12 +237,12 @@ router.get('/get-faktors', async (req,res)=>{
         res.status(500).json({message: error.message})
     }
 })
-router.post('/get-customers', async (req,res)=>{
+router.get('/get-customers', async (req,res)=>{
     const cookieData = req.cookies
     var loginStatus=false
     try{
         var sepidarResult = await RahkaranPOST("/Sales/PartyManagement/Services/PartyManagementService.svc/GetCustomerList",
-        req.body,cookieData)
+        JSON.stringify({PageSize:"1500"}),cookieData)
         if(!sepidarResult) {
             const loginData = await RahkaranLogin()
             var cookieSGPT = '';
