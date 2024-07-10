@@ -652,10 +652,10 @@ router.post('/customer-otp',jsonParser,async(req,res)=>{
     
     const user = await customers.findOne({meliCode: username });
     if(!user){
-      res.status(400).json({message:"مشتری فعال نیست"})
+      res.status(400).json({message:"اطلاعات کاربری یافت نشد"})
     }
     if(user.rahStatus != 2){
-      res.status(400).json({message:"مشتری فعال نیست"})
+      res.status(400).json({message:"کاربری شما فعال نیست، در صورت نیاز با کارشناس مربوطه تماس بگیرید"})
     }
     if(user){
       smsResult =api.VerifyLookup({
