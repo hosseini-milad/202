@@ -262,8 +262,8 @@ router.post('/get-customers', async (req,res)=>{
         var newCustomer = [];
         var updateCustomer = 0
         var notUpdateCustomer = 0
-        for(var i=0;i<sepidarResult.length;i++){
-            var customer = sepidarResult[i]
+        for(var i=0;i<(sepidarResult.result&&sepidarResult.result.length);i++){
+            var customer = sepidarResult[i].result
             //console.log(customer)
             var phone = customer.Tel
             try{
