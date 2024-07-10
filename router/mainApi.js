@@ -240,11 +240,12 @@ router.get('/get-faktors', async (req,res)=>{
 router.get('/get-customers', async (req,res)=>{
     const cookieData = req.cookies
     var loginStatus=false
+    var loginData = ''
     try{
         var sepidarResult = await RahkaranPOST("/Sales/PartyManagement/Services/PartyManagementService.svc/GetCustomerList",
         {"PageSize":1500},cookieData)
         if(!sepidarResult) {
-            const loginData = await RahkaranLogin()
+            loginData = await RahkaranLogin()
             var cookieSGPT = '';
             if(loginData){
                 cookieSGPT = loginData.split('SGPT=')[1]
@@ -313,7 +314,7 @@ router.get('/get-customers', async (req,res)=>{
             update:updateCustomer,
             notUpdate:notUpdateCustomer},
             result:sepidarResult.length,
-            loginStatus:loginStatus,
+            loginStatus:loginData,
             message:"کاربران بروز شدند"})
     }
     catch(error){
