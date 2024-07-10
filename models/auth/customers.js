@@ -24,6 +24,10 @@ const customerSchema = new mongoose.Schema({
   imageUrl1:{ type: String },
   imageUrl2:{ type: String },
   token:{type:String},
+
+  rahPartyType:{type:String},
+  rahStatus:{type:String},
+  rahType:{type:String},
   date:{type:Date} 
 });
 
