@@ -34,7 +34,7 @@ const CreateRahkaran=async(faktorData,faktorItems,userData)=>{
     const postData = 
         {
             "addressId":"",
-          "brokerId":62,
+          "brokerId":"",
             "currencyId":"1",
             "customerId":userData.customerID,
             "date":`/Date(${faktorData.progressDate})/`,
