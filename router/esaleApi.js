@@ -104,7 +104,7 @@ router.post('/list-product',jsonParser,async (req,res)=>{
             { $match:data.panel?{}:{active:true}},
             { $match:searchCat.length?{catId:{$in:searchCat}}:{}},
             { $match:(data.active&&data.active=="deactive")?{}:
-                {catId:{$nin:[""]}}},//["1","4","5"]}}},
+                {$and:[{catId:{$exist:true}},{catId:{$nin:[""]}}]}},//["1","4","5"]}}},
             { $match:data.search?{$or:[
                 {title:new RegExp('.*' + data.search + '.*')},
                 {sku:new RegExp('.*' + data.search + '.*')}
