@@ -22,7 +22,7 @@ const RahNewFaktor=async(faktorData,RahFaktor,rahItems,userData)=>{
     faktorMainData.netPrice = rahFaktorData&&
         rahFaktorData[0]&&rahFaktorData[0].NetPrice
     var faktorItemData =faktorData.faktorItems
-    for(var i=0;i<faktorItemData.length;i++){
+    for(var i=0;i<rahFaktorItems.length;i++){
         faktorItemData[i].originData = {
             count:faktorItemData[i].count,
             sku:faktorItemData[i].sku,

@@ -16,6 +16,7 @@ const panelUserApi = require('./panelUserApi')
 const CRMPanelApi = require('./panelCrmApi')
 const panelOrderApi = require('./panelOrderApi')
 const panelProductApi = require('./panelProductApi')
+const reportApi = require('./reportApi')
 const esaleApi = require('./esaleApi')
 const panelFaktorApi = require('./faktorApi')
 const sepidarFetch = require('../middleware/SepidarPost');
@@ -56,6 +57,7 @@ router.use('/cart', cartApi)
 router.use('/product', productApi)
 router.use('/form', formApi)
 router.use('/user', userApi)
+router.use('/report', reportApi)
 router.use('/payment',paymentApi)
 
 router.use('/yas', yasApi)
@@ -71,7 +73,6 @@ schedule.scheduleJob('5 */2 * * *', async() => {
         {method: 'GET'});
  })
  schedule.scheduleJob('*/10 * * * *', async() => { 
-    console.log("refreshing")
     response = await fetch(ONLINE_URL+"/get-faktors-auth",
         {method: 'GET'});
     response = await fetch(ONLINE_URL+"/get-faktors",
@@ -214,10 +215,12 @@ router.get('/get-faktors', async (req,res)=>{
         }
         for(var i=0;i<rahkaranOut.length;i++){
             if(rahkaranOut[i]&&rahkaranOut[i].State == 2){
+                console.log(rahkaranOut[i].Number)
                 await ordersLogs.create({status:"تایید شده",orderNo:rahkaranOut[i].ID})
                 await faktor.updateOne({InvoiceID:rahkaranOut[i].ID},
                     {$set:{status:"تایید شده",isEdit:false}}
                 )
+                await CreateFaktor(rahkaranOut[i].Number)
                 await CreateNotif(faktorList[i].InvoiceID,faktorList[i].userId,"تایید سفارش ")
             }
             if(rahkaranOut[i]&&rahkaranOut[i].State == 6){
@@ -509,7 +512,7 @@ router.get('/sepidar-quantity', async (req,res)=>{
     }
 })
 router.get('/sepidar-all', async (req,res)=>{
-    try{
+    try{ 
         response = await fetch(ONLINE_URL+"/sepidar-product",
             {method: 'GET'});
         response = await fetch(ONLINE_URL+"/sepidar-price",

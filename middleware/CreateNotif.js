@@ -2,7 +2,6 @@ const notif = require("../model/Params/notif")
 
 
 const CreateNotif = async(data,user,type)=>{
-    console.log(data)
     await notif.create({
         title:type+data,
         orderNo:data,

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html dir="rtl">
+    <main>
+    <header>
+        <h1>فاکتور فروش</h1>
+        
+        <div class="dateInfo">
+            {{#each order}}<span>شماره: {{rahId}}</span>{{/each}} <br/>
+            {{#each date}}<span>تاریخ: {{this}}</span>{{/each}}
+        </div>
+    </header>
+        <table cellspacing="0" cellpadding="0" cols="12">
+            <tbody class="borderNow">
+                <tr>
+                    <td class="vertical" rowspan="2">مشخصات<br/>فروشنده<br></td>
+                    <td class="normalTd">نام فروشنده</td>
+                    <td class="normalTd">شرکت صنایع غذایی پاک تلیسه(202)</td>
+                    <td class="seprator"></td>
+                    <td class="normalTd">کد اقتصادی</td>
+                    <td class="normalTd">10102151600</td>
+                  </tr>
+                  <tr>
+                    <td class="normalTd">نشانی</td>
+                    <td class="normalTd"></td>
+                    <td class="seprator"></td>
+                    <td class="normalTd">کدپستی</td>
+                    <td class="normalTd"></td>
+                  </tr>
+            </tbody> 
+            {{#each user}}
+            <tbody class="borderNow">
+                <tr>
+                    <td class="vertical" rowspan="4">مشخصات<br/>خریدار<br></td>
+                    <td class="normalTd">نام خریدار</td>
+                    <td class="normalTd" colspan="4">{{cName}}</td>
+                  </tr>
+                  <tr>
+                      <td class="normalTd">کد خریدار</td>
+                      <td class="normalTd">{{customerID}}</td>
+                      <td class="seprator"></td>
+                      <td class="normalTd">کد اقتصادی</td>
+                      <td class="normalTd">{{meliCode}}</td>
+                    </tr>
+                  <tr>
+                    <td class="normalTd">نشانی</td>
+                    <td class="normalTd" colspan="4">{{Address}}</td>
+                  </tr>
+                  <tr>
+                    <td class="normalTd">تلفن</td>
+                    <td class="normalTd">{{phone}}</td>
+                    <td class="seprator"></td>
+                    <td class="normalTd">کدپستی</td>
+                    <td class="normalTd"></td>
+                  </tr>
+            </tbody>  
+            {{/each}} 
+        </table>
+        <table cellspacing="0" cellpadding="0" cols="12"
+            class="borderTable">
+            <tbody class="borderNow innerBorder">
+                <tr>
+                    <th class="normalTd">ردیف</th>
+                    <th class="normalTd">کد محصول</th>
+                    <th class="normalTd">نام محصول</th>
+                    <th class="normalTd">واحد سنجش</th>
+                    <th class="normalTd">مقدار</th>
+                    <th class="normalTd">فی</th>
+                    <th class="normalTd">مبلغ(ریال)</th>
+                    <th class="normalTd">توضیحات</th>
+                  </tr>
+                  {{#each items}}
+                  <tr>
+                    <td class="normalTd">{{index}}</td>
+                    <td class="normalTd">{{sku}}</td>
+                    <td class="normalTd">{{title}}</td>
+                    <td class="normalTd">{{unit}}</td>
+                    <td class="normalTd">{{count}}</td>
+                    <td class="normalTd">{{price}}</td>
+                    <td class="normalTd">{{totalPrice}}</td>
+                    <td class="normalTd"></td>
+                  </tr>
+                  {{/each}}
+                  {{#each order}}
+                  <tr>
+                    <td class="normalTd" colspan="4">جمع</td>
+                    <td class="normalTd">{{totalCount}}</td>
+                    <td class="normalTd"></td>
+                    <td class="normalTd">{{totalPrice}}</td>
+                    <td class="normalTd"></td>
+                  </tr>
+                  {{/each}}
+            </tbody> 
+            
+        </table>
+        <table cellspacing="0" cellpadding="0" cols="12"
+            class="borderHalf">
+            {{#each order}}
+            <tbody class="borderNow innerBorder">
+                <tr>
+                    <td class="normalTd">جمع مبلغ</td>
+                    <td class="normalTd">{{totalPrice}}</td>
+                </tr>
+                <tr>
+                    <td class="normalTd">جمع اضافات</td>
+                    <td class="normalTd">{{totalAddition}}</td>
+                </tr>
+                <tr>
+                    <td class="normalTd">جمع کسورات</td>
+                    <td class="normalTd">{{totalDiscount}}</td>
+                </tr>
+                <tr>
+                    <td class="normalTd">مبلغ کل</td>
+                    <td class="normalTd">{{netPrice}}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="normalTd">مبلغ به حروف:
+                        {{pPrice}} ریال</td>
+                </tr>
+            </tbody> 
+            {{/each}}
+        </table>
+    </main>
+    <footer>
+
+    </footer>
+    <style>
+        @font-face {
+            font-family: iran;
+            src: url("http://localhost:2020/uploads/fonts/IRANSansWeb.eot") format("embedded-opentype");
+            src: url("http://localhost:2020/uploads/fonts/IRANSansWeb.eot") format("embedded-opentype"),
+                url("http://localhost:2020/uploads/fonts/IRANSansWeb.ttf") format("truetype"),
+                url("http://localhost:2020/uploads/fonts/IRANSansWeb.woff") format("woff"),
+                url("http://localhost:2020/uploads/fonts/IRANSansWeb.woff2") format("woff2");
+            }
+        html{
+            font-family: iran;
+            font-size: 13px;
+        }
+        main{
+            width: 600px;   
+            margin: auto;
+            text-align: right;
+            
+        }
+        header{
+            position: relative;
+        }
+        table{
+            border-collapse: collapse;  
+            width: 100%;
+            margin-top: 5px;
+        }
+        .borderNow{
+            border:2px solid #333 !important;
+            padding: 10px;
+        }
+        .innerBorder td,.borderTable th{
+            border: 1px solid #333;
+            text-align: center;
+        }
+        .vertical{
+            writing-mode: tb-rl;
+            width: 30px;
+            padding: 10px 5px 10px 15px;
+            background-color: #eee;
+            border-left: 1px solid #333;
+            line-height: 1.1;
+        }
+        .normalTd{
+            padding: 5px 10px 5px 5px;
+        }
+        .borderHalf{
+            width: 50%;
+            margin-right: 50%;
+
+        }
+        .dateInfo{
+            position: absolute;
+            left: 20px;
+            top: 0px;
+        }
+    </style>
+</html>

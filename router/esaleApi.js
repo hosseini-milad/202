@@ -302,7 +302,7 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
             },cookieData)
             faktorItemsDetail = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotationItems",
             {
-                "PageSize":1,
+                "PageSize":10,
                 "MasterEntityID":rahkaranResult.result
             },cookieData)
         }

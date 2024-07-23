@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 
 const FaktorSchema = new Schema({
     faktorNo:{ type: String ,unique:true},
+    faktorUrl:{ type: String},
     initDate: { type: Date, default: Date.now },
     progressDate: { type: Date },
     userId:{ type: String },
