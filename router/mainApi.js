@@ -173,7 +173,7 @@ router.get('/get-faktors', async (req,res)=>{
     const cookieData = req.cookies
     
     try{
-        var faktorList = await faktor.find({status:{$in:["ثبت شده","ویرایش شده","تایید شده","لغو شده"]}})
+        var faktorList = await faktor.find({status:{$in:["در انتظار تایید","ویرایش شده","تایید شده","لغو شده"]}})
         var rahkaranOut=[]
         var rahkaranItemOut=[]
         for(var i=0;i<faktorList.length;i++){
