@@ -370,7 +370,7 @@ router.post('/list-faktor',auth,jsonParser,async (req,res)=>{
     try{
         const myFaktors = await faktor.aggregate([
             {$match:{userId:userId}},
-            { $match:search?{faktorNo:new RegExp('.*' + search + '.*')}:{}},
+            { $match:search?{rahId:new RegExp('.*' + search + '.*')}:{}},
             {$lookup:{
                 from : "faktoritems", 
                 localField: "faktorNo", 
