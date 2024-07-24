@@ -14,6 +14,7 @@ const docCat = require('../model/Params/docCat');
 const docSchema = require('../model/Params/document');
 const CreateMock = require('../middleware/CreateMocks');
 const customers = require('../models/auth/customers');
+const CreateNotif = require('../middleware/CreateNotif');
 
 
 router.post('/sliders', async (req,res)=>{
@@ -276,8 +277,17 @@ router.post('/update-news',jsonParser,async (req,res)=>{
     const data = req.body 
 
     try{
-        var result = newsCode?await news.updateOne({enTitle:newsCode},{$set:data}):
-        await news.create(data);
+        var result = ''
+        if(newsCode)
+            await news.updateOne({enTitle:newsCode},{$set:data})
+        else
+            {
+                await news.create(data)
+                const customerList = await customers.find({})
+                for(var i=0;i<customerList.length;i++){
+                    await CreateNotif(data.title,customerList[i]._id,"news",data.link)
+                }
+            };
         res.json(result)
         return
         
