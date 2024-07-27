@@ -54,7 +54,8 @@ const CreateFaktor = async(rahId)=>{
         await pdf.create(document, options)
         .then(async(res) =>{
           console.log(res)
-            const filePath = res.filename
+            var filePath = res.filename.split('/uploads')[1]
+            filePath = process.env.ONLINE_URL + "/uploads"+filePath
             await faktor.updateOne({rahId:rahId},{$set:{faktorUrl:filePath}})
             return(filePath)
         })
