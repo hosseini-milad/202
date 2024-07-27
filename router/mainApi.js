@@ -170,7 +170,7 @@ router.get('/get-faktors-auth', async (req,res)=>{
     await fetch(ONLINE_URL+"/get-faktors",
         {method: 'GET'}); 
 })
-router.get('/get-faktors', async (req,res)=>{
+router.post('/get-faktors', async (req,res)=>{
     console.log("getting now")
     const cookieData = req.cookies
     try{
