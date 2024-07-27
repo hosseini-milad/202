@@ -77,7 +77,7 @@ schedule.scheduleJob('5 */2 * * *', async() => {
     response = await fetch(ONLINE_URL+"/get-faktors-auth",
         {method: 'GET'});
     response = await fetch(ONLINE_URL+"/get-faktors",
-        {method: 'GET'});
+        {method: 'POST'});
     response = await fetch(ONLINE_URL+"/get-customers",
         {method: 'GET'});
  })
@@ -168,16 +168,16 @@ router.get('/get-faktors-auth', async (req,res)=>{
         {method: 'GET'});
     console.log(loginResult)
     await fetch(ONLINE_URL+"/get-faktors",
-        {method: 'GET'}); 
+        {method: 'POST'}); 
 })
 router.post('/get-faktors', async (req,res)=>{
-    console.log("getting now")
+    //console.log("getting now")
     const cookieData = req.cookies
     try{
-        var faktorList = await faktor.find({status:{$in:["در انتظار تایید","ویرایش شده","تایید شده","لغو شده"]}})
+        var faktorList = await faktor.find({status:{$in:["در انتظار تایید","ویرایش شده"]}})//,"تایید شده","لغو شده"
         var rahkaranOut=[]
         var rahkaranItemOut=[]
-        console.log(faktorList.length)
+        //console.log(faktorList.length)
         for(var i=0;i<faktorList.length;i++){
             var sepidarResult = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
             {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":5,},cookieData)
@@ -215,7 +215,7 @@ router.post('/get-faktors', async (req,res)=>{
                     faktorList[i].InvoiceID)    
             }
         }
-        console.log(rahkaranOut.length)
+        //console.log(rahkaranOut.length)
         for(var i=0;i<rahkaranOut.length;i++){
             if(rahkaranOut[i]&&rahkaranOut[i].State == 2){
                 console.log(rahkaranOut[i].Number) 
