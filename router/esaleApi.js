@@ -339,16 +339,16 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
         
         const RahFaktorData = await RahNewFaktor(faktorData,faktorDetail,
             faktorItemsDetail,userData)
+        const rahId = faktorDetail.result&&faktorDetail.result[0]&&faktorDetail.result[0].Number
         const newFaktor = await faktor.create({...RahFaktorData.mainData,
             //InvoiceID:rahkaranResult.result,
             rahDetail:faktorDetail,
             rahItems:faktorItemsDetail,
             active:true,InvoiceID:rahkaranResult.result,
-            rahId:faktorDetail.result&&faktorDetail.result[0]&&faktorDetail.result[0].Number,
+            rahId:rahId,
             status:"در انتظار تایید"})
             await CreateNotif(rahkaranResult.result,userId,"ثبت سفارش ")
-            await sendSmsUser(userId,process.env.OrderSubmit,
-                rahkaranResult.result)    
+            await sendSmsUser(userId,process.env.OrderSubmit,rahId)    
         const newFaktorItems = await faktorItems.create(RahFaktorData.itemData)
         const cartFound = await cart.deleteMany({userId:userId})
  
