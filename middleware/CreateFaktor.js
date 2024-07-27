@@ -55,7 +55,7 @@ const CreateFaktor = async(rahId)=>{
         .then(async(res) =>{
           console.log(res)
             var filePath = res.filename.split('/uploads')[1]
-            filePath = process.env.ONLINE_URL + "/uploads"+filePath
+            filePath = process.env.DOWN_URL + "/uploads"+filePath
             await faktor.updateOne({rahId:rahId},{$set:{faktorUrl:filePath}})
             return(filePath)
         })
