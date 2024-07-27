@@ -215,10 +215,10 @@ router.get('/get-faktors', async (req,res)=>{
         }
         for(var i=0;i<rahkaranOut.length;i++){
             if(rahkaranOut[i]&&rahkaranOut[i].State == 2){
-                console.log(rahkaranOut[i].Number)
+                console.log(rahkaranOut[i].Number) 
                 await ordersLogs.create({status:"تایید شده",orderNo:rahkaranOut[i].ID})
                 await faktor.updateOne({InvoiceID:rahkaranOut[i].ID},
-                    {$set:{status:"تایید شده",isEdit:false}}
+                    {$set:{status:"تایید شده",isEdit:false,isDone:true}}
                 )
                 await CreateFaktor(rahkaranOut[i].Number)
                 await CreateNotif(faktorList[i].InvoiceID,faktorList[i].userId,"تایید سفارش ")
