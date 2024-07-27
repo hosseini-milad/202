@@ -171,8 +171,8 @@ router.get('/get-faktors-auth', async (req,res)=>{
         {method: 'GET'}); 
 })
 router.get('/get-faktors', async (req,res)=>{
-    const cookieData = req.cookies
     console.log("getting now")
+    const cookieData = req.cookies
     try{
         var faktorList = await faktor.find({status:{$in:["در انتظار تایید","ویرایش شده","تایید شده","لغو شده"]}})
         var rahkaranOut=[]
