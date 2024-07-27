@@ -77,7 +77,7 @@ schedule.scheduleJob('5 */2 * * *', async() => {
     response = await fetch(ONLINE_URL+"/get-faktors-auth",
         {method: 'GET'});
     response = await fetch(ONLINE_URL+"/get-faktors",
-        {method: 'POST'});
+        {method: 'GET'});
     response = await fetch(ONLINE_URL+"/get-customers",
         {method: 'GET'});
  })
@@ -168,9 +168,9 @@ router.get('/get-faktors-auth', async (req,res)=>{
         {method: 'GET'});
     console.log(loginResult)
     await fetch(ONLINE_URL+"/get-faktors",
-        {method: 'POST'}); 
+        {method: 'GET'}); 
 })
-router.post('/get-faktors', async (req,res)=>{
+router.get('/get-faktors', async (req,res)=>{
     console.log("getting now")
     const cookieData = req.cookies
     try{
