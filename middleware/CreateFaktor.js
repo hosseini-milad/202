@@ -36,6 +36,7 @@ const CreateFaktor = async(rahId)=>{
   const userData = await customers.findOne({customerID:orderData.customerID}).lean()
   //res.json({orderData,orderList,userData})
   //return
+  console.log("doing")
   //try { 
         var html = fs.readFileSync("./uploads/template.html", "utf8");
         var options = { format: "A5", orientation: "portrate", border: "5mm" };
@@ -52,11 +53,13 @@ const CreateFaktor = async(rahId)=>{
         };
         await pdf.create(document, options)
         .then(async(res) =>{
+          console.log(res)
             const filePath = res.filename
             await faktor.updateOne({rahId:rahId},{$set:{faktorUrl:filePath}})
             return(filePath)
         })
         .catch(error => {
+          console.log(error)
             return(error)
         });
         return(document.path)
