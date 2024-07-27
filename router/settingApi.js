@@ -179,7 +179,7 @@ router.get('/list-notif',jsonParser,auth,async (req,res)=>{
     try{
         var result = userId&&await notif.find({userId:ObjectID(userId)}).sort({date:-1}).limit(10)
         var resultPop = userId&&await notif.findOne({userId:ObjectID(userId),
-            title:/news/
+            title:/news/,status:true
         }).sort({date:-1})
         const unread = result&&result.filter(item=>(item.status==true))
         
