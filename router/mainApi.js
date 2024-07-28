@@ -204,6 +204,7 @@ router.post('/get-faktors', async (req,res)=>{
             rahkaranItemOut.push(sepidarItemResult)
             const checkChangeItems = await CheckChange(faktorList[i].InvoiceID,sepidarItemResult)
             if(checkChangeItems){
+                if(faktorList[i].isEdit) continue
                 await ordersLogs.create({status:"ویرایش شده",orderNo:rahkaranOut[i].ID,
                 description:checkChangeItems
                 })
