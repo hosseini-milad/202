@@ -34,6 +34,8 @@ const slider = require('../models/main/slider');
 const RahErrorHandle = require('../middleware/RahErrorHandle');
 const sendSmsUser = require('../middleware/sendSms');
 const CreateNotif = require('../middleware/CreateNotif');
+const RahCreateFaktor = require('../middleware/RahCreateFaktor');
+const RahDeleteFaktor = require('../middleware/RahDeleteFaktor');
 
 /*Product*/
 router.post('/fetch-product',jsonParser,async (req,res)=>{
@@ -270,7 +272,7 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
             res.status(400).json({message:"مشتری فعال نیست"})
         }
         const myCart = await CalcCart(userId)
-
+        
         const faktorData = await CalcFaktor(myCart,userData)
         
         if(!faktorData){ 
@@ -279,83 +281,17 @@ router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
         if(!faktorData.faktorItems||!faktorData.faktorItems.length){
             res.status(400).json({message:"سبد خرید خالی است"})
         }
+        const cartResult = await RahCreateFaktor(faktorData,"RahFaktor",
+            "rahItems",userData,cookieData,res)
         //console.log(faktorData.faktorData,faktorData.faktorItems,userData)
-        const rahKaranFaktor = await CreateRahkaran(faktorData.faktorData,
-            faktorData.faktorItems,userData)
-        //console.log(rahKaranFaktor)
-        var faktorDetail = ''
-        var faktorItemsDetail = []
-        //res.status(200).json({message: rahKaranFaktor})
-        //return
-
-        var rahkaranResult =  await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/PlaceQuotation",
-            rahKaranFaktor,cookieData)
-        if(rahkaranResult.status==500){
-            res.status(400).json({message: RahErrorHandle(rahkaranResult.result)})
-            return
-        }
-        if(rahkaranResult&&rahkaranResult.result){
-            faktorDetail = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
-            {
-                "PageSize":1,
-                "MasterEntityID":rahkaranResult.result
-            },cookieData)
-            faktorItemsDetail = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotationItems",
-            {
-                "PageSize":10,
-                "MasterEntityID":rahkaranResult.result
-            },cookieData)
-        }
-
-        if(!rahkaranResult) {
-            const loginData = await RahkaranLogin()
-            var cookieSGPT = '';
-            if(loginData){
-                cookieSGPT = loginData.split('SGPT=')[1]
-                cookieSGPT = cookieSGPT.split(';')[0]
-            }
-        // console.log(cookieSGPT)
-            res.cookie("sg-dummy","-")
-            res.cookie("sg-auth-SGPT",cookieSGPT)
-            //console.log(`sg-auth-SGPT=${cookieSGPT}`)
-            rahkaranResult =await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/PlaceQuotation",
-            rahKaranFaktor,{"sg-auth-SGPT":cookieSGPT})
-            if(!rahkaranResult||rahkaranResult.status!="200"){
-                res.status(400).json({message:rahkaranResult?RahErrorHandle(rahkaranResult.result):"سرور راهکاران قطع است"})
-                return
-            }
-            faktorDetail = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
-            {
-                "PageSize":1,
-                "MasterEntityID":rahkaranResult.result
-            },{"sg-auth-SGPT":cookieSGPT})
-            //console.log(faktorDetail)
-            faktorItemsDetail = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotationItems",
-            {
-                "PageSize":10,
-                "MasterEntityID":rahkaranResult.result
-            },{"sg-auth-SGPT":cookieSGPT})
-        }
         
-        const RahFaktorData = await RahNewFaktor(faktorData,faktorDetail,
-            faktorItemsDetail,userData)
-        const rahId = faktorDetail.result&&faktorDetail.result[0]&&faktorDetail.result[0].Number
-        const newFaktor = await faktor.create({...RahFaktorData.mainData,
-            //InvoiceID:rahkaranResult.result,
-            rahDetail:faktorDetail,
-            rahItems:faktorItemsDetail,
-            active:true,InvoiceID:rahkaranResult.result,
-            rahId:rahId,
-            status:"در انتظار تایید"})
-            await CreateNotif(rahkaranResult.result,userId,"ثبت سفارش ")
-            await sendSmsUser(userId,process.env.OrderSubmit,rahId)    
-        const newFaktorItems = await faktorItems.create(RahFaktorData.itemData)
+        res.json(cartResult)
         const cartFound = await cart.deleteMany({userId:userId})
  
         
         res.status(200).json({status:rahkaranResult&&rahkaranResult.status,
-            rahkaranResult,message:"سفارش ثبت شد",log:RahFaktorData,
-            newFaktor:newFaktor})
+            rahkaranResult,message:"سفارش ثبت شد",log:cartResult.RahFaktorData,
+            newFaktor:cartResult.newFaktor})
     }
     catch(error){
         res.status(500).json({message: error.message})
@@ -495,6 +431,41 @@ router.post('/cancel-faktor',auth,jsonParser,async (req,res)=>{
             {$set:{active:false,status:"باطل شده"}})
         res.status(200).json({rahkaranResult:rahkaranResult,orderData:myFaktor,
             success:true,message:"سفارش لغو شد"})
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    } 
+})
+router.post('/accept-faktor',auth,jsonParser,async (req,res)=>{
+    const cookieData = req.cookies
+    const userId = req.headers["userid"]
+    const faktorNo = req.body.faktorNo
+    try{
+        if(!faktorNo){
+            res.status(400).json({message:"کد سفارش وارد نشده است"})
+        }
+        const userData = await customerSchema.findOne({_id:ObjectID(userId)})
+        const myFaktor = await faktor.findOne({userId:userId,faktorNo:faktorNo})
+        const myFaktorItems = await faktorItems.find({faktorNo:faktorNo})
+        if(!myFaktor){
+            res.status(400).json({message:"سفارش یافت نشد "})
+        }
+        var faktorData={
+            faktorData:myFaktor,
+            faktorItems:myFaktorItems
+        }
+        const cartResult = await RahCreateFaktor(faktorData,"RahFaktor",
+            "rahItems",userData,cookieData,res)
+        if(!cartResult||cartResult.error){
+            res.status(400).json(cartResult)
+        }
+
+        const delResult = 0&&await RahDeleteFaktor(myFaktor,cookieData,res)
+        0&&await faktor.deleteOne({userId:userId,faktorNo:faktorNo})
+        0&&await faktorItems.deleteMany({faktorNo:faktorNo})
+        
+        res.status(200).json({rahkaranResult:delResult.rahkaranResult,orderData:myFaktor,
+            success:true,message:"سفارش تایید شد",cartResult})
     }
     catch(error){
         res.status(500).json({message: error.message})

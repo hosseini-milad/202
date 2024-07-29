@@ -60,7 +60,6 @@ const CreateRahkaran=async(faktorData,faktorItems,userData)=>{
             "state":1,
             "shippingPointID":null
     }
-    console.log(postData)
     return(postData)
 }
 module.exports =CreateRahkaran
