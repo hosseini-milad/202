@@ -202,9 +202,11 @@ router.post('/get-faktors', async (req,res)=>{
             var sepidarItemResult = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotationItems",
             {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":30,},cookieData)
             rahkaranItemOut.push(sepidarItemResult)
-            const checkChangeItems = await CheckChange(faktorList[i].InvoiceID,sepidarItemResult)
+            var checkChangeItems =''
+            if(!faktorList[i].isEdit)
+                checkChangeItems= await CheckChange(faktorList[i].InvoiceID,sepidarItemResult)
+            
             if(checkChangeItems){
-                if(faktorList[i].isEdit) continue
                 await ordersLogs.create({status:"ویرایش شده",orderNo:rahkaranOut[i].ID,
                 description:checkChangeItems
                 })
@@ -219,7 +221,7 @@ router.post('/get-faktors', async (req,res)=>{
         //console.log(rahkaranOut.length)
         for(var i=0;i<rahkaranOut.length;i++){
             if(rahkaranOut[i]&&rahkaranOut[i].State == 2){
-                console.log(rahkaranOut[i].Number) 
+                //console.log(rahkaranOut[i].Number) 
                 await ordersLogs.create({status:"تایید شده",orderNo:rahkaranOut[i].ID})
                 await faktor.updateOne({InvoiceID:rahkaranOut[i].ID},
                     {$set:{status:"تایید شده",isEdit:false,isDone:true}}
