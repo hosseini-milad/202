@@ -38,6 +38,7 @@ const RahCreateFaktor=async(faktorData,RahFaktor,rahItems,userData,cookieData,re
 
     if(!rahkaranResult) {
         const loginData = await RahkaranLogin()
+        //return(loginData)
         var cookieSGPT = '';
         if(loginData){
             cookieSGPT = loginData.split('SGPT=')[1]
@@ -49,12 +50,13 @@ const RahCreateFaktor=async(faktorData,RahFaktor,rahItems,userData,cookieData,re
         //console.log(`sg-auth-SGPT=${cookieSGPT}`)
         rahkaranResult =await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/PlaceQuotation",
         rahKaranFaktor,{"sg-auth-SGPT":cookieSGPT})
-        return(rahkaranResult)
-        return
+        //return(rahkaranResult)
+        
         if(!rahkaranResult||rahkaranResult.status!="200"){
             return({message:rahkaranResult?RahErrorHandle(rahkaranResult.result):"سرور راهکاران قطع است",error:true})
             
         }
+        //return
         faktorDetail = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
         {
             "PageSize":1,

@@ -444,6 +444,10 @@ router.post('/accept-faktor',auth,jsonParser,async (req,res)=>{
         if(!faktorNo){
             res.status(400).json({message:"کد سفارش وارد نشده است"})
         }
+        const faktorDetail = await faktor.updateOne({faktorNo:faktorNo},
+            {$set:{active:true,status:"در انتظار تایید",isEdit:false}})
+        res.json({message:"سفارش برای تایید ارسال شد"})
+        return
         const userData = await customerSchema.findOne({_id:ObjectID(userId)})
         const myFaktor = await faktor.findOne({userId:userId,faktorNo:faktorNo})
         const myFaktorItems = await faktorItems.find({faktorNo:faktorNo})
@@ -456,8 +460,9 @@ router.post('/accept-faktor',auth,jsonParser,async (req,res)=>{
         }
         const cartResult = await RahCreateFaktor(faktorData,"RahFaktor",
             "rahItems",userData,cookieData,res)
-        if(!cartResult||cartResult.error){
+        if(1||!cartResult||cartResult.error){
             res.status(400).json(cartResult)
+            return
         }
 
         const delResult = 0&&await RahDeleteFaktor(myFaktor,cookieData,res)
