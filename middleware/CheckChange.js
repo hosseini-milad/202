@@ -23,6 +23,7 @@ const CheckChange=async(faktorNo,rahItems)=>{
             
         }
         else if(newItems[i].Fee != oldItems[i].price){
+            await updateItems(newItems,mainFaktor.faktorNo,oldItems)
             return({error:"Edited Price"})
             
         }
