@@ -116,7 +116,6 @@ router.post('/get-product', async (req,res)=>{
         sepidarResultRaw = await RahkaranPOST("/Sales/ProductManagement/Services/ProductManagementService.svc/GetProducts",
         {"PageSize":5},cookieData)
         const query=[]
-        console.log(sepidarResultRaw)
         var newProduct = [];
         var updateProduct = 0
         var notUpdateProduct = 0
@@ -165,18 +164,15 @@ router.post('/get-product', async (req,res)=>{
 router.get('/get-faktors-auth', async (req,res)=>{
     const loginResult = await fetch(ONLINE_URL+"/auth-server",
         {method: 'GET'});
-    console.log(loginResult)
     await fetch(ONLINE_URL+"/get-faktors",
         {method: 'POST'}); 
 })
 router.post('/get-faktors', async (req,res)=>{
-    //console.log("getting now")
     const cookieData = req.cookies
     try{
         var faktorList = await faktor.find({status:{$in:["در انتظار تایید","ویرایش شده"]}})//,"تایید شده","لغو شده"
         var rahkaranOut=[]
         var rahkaranItemOut=[]
-        //console.log(faktorList.length)
         for(var i=0;i<faktorList.length;i++){
             var sepidarResult = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
             {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":5,},cookieData)
@@ -187,7 +183,6 @@ router.post('/get-faktors', async (req,res)=>{
                     cookieSGPT = loginData.split('SGPT=')[1]
                     cookieSGPT = cookieSGPT.split(';')[0]
                 }
-            // console.log(cookieSGPT)
                 res.cookie("sg-dummy","-")
                 res.cookie("sg-auth-SGPT",cookieSGPT)
                 sepidarResult = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
@@ -197,7 +192,6 @@ router.post('/get-faktors', async (req,res)=>{
             if(sepidarResult)
                 rahkaranOut.push(sepidarResult.result[0])
             else{}
-                //console.log(sepidarResult)
             var sepidarItemResult = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotationItems",
             {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":30,},cookieData)
             rahkaranItemOut.push(sepidarItemResult)
