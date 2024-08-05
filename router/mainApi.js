@@ -208,7 +208,7 @@ router.post('/get-faktors', async (req,res)=>{
                 )
                 await CreateNotif(faktorList[i].rahId,faktorList[i].userId,"ویرایش سفارش ")
                 await sendSmsUser(faktorList[i].userId,process.env.OrderEdit,
-                    faktorList[i].InvoiceID)    
+                    faktorList[i].rahId)    
             }
         }
         for(var i=0;i<rahkaranOut.length;i++){
