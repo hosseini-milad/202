@@ -21,14 +21,14 @@ const CheckChange=async(faktorNo,rahItems)=>{
     for(var i=0;i<newItems.length;i++){
         console.log("start editing")
         console.log(newItems[i].Quantity ,oldItems[i].count)
-        console.log(newItems[i].Fee ,oldItems[i]&&oldItems[i].price)
+        console.log(newItems[i].Fee ,(oldItems[i]&&oldItems[i].price))
         console.log("----------------------------")
         if(newItems[i].Quantity != oldItems[i].count){
             await updateItems(newItems,mainFaktor.faktorNo,oldItems)
             return({error:"Edited Quantity"})
             
         }
-        else if(newItems[i].Fee != oldItems[i].price){
+        else if(newItems[i].Fee != (oldItems[i]&&oldItems[i].price)){
             await updateItems(newItems,mainFaktor.faktorNo,oldItems)
             return({error:"Edited Price"})
             
