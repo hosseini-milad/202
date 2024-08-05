@@ -44,7 +44,7 @@ const updateItems=async(newItems,faktorNo,oldItems)=>{
         
         const oldItem = oldItems.find(item=>item.sku==product.sku)
         var isEditPrice = ((oldItem&&oldItem.price) == newItem.Fee)?0:1
-        var isEditCount = (oldItem.count == newItem.Quantity)?0:1
+        var isEditCount = ((oldItem&&oldItem.count) == newItem.Quantity)?0:1
         resultItems.push({
             faktorNo:faktorNo,
             sku:product&&product.sku,
