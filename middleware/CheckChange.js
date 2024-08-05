@@ -9,7 +9,10 @@ const CheckChange=async(faktorNo,rahItems)=>{
     const oldItems = await faktorItem.find({faktorNo:mainFaktor.faktorNo})
     if(!mainFaktor) return('')
     if(!newItems || !oldItems) return('')
-    
+        
+        console.log(mainFaktor)
+	    console.log(oldItems)
+
     if(newItems.length != oldItems.length){
         await updateItems(newItems,mainFaktor.faktorNo,oldItems)
         return({error:'تعداد آیتم ها یکسان نیستند'})
@@ -18,7 +21,7 @@ const CheckChange=async(faktorNo,rahItems)=>{
     for(var i=0;i<newItems.length;i++){
         console.log("start editing")
         console.log(newItems[i].Quantity ,oldItems[i].count)
-        console.log(newItems[i].Fee ,oldItems[i].price)
+        console.log(newItems[i].Fee ,oldItems[i]&&oldItems[i].price)
         console.log("----------------------------")
         if(newItems[i].Quantity != oldItems[i].count){
             await updateItems(newItems,mainFaktor.faktorNo,oldItems)
