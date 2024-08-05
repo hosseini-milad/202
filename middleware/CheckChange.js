@@ -11,6 +11,7 @@ const CheckChange=async(faktorNo,rahItems)=>{
     if(!newItems || !oldItems) return({error:'خطای 2'})
     
     if(newItems.length != oldItems.length){
+        await updateItems(newItems,mainFaktor.faktorNo,oldItems)
         return({error:'تعداد آیتم ها یکسان نیستند'})
     }
     var newState = ''
