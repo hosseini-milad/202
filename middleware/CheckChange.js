@@ -15,8 +15,6 @@ const CheckChange=async(faktorNo,rahItems)=>{
     }
     var newState = ''
     for(var i=0;i<newItems.length;i++){
-        //console.log(newItems[i].Fee)
-        //console.log(oldItems[i].price)
         if(newItems[i].Quantity != oldItems[i].count){
             await updateItems(newItems,mainFaktor.faktorNo,oldItems)
             return({error:"Edited Quantity"})
@@ -29,18 +27,14 @@ const CheckChange=async(faktorNo,rahItems)=>{
         }
     }
     return('')
-    //console.log(oldItems)
-    //console.log(newItems)
 }
 const updateItems=async(newItems,faktorNo,oldItems)=>{
     var resultItems = []
     for(var i=0;i<newItems.length;i++){
         const newItem = newItems[i]
-        //console.log(oldItem)
         const product = await products.findOne({ItemID:newItem.ProductRef})
         
         const oldItem = oldItems.find(item=>item.sku==product.sku)
-        //console.log(oldItem)
         var isEditPrice = (oldItem.price == newItem.Fee)?0:1
         var isEditCount = (oldItem.count == newItem.Quantity)?0:1
         resultItems.push({

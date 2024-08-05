@@ -74,7 +74,7 @@ schedule.scheduleJob('5 */2 * * *', async() => {
         {method: 'GET'});
  })
  schedule.scheduleJob('*/10 * * * *', async() => { 
-    response = await fetch(ONLINE_URL+"/get-faktors-auth",
+    response = await fetch(ONLINE_URL+"/auth-server",
         {method: 'GET'});
     response = await fetch(ONLINE_URL+"/get-faktors",
         {method: 'POST'});
@@ -89,7 +89,6 @@ router.get('/auth-server', async (req,res)=>{
             cookieSGPT = loginResult.split('SGPT=')[1]
             cookieSGPT = cookieSGPT.split(';')[0]
         }
-        console.log(cookieSGPT)
         res.cookie("sg-dummy","-")
         res.cookie("sg-auth-SGPT",cookieSGPT)
         res.json({result:loginResult,
@@ -218,10 +217,8 @@ router.post('/get-faktors', async (req,res)=>{
                     faktorList[i].InvoiceID)    
             }
         }
-        //console.log(rahkaranOut.length)
         for(var i=0;i<rahkaranOut.length;i++){
             if(rahkaranOut[i]&&rahkaranOut[i].State == 2){
-                //console.log(rahkaranOut[i].Number) 
                 await ordersLogs.create({status:"تایید شده",orderNo:rahkaranOut[i].ID})
                 await faktor.updateOne({InvoiceID:rahkaranOut[i].ID},
                     {$set:{status:"تایید شده",isEdit:false,isDone:true}}
@@ -236,7 +233,7 @@ router.post('/get-faktors', async (req,res)=>{
                     {$set:{status:"باطل شده",active:false,isEdit:false}}
                 )
                 await CreateNotif(faktorList[i].InvoiceID,faktorList[i].userId,"لغو سفارش ")
-                //console.log(result)
+                
             }
         }
         res.json({mainResult:rahkaranOut,itemResult:rahkaranItemOut})
@@ -260,10 +257,8 @@ router.get('/get-customers', async (req,res)=>{
                 cookieSGPT = loginData.split('SGPT=')[1]
                 cookieSGPT = cookieSGPT.split(';')[0]
             }
-        // console.log(cookieSGPT)
             res.cookie("sg-dummy","-")
             res.cookie("sg-auth-SGPT",cookieSGPT)
-            //console.log(`sg-auth-SGPT=${cookieSGPT}`)
             loginStatus=true
             sepidarResult =RahkaranPOST("/Sales/PartyManagement/Services/PartyManagementService.svc/GetCustomerList",
             {"PageSize":1500},{"sg-auth-SGPT":cookieSGPT})
@@ -274,7 +269,6 @@ router.get('/get-customers', async (req,res)=>{
         var notUpdateCustomer = 0
         for(var i=0;i<(sepidarResult.result&&sepidarResult.result.length);i++){
             var customer = sepidarResult.result[i]
-            //console.log(customer)
             var phone = customer.Tel
             try{
                 if(!phone) phone =customer.Addresses[0].Tel
