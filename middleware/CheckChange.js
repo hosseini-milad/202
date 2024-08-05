@@ -19,7 +19,7 @@ const CheckChange=async(faktorNo,rahItems)=>{
     }
     var newState = ''
     for(var i=0;i<newItems.length;i++){
-        console.log("start editing")
+        console.log("start editing ",mainFaktor.rahId)
         console.log(newItems[i].Quantity ,oldItems[i].count)
         console.log(newItems[i].Fee ,(oldItems[i]&&oldItems[i].price))
         console.log("----------------------------")
