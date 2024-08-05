@@ -10,8 +10,8 @@ const CheckChange=async(faktorNo,rahItems)=>{
     if(!mainFaktor) return('')
     if(!newItems || !oldItems) return('')
         
-        console.log(mainFaktor)
-	    console.log(oldItems)
+        //console.log(mainFaktor)
+	    //console.log(oldItems)
 
     if(newItems.length != oldItems.length){
         await updateItems(newItems,mainFaktor.faktorNo,oldItems)
