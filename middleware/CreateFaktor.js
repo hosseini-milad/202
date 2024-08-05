@@ -37,7 +37,7 @@ const CreateFaktor = async(rahId)=>{
   
   //try { 
         var html = fs.readFileSync("./uploads/template.html", "utf8");
-        var options = { format: "A5", orientation: "landscape", border: "5mm" };
+        var options = { format: "A4", orientation: "portrate", border: "5mm" };
         var date = new Date(orderData.initDate)
         var document = {
             html: html, 
