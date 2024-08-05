@@ -7,6 +7,10 @@ const CheckChange=async(faktorNo,rahItems)=>{
     const newItems = rahItems.result
     const mainFaktor = await faktor.findOne({InvoiceID:faktorNo})
     const oldItems = await faktorItem.find({faktorNo:mainFaktor.faktorNo})
+
+    console.log(mainFaktor)
+	console.log(oldItems)
+
     if(!mainFaktor) return('')
     if(!newItems || !oldItems) return('')
         
