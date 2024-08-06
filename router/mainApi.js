@@ -177,7 +177,7 @@ router.post('/get-faktors', async (req,res)=>{
         for(var i=0;i<faktorList.length;i++){
             var sepidarResult = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
             {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":5,},cookieData)
-            console.log(sepidarResult)
+            
             if(!sepidarResult) {
                 const loginData = await RahkaranLogin()
                 var cookieSGPT = '';
@@ -197,6 +197,8 @@ router.post('/get-faktors', async (req,res)=>{
             var sepidarItemResult = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotationItems",
             {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":30,},cookieData)
             rahkaranItemOut.push(sepidarItemResult)
+            
+            console.log(rahkaranOut)
             var checkChangeItems =''
             if(!faktorList[i].isEdit)
                 checkChangeItems= await CheckChange(faktorList[i].InvoiceID,sepidarItemResult)
