@@ -74,6 +74,7 @@ schedule.scheduleJob('5 */2 * * *', async() => {
         {method: 'GET'});
  })
  schedule.scheduleJob('*/10 * * * *', async() => { 
+    console.log("schedule running now: " + Date.now())
     response = await fetch(ONLINE_URL+"/auth-server",
         {method: 'GET'});
     response = await fetch(ONLINE_URL+"/get-faktors",
