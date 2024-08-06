@@ -198,11 +198,11 @@ router.post('/get-faktors', async (req,res)=>{
             {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":30,},cookieData)
             rahkaranItemOut.push(sepidarItemResult)
             
-            console.log(rahkaranOut)
             var checkChangeItems =''
             if(!faktorList[i].isEdit)
                 checkChangeItems= await CheckChange(faktorList[i].InvoiceID,sepidarItemResult)
             
+            console.log(rahkaranOut.Number,checkChangeItems)
             if(checkChangeItems){
                 await ordersLogs.create({status:"ویرایش شده",orderNo:rahkaranOut[i].ID,
                 description:checkChangeItems
