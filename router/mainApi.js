@@ -177,7 +177,7 @@ router.post('/get-faktors', async (req,res)=>{
         for(var i=0;i<faktorList.length;i++){
             var sepidarResult = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
             {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":5,},cookieData)
-            
+            console.log(sepidarResult)
             if(!sepidarResult) {
                 const loginData = await RahkaranLogin()
                 var cookieSGPT = '';
