@@ -174,6 +174,7 @@ router.post('/get-faktors', async (req,res)=>{
         var faktorList = await faktor.find({status:{$in:["در انتظار تایید","ویرایش شده"]}})//,"تایید شده","لغو شده"
         var rahkaranOut=[]
         var rahkaranItemOut=[]
+        console.log(faktorList)
         for(var i=0;i<faktorList.length;i++){
             var sepidarResult = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
             {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":5,},cookieData)
