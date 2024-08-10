@@ -15,7 +15,7 @@ const CreateFaktor = require('../middleware/CreateFaktor');
 router.post('/create-report',jsonParser, async (req,res)=>{
   const rahId = req.body.rahId
   const faktorUrl = await CreateFaktor(rahId)
-  console.log(faktorUrl)
+  
   if(faktorUrl)
     res.json(faktorUrl)
   else

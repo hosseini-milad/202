@@ -440,6 +440,7 @@ router.post('/accept-faktor',auth,jsonParser,async (req,res)=>{
     const cookieData = req.cookies
     const userId = req.headers["userid"]
     const faktorNo = req.body.faktorNo
+    res.status(400).json({error:'not allowed now'})
     try{
         if(!faktorNo){
             res.status(400).json({message:"کد سفارش وارد نشده است"})

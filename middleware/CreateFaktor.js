@@ -7,7 +7,7 @@ const PersianNumber = require("./PersianNumber")
 var pdf = require("pdf-creator-node")
 var fs = require('fs');
 const customers = require("../models/auth/customers")
-
+ 
 const CreateFaktor = async(rahId)=>{
     const orderData = await faktor.findOne({rahId:rahId}).lean()
   if(!orderData){
@@ -34,12 +34,10 @@ const CreateFaktor = async(rahId)=>{
   orderData.totalAddition = NormalPrice(orderData.totalAddition)
   orderData.totalDiscount = NormalPrice(orderData.totalDiscount)
   const userData = await customers.findOne({customerID:orderData.customerID}).lean()
-  //res.json({orderData,orderList,userData})
-  //return
-  console.log("doing")
+  
   //try { 
         var html = fs.readFileSync("./uploads/template.html", "utf8");
-        var options = { format: "A5", orientation: "portrate", border: "5mm" };
+        var options = { format: "A4", orientation: "portrate", border: "5mm" };
         var date = new Date(orderData.initDate)
         var document = {
             html: html, 
@@ -53,7 +51,6 @@ const CreateFaktor = async(rahId)=>{
         };
         await pdf.create(document, options)
         .then(async(res) =>{
-          console.log(res)
             var filePath = res.filename.split('/uploads')[1]
             filePath = process.env.DOWN_URL + "/uploads"+filePath
             await faktor.updateOne({rahId:rahId},{$set:{faktorUrl:filePath}})
