@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
+const sql = require('mssql')
 const router = express.Router()
 var ObjectID = require('mongodb').ObjectID;
 const auth = require("../middleware/auth");
@@ -324,5 +325,33 @@ router.post('/show-news',jsonParser,async (req,res)=>{
         res.status(500).json({message: error.message})
     } 
 })
+
+
+router.post('/fetch-procedure',jsonParser,async (req,res)=>{
+    const data = req.body
+    const config = {
+        user: 'SPUser',
+        password: 'matini@SP',
+        server: '10.10.4.23',
+        database: 'SGPT_sg3',
+        options: {
+            trustedConnection: true,
+            trustServerCertificate: true
+        }
+    }
+    try {
+        // make sure that any items are correctly URL encoded in the connection string
+        await sql.connect(config)
+        const request = new sql.Request()
+        request.input('sdate', sql.DateTime, data.sdate)
+        request.input('edate', sql.DateTime, data.edate)
+        request.input('customerId', sql.NVarChar, data.customerId)
+        const result = await request.execute('dbo.GetVoucherFullInfo')
+        res.json(result)
+    } catch (err) {
+        console.log(err)
+    }
+}
+)
 
 module.exports = router;

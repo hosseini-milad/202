@@ -174,9 +174,18 @@ router.post('/get-faktors', async (req,res)=>{
         var faktorList = await faktor.find({status:{$in:["در انتظار تایید","ویرایش شده"]}})//,"تایید شده","لغو شده"
         var rahkaranOut=[]
         var rahkaranItemOut=[]
+        const loginData = await RahkaranLogin()
+        var cookieSGPT = '';
+        if(loginData){
+            cookieSGPT = loginData.split('SGPT=')[1]
+            cookieSGPT = cookieSGPT.split(';')[0]
+        }
+        res.cookie("sg-dummy","-")
+        res.cookie("sg-auth-SGPT",cookieSGPT)
+
         for(var i=0;i<faktorList.length;i++){
             var sepidarResult = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
-            {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":5,},cookieData)
+            {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":5,},{"sg-auth-SGPT":cookieSGPT})
             
             if(!sepidarResult) {
                 const loginData = await RahkaranLogin()
@@ -195,7 +204,7 @@ router.post('/get-faktors', async (req,res)=>{
                 rahkaranOut.push(sepidarResult.result[0])
             else{}
             var sepidarItemResult = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotationItems",
-            {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":30,},cookieData)
+            {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":30,},{"sg-auth-SGPT":cookieSGPT})
             rahkaranItemOut.push(sepidarItemResult)
             
             var checkChangeItems =''
