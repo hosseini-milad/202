@@ -41,7 +41,6 @@ const RahkaranLogin=async()=>{
         return(cookieValue)
     }
     catch(error){ 
-        console.log(error)
         return({error:sessionResponse,
             error_description:loginResponse})
     }

@@ -70,15 +70,16 @@ router.use('/esale', esaleApi)
 
 router.use('/panel/crm',CRMPanelApi)
 schedule.scheduleJob('5 */2 * * *', async() => { 
-    response = await fetch(ONLINE_URL+"/get-product",
+    response = await fetch(ONLINE_URL+"/api/get-product",
         {method: 'GET'});
  })
  schedule.scheduleJob('*/10 * * * *', async() => { 
     /*response = await fetch(ONLINE_URL+"/get-faktors-auth",
         {method: 'GET'});*/
-    response = await fetch(ONLINE_URL+"/get-faktors",
+    console.log(ONLINE_URL+"/get-faktors")
+    var response = await fetch(ONLINE_URL+"/api/get-faktors",
         {method: 'POST'});
-    response = await fetch(ONLINE_URL+"/get-customers",
+    response = await fetch(ONLINE_URL+"/api/get-customers",
         {method: 'GET'});
  })
 router.get('/auth-server', async (req,res)=>{
@@ -186,7 +187,6 @@ router.post('/get-faktors', async (req,res)=>{
         for(var i=0;i<faktorList.length;i++){
             var sepidarResult = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
             {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":5,},{"sg-auth-SGPT":cookieSGPT})
-            
             if(!sepidarResult) {
                 const loginData = await RahkaranLogin()
                 var cookieSGPT = '';

@@ -20,7 +20,6 @@ const RahkaranPOST=async(url,data,cookie)=>{
         cookie:cookieData}
     }
     try{    
-        console.log(RAHKARAN_URL+url,postOptions)
         response = await fetch(RAHKARAN_URL+url,postOptions);
         const status = response.status
         
