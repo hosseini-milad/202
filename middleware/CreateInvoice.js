@@ -35,8 +35,8 @@ const CreateInvoice = async(userId,sdate,edate)=>{
         var finalPath = ''
         await pdf.create(document, options)
         .then(async(res) =>{
-          var filePath = res.filename.split('\\uploads')[1]
-          finalPath = downUrl + "uploads"+filePath.replace( /\\/g, '/')
+          var filePath = res.filename.split('/uploads')[1]
+          filePath = process.env.DOWN_URL + "/uploads"+filePath
             
             return(finalPath)
         })
