@@ -606,6 +606,7 @@ router.post('/login-customer',jsonParser, async (req,res)=>{
       }
       if(user.rahStatus != 2){
         res.status(400).json({error:"کاربری شما فعال نیست، در صورت نیاز با کارشناس مربوطه تماس بگیرید"})
+        return
     }
       if(!user.password){
         res.status(400).json({error:"رمز عبور ارسال نشده است"});
