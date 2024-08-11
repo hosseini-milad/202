@@ -111,6 +111,6 @@ const styles = {
         }); 
         // You can then return this straight
         //res.attachment('report.xlsx'); // This is sails.js specific (in general you need to set headers)
-        return (downUrl+"/"+url);
+        return ("./"+url);
     }
     module.exports = exportExcelApi;

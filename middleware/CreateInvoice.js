@@ -34,17 +34,17 @@ const CreateInvoice = async(userId,sdate,edate)=>{
         };
         var finalPath = ''
         await pdf.create(document, options)
-        .then(async(res) =>{
-          var filePath = res.filename.split('/uploads')[1]
-          filePath = process.env.DOWN_URL + "/uploads"+filePath
-            
+        .then(async() =>{
             return(finalPath)
         })
         .catch(error => {
           console.log(error)
             return(error)
         });
-        return({pdfUrl:document.path,xlsUrl:excelUrl,data:recordsets,status:"done"})
+        return({ baseUrl:downUrl,
+          pdfUrl:document.path,
+          xlsUrl:excelUrl,
+          data:recordsets,status:"done"})
  //    } 
   //catch(error){
   //  return("error catch")
