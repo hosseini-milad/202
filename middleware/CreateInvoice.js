@@ -44,7 +44,7 @@ const CreateInvoice = async(userId,sdate,edate)=>{
           console.log(error)
             return(error)
         });
-        return({pdfUrl:finalPath,xlsUrl:excelUrl,data:recordsets,status:"done"})
+        return({pdfUrl:document.path,xlsUrl:excelUrl,data:recordsets,status:"done"})
  //    } 
   //catch(error){
   //  return("error catch")
