@@ -40,6 +40,7 @@ router.post('/create-invoice',jsonParser,auth, async (req,res)=>{
 router.post('/remove-invoice',jsonParser,auth, async (req,res)=>{
   var filePath = `./uploads/invoices/invoice${req.body.source}.pdf`; 
   fs.unlinkSync(filePath);
+  res.json(filePath)
 })
 
 
