@@ -30,16 +30,16 @@ router.post('/create-invoice',jsonParser,auth, async (req,res)=>{
   const dateFrom = req.body.dateFrom
   const dateTo = req.body.dateTo
   //console.log(userId)
-  try{
+  //try{
     const faktorUrl = await CreateInvoice(userId,dateFrom,dateTo)
   
   if(faktorUrl)
     res.json(faktorUrl)
   else
     res.status(400).json("error occure")
-  }catch(error){
-    res.status(500).json({error:error})
-  }
+  //}catch(error){
+    //res.status(500).json({error:error})
+  //}
 })
 router.post('/remove-invoice',jsonParser,auth, async (req,res)=>{
   var filePath = `./uploads/invoices/invoice${req.body.source}.pdf`; 

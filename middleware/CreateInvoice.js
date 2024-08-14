@@ -12,8 +12,8 @@ const CreateInvoice = async(userId,sdate,edate)=>{
       return('not found')
     }
     
-  var pureS = sdate?sdate.replace( /\//g, '-'):"1400-01-01"
-  var pureE = edate?edate.replace( /\//g, '-'):"1410-12-29"
+  var pureS = sdate?sdate.replace( /\//g, '-'):"2020-01-01"
+  var pureE = edate?edate.replace( /\//g, '-'):"2025-12-29"
   const result = await Procedures(userData.customerID,pureS,pureE)
   if(!result||!result.recordsets[0]){
     return('error')
