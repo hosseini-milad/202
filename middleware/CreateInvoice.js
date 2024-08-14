@@ -11,7 +11,10 @@ const CreateInvoice = async(userId,sdate,edate)=>{
     if(!userData){
       return('not found')
     }
-  const result = await Procedures(userData.customerID,sdate,edate)
+    
+  var pureS = sdate?sdate.replace( /\//g, '-'):"1400-01-01"
+  var pureE = edate?sdate.replace( /\//g, '-'):"1410-12-29"
+  const result = await Procedures(userData.customerID,pureS,pureE)
   if(!result||!result.recordsets[0]){
     return('error')
   }
@@ -44,7 +47,7 @@ const CreateInvoice = async(userId,sdate,edate)=>{
         });
         return({ baseUrl:downUrl,
           pdfUrl:document.path,
-          xlsUrl:excelUrl,
+          xlsUrl:excelUrl, date:{start:pureS,end:pureE},
           data:recordsets,status:"done"})
  //    } 
   //catch(error){

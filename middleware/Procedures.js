@@ -10,14 +10,12 @@ const Procedures = async(customerId,sdate,edate)=>{
           trustServerCertificate: true
       }
   }
-  var pureS = sdate.replace( /\//g, '-')
-  var pureE = edate?sdate.replace( /\//g, '-'):"1410-12-29"
   try {
       // make sure that any items are correctly URL encoded in the connection string
       await sql.connect(config)
       const request = new sql.Request()
-      request.input('sdate', sql.DateTime, pureS)
-      request.input('edate', sql.DateTime, pureE)
+      request.input('sdate', sql.DateTime, sdate)
+      request.input('edate', sql.DateTime, edate)
       request.input('customerId', sql.NVarChar, customerId)
       const result = await request.execute('dbo.GetVoucherFullInfo')
       return(result)
