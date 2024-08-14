@@ -93,6 +93,7 @@ const styles = {
             debit:item.credit, credit: '-', 
             remain: item.debit}
         ))
+        try{fs.unlinkSync(url);}catch{}
         const report = excel.buildExport(
         [ // <- Notice that this is an array. Pass multiple sheets to create multi sheet report
             {

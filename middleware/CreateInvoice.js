@@ -33,6 +33,7 @@ const CreateInvoice = async(userId,sdate,edate)=>{
             path: `./uploads/invoices/invoice${userData.customerID}.pdf`
         };
         var finalPath = ''
+        try{fs.unlinkSync(document.path);}catch{}
         await pdf.create(document, options)
         .then(async() =>{
             return(finalPath)
