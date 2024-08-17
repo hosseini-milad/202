@@ -22,10 +22,10 @@ const CheckChange=async(faktorNo,rahItems,rahOrder)=>{
     }
     var newState = ''
     for(var i=0;i<newItems.length;i++){
-        console.log("start editing ",mainFaktor.faktorNo)
-        console.log(newItems[i].Quantity ,oldItems[i].count)
-        console.log(newItems[i].Fee ,(oldItems[i]&&oldItems[i].price))
-        console.log("----------------------------")
+        //console.log("start editing ",mainFaktor.faktorNo)
+        //console.log(newItems[i].Quantity ,oldItems[i].count)
+        //console.log(newItems[i].Fee ,(oldItems[i]&&oldItems[i].price))
+        //console.log("----------------------------")
         if(newItems[i].Quantity != oldItems[i].count){
             await updateItems(newItems,mainFaktor.faktorNo,oldItems)
             return({error:"Edited Quantity"})
