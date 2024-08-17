@@ -19,9 +19,15 @@ const CreateInvoice = async(userId,sdate,edate)=>{
     return('error')
   }
   const recordsets = result.recordsets[0]
+  var remain = 0
   for(var i=0;i<recordsets.length;i++){
     recordsets[i].dateFa = new Date(recordsets[i].date).toLocaleDateString('fa')
     recordsets[i].index = i+1
+    var creditRemain = recordsets[i].credit?parseFloat(recordsets[i].credit):0
+    var debitRemain = recordsets[i].debit?parseFloat(recordsets[i].debit):0
+    var tempRemain = debitRemain - creditRemain
+    remain = remain + tempRemain
+    recordsets[i].remain = remain
   }
   const excelUrl = await exportExcelApi(recordsets,userData.customerID,downUrl)
         var html = fs.readFileSync("./uploads/templateInvoice.html", "utf8");
