@@ -3,11 +3,13 @@ const faktorItem = require("../models/product/faktorItem")
 const products = require("../models/product/products")
 
 
-const CheckChange=async(faktorNo,rahItems)=>{
+const CheckChange=async(faktorNo,rahItems,rahOrder)=>{
     const newItems = rahItems.result
     const mainFaktor = await faktor.findOne({InvoiceID:faktorNo})
     const oldItems = await faktorItem.find({faktorNo:mainFaktor.faktorNo})
-
+    console.log(rahItems)
+    console.log(rahOrder)
+    return
     if(!mainFaktor) return('')
     if(!newItems || !oldItems) return('')
         

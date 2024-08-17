@@ -90,8 +90,8 @@ const styles = {
         
         var dataset = data.map((item,i)=>(
             {radif: i+1, date:item.dateFa, title: item.desc, 
-            debit:item.credit, credit: '-', 
-            remain: item.debit}
+            debit:item.credit, credit: item.debit, 
+            remain: '-'}
         ))
         try{fs.unlinkSync(url);}catch{}
         const report = excel.buildExport(
