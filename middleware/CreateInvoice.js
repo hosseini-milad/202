@@ -25,7 +25,7 @@ const CreateInvoice = async(userId,sdate,edate)=>{
     recordsets[i].index = i+1
     var creditRemain = recordsets[i].credit?parseFloat(recordsets[i].credit):0
     var debitRemain = recordsets[i].debit?parseFloat(recordsets[i].debit):0
-    var tempRemain = debitRemain - creditRemain
+    var tempRemain = creditRemain - debitRemain
     remain = remain + tempRemain
     recordsets[i].remain = remain
   }
