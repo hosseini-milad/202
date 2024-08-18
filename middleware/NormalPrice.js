@@ -3,7 +3,7 @@ const NormalPrice=(priceText,count)=>{
         if(!priceText||priceText === null||priceText === undefined) return("")
         if(!count) count = 1
         var priceNeg = false
-        if(priceText.includes('-')) priceNeg=true
+        if(priceText&&priceText.includes('-')) priceNeg=true
         try{priceText =priceText.split(' ')[0];}catch{}
         if(priceText === "0"||priceText === 0)return("0");
         var rawPrice = parseInt(priceText.toString().replace(/\D/g,''))*count
