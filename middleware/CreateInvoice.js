@@ -2,7 +2,8 @@ var pdf = require("pdf-creator-node")
 var fs = require('fs');
 const customers = require("../models/auth/customers")
 const Procedures = require("./Procedures")
-const exportExcelApi = require("./excelExport")
+const exportExcelApi = require("./excelExport");
+const NormalPrice = require("./NormalPrice");
  
 const CreateInvoice = async(userId,sdate,edate)=>{
   const downUrl = process.env.DOWN_URL
@@ -27,7 +28,9 @@ const CreateInvoice = async(userId,sdate,edate)=>{
     var debitRemain = recordsets[i].debit?parseFloat(recordsets[i].debit):0
     var tempRemain = creditRemain - debitRemain
     remain = remain + tempRemain
-    recordsets[i].remain = remain
+    recordsets[i].credit = NormalPrice(recordsets[i].credit)
+    recordsets[i].debit = NormalPrice(recordsets[i].debit)
+    recordsets[i].remain = NormalPrice(remain)
   }
   const excelUrl = await exportExcelApi(recordsets,userData.customerID,downUrl)
         var html = fs.readFileSync("./uploads/templateInvoice.html", "utf8");

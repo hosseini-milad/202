@@ -184,7 +184,6 @@ router.post('/get-faktors', async (req,res)=>{
         res.cookie("sg-dummy","-")
         res.cookie("sg-auth-SGPT",cookieSGPT)
         for(var i=0;i<faktorList.length;i++){
-            console.log(faktorList[i])
             var sepidarResult = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
             {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":5,},{"sg-auth-SGPT":cookieSGPT})
             if(!sepidarResult) {
