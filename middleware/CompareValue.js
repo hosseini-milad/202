@@ -1,4 +1,4 @@
-const CompareValue=async(value1,value2)=>{
+const CompareValue=(value1,value2)=>{
     if(!value1){
         if(!value2) return true
         if(value2=="0") return true
