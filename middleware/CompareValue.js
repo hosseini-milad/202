@@ -7,7 +7,8 @@ const CompareValue=async(value1,value2)=>{
         if(!value2) return true
         if(value2=="0") return true
     }
-    if(value1.toString()==value2.toString()) return true
+    if(value1==value2) return true
+    console.log(value1+" - "+value2)
     return false
 }
 
