@@ -33,7 +33,7 @@ const CheckChange=async(faktorNo,rahItems,rahOrder)=>{
         await updateOrder(mainFaktor,newItems,id)
         await updateItems(newItems,mainFaktor.faktorNo,oldItems)
         return({id:id,error:"تخفیفات تغییر کرده است",newDiscount:newOrder.Reductions,
-            oldDiscount:mainFaktor.totalDiscount
+            oldDiscount:mainFaktor.totalDiscount,orderData:newOrder
         })
     }
     var newState = ''
