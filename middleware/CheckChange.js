@@ -6,7 +6,7 @@ const CompareValue = require("./CompareValue")
 
 const CheckChange=async(faktorNo,rahItems,rahOrder)=>{
     const newItems = rahItems.result
-    const newOrder = rahOrder.result
+    const newOrder = rahOrder.result&&rahOrder.result[0]
     const mainFaktor = await faktor.findOne({InvoiceID:faktorNo})
     const oldItems = await faktorItem.find({faktorNo:mainFaktor.faktorNo})
     const id = mainFaktor.rahId
