@@ -1,12 +1,15 @@
 const faktor = require("../models/product/faktor")
 const faktorItem = require("../models/product/faktorItem")
 const products = require("../models/product/products")
+const CompareValue = require("./CompareValue")
 
 
 const CheckChange=async(faktorNo,rahItems,rahOrder)=>{
     const newItems = rahItems.result
+    const newOrder = rahOrder.result
     const mainFaktor = await faktor.findOne({InvoiceID:faktorNo})
     const oldItems = await faktorItem.find({faktorNo:mainFaktor.faktorNo})
+    const id = mainFaktor.rahId
     //console.log(rahItems)
     //console.log(rahOrder)
     //return
@@ -17,27 +20,51 @@ const CheckChange=async(faktorNo,rahItems,rahOrder)=>{
 	    //console.log(oldItems)
 
     if(newItems.length != oldItems.length){
+        await updateOrder(mainFaktor,newItems,id)
         await updateItems(newItems,mainFaktor.faktorNo,oldItems)
-        return({error:'تعداد آیتم ها یکسان نیستند'})
+        return({id:id,error:'تعداد آیتم ها یکسان نیستند'})
+    }
+    if(!CompareValue(newOrder.Additions,mainFaktor.totalAddition)){
+        await updateOrder(mainFaktor,newItems,id)
+        return({id:id,error:"اضافات تغییر کرده است"})
+    }
+    if(!CompareValue(newOrder.Reductions,mainFaktor.totalDiscount)){
+        await updateOrder(mainFaktor,newItems,id)
+        return({id:id,error:"تخفیفات تغییر کرده است"})
     }
     var newState = ''
     for(var i=0;i<newItems.length;i++){
-        //console.log("start editing ",mainFaktor.faktorNo)
-        //console.log(newItems[i].Quantity ,oldItems[i].count)
-        //console.log(newItems[i].Fee ,(oldItems[i]&&oldItems[i].price))
-        //console.log("----------------------------")
         if(newItems[i].Quantity != oldItems[i].count){
+            (newItems[i].Quantity != oldItems[i].count)
             await updateItems(newItems,mainFaktor.faktorNo,oldItems)
-            return({error:"Edited Quantity"})
+            await updateOrder(mainFaktor,newItems,id)
+            return({id:id,error:"Edited Quantity"})
             
         }
         else if(newItems[i].Fee != (oldItems[i]&&oldItems[i].price)){
             await updateItems(newItems,mainFaktor.faktorNo,oldItems)
-            return({error:"Edited Price"})
+            await updateOrder(mainFaktor,newItems,id)
+            return({id:id,error:"Edited Price"})
             
         }
     }
     return('')
+}
+const updateOrder = async(newOrder,newItems,id)=>{
+    var totalCount = 0
+    for(var i=0;i<newItems.length;i++){
+        totalCount += parseFloat(newItems[i].Quantity)
+    }
+    var resultOrder = {
+        totalCount:totalCount,
+        totalDiscount:newOrder.Reductions,
+        totalPrice:newOrder.Price,
+        totalAddition:newOrder.Additions,
+        netPrice:newOrder.NetPrice,
+
+    }
+    const result =await faktor.updateOne({rahId:id},{$set:resultOrder})
+    
 }
 const updateItems=async(newItems,faktorNo,oldItems)=>{
     var resultItems = []
