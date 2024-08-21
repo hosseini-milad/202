@@ -37,18 +37,17 @@ const CheckChange=async(faktorNo,rahItems,rahOrder)=>{
     var newState = ''
     for(var i=0;i<newItems.length;i++){
         if(newItems[i].Quantity != oldItems[i].count){
-            (newItems[i].Quantity != oldItems[i].count)
             await updateItems(newItems,mainFaktor.faktorNo,oldItems)
             await updateOrder(mainFaktor,newItems,id)
             return({id:id,error:"Edited Quantity"})
             
         }
-        else if(newItems[i].Fee != (oldItems[i]&&oldItems[i].price)){
+        /*else if(newItems[i].Fee != (oldItems[i]&&oldItems[i].price)){
             await updateItems(newItems,mainFaktor.faktorNo,oldItems)
             await updateOrder(mainFaktor,newItems,id)
             return({id:id,error:"Edited Price"})
             
-        }
+        }*/
     }
     return('')
 }
