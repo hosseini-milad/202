@@ -58,6 +58,7 @@ const updateOrder = async(newOrder,newItems,id)=>{
     for(var i=0;i<newItems.length;i++){
         totalCount += parseFloat(newItems[i].Quantity)
     }
+    console.log(totalCount)
     var resultOrder = {
         totalCount:totalCount,
         totalDiscount:newOrder.Reductions,
