@@ -20,17 +20,17 @@ const CheckChange=async(faktorNo,rahItems,rahOrder)=>{
 	    //console.log(oldItems)
 
     if(newItems.length != oldItems.length){
-        await updateOrder(mainFaktor,newItems,id)
+        await updateOrder(newOrder,newItems,id)
         await updateItems(newItems,mainFaktor.faktorNo,oldItems)
         return({id:id,error:'تعداد آیتم ها یکسان نیستند'})
     }
     if(CompareValue(newOrder.Additions,mainFaktor.totalAddition)==false){
-        await updateOrder(mainFaktor,newItems,id)
+        await updateOrder(newOrder,newItems,id)
         await updateItems(newItems,mainFaktor.faktorNo,oldItems)
         return({id:id,error:"اضافات تغییر کرده است"})
     }
     if(CompareValue(newOrder.Reductions,mainFaktor.totalDiscount)==false){
-        await updateOrder(mainFaktor,newItems,id)
+        await updateOrder(newOrder,newItems,id)
         await updateItems(newItems,mainFaktor.faktorNo,oldItems)
         return({id:id,error:"تخفیفات تغییر کرده است",newDiscount:newOrder.Reductions,
             oldDiscount:mainFaktor.totalDiscount,orderData:newOrder
@@ -40,7 +40,7 @@ const CheckChange=async(faktorNo,rahItems,rahOrder)=>{
     for(var i=0;i<newItems.length;i++){
         if(newItems[i].Quantity != oldItems[i].count){
             await updateItems(newItems,mainFaktor.faktorNo,oldItems)
-            await updateOrder(mainFaktor,newItems,id)
+            await updateOrder(newOrder,newItems,id)
             return({id:id,error:"Edited Quantity"})
             
         }
