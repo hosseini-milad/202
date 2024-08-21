@@ -30,7 +30,6 @@ const CheckChange=async(faktorNo,rahItems,rahOrder)=>{
         return({id:id,error:"اضافات تغییر کرده است"})
     }
     if(CompareValue(newOrder.Reductions,mainFaktor.totalDiscount)==false){
-        console.log("start editing")
         await updateOrder(mainFaktor,newItems,id)
         await updateItems(newItems,mainFaktor.faktorNo,oldItems)
         return({id:id,error:"تخفیفات تغییر کرده است",newDiscount:newOrder.Reductions,
@@ -55,12 +54,10 @@ const CheckChange=async(faktorNo,rahItems,rahOrder)=>{
     return('')
 }
 const updateOrder = async(newOrder,newItems,id)=>{
-    console.log("updating")
     var totalCount = 0
     for(var i=0;i<newItems.length;i++){
         totalCount += parseFloat(newItems[i].Quantity)
     }
-    console.log(totalCount)
     var resultOrder = {
         totalCount:totalCount,
         totalDiscount:newOrder.Reductions,
