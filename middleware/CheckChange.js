@@ -66,6 +66,7 @@ const updateOrder = async(newOrder,newItems,id)=>{
         netPrice:newOrder.NetPrice,
 
     }
+    console.log(newOrder)
     console.log(resultOrder)
     const result =await faktor.updateOne({rahId:id},{$set:resultOrder})
     console.log(result)
