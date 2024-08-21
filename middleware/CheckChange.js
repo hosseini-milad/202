@@ -54,6 +54,7 @@ const CheckChange=async(faktorNo,rahItems,rahOrder)=>{
     return('')
 }
 const updateOrder = async(newOrder,newItems,id)=>{
+    console.log("updating")
     var totalCount = 0
     for(var i=0;i<newItems.length;i++){
         totalCount += parseFloat(newItems[i].Quantity)
