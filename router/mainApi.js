@@ -76,7 +76,7 @@ schedule.scheduleJob('5 */2 * * *', async() => {
  schedule.scheduleJob('*/3 * * * *', async() => { 
     /*response = await fetch(ONLINE_URL+"/get-faktors-auth",
         {method: 'GET'});*/
-    console.log(ONLINE_URL+"/get-faktors")
+    console.log("schedule running")
     var response = await fetch(ONLINE_URL+"/api/get-faktors",
         {method: 'POST'});
     response = await fetch(ONLINE_URL+"/api/get-customers",
@@ -183,6 +183,7 @@ router.post('/get-faktors', async (req,res)=>{
         }
         res.cookie("sg-dummy","-")
         res.cookie("sg-auth-SGPT",cookieSGPT)
+        var result = []
         for(var i=0;i<faktorList.length;i++){
             var sepidarResult = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
             {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":5,},{"sg-auth-SGPT":cookieSGPT})
@@ -209,7 +210,7 @@ router.post('/get-faktors', async (req,res)=>{
             var checkChangeItems =''
             if(!faktorList[i].isEdit)
                 checkChangeItems= await CheckChange(faktorList[i].InvoiceID,sepidarItemResult,sepidarResult)
-            
+            result.push(checkChangeItems)
             if(checkChangeItems){
                 await ordersLogs.create({status:"ویرایش شده",orderNo:rahkaranOut[i].ID,
                 description:checkChangeItems
@@ -243,7 +244,7 @@ router.post('/get-faktors', async (req,res)=>{
                 
             }
         }
-        res.json({mainResult:rahkaranOut,itemResult:rahkaranItemOut})
+        res.json({mainResult:result})
         return
     }
     catch(error){
