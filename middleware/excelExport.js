@@ -90,7 +90,7 @@ const styles = {
         
         var dataset = data.map((item,i)=>(
             {radif: i+1, date:item.dateFa, title: item.des, 
-            debit:item.credit, credit: item.debit, 
+            debit:item.debit, credit: item.credit, 
             remain: item.remain}
         ))
         try{fs.unlinkSync(url);}catch{}
