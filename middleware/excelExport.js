@@ -89,7 +89,7 @@ const styles = {
         
         
         var dataset = data.map((item,i)=>(
-            {radif: i+1, date:item.dateFa, title: item.desc, 
+            {radif: i+1, date:item.dateFa, title: item.des, 
             debit:item.credit, credit: item.debit, 
             remain: item.remain}
         ))
