@@ -18,7 +18,7 @@ const CheckChange=async(faktorNo,rahItems,rahOrder)=>{
         
         //console.log(mainFaktor)
 	    //console.log(oldItems)
-
+    try{
     if(newItems.length != oldItems.length){
         await updateOrder(newOrder,newItems,id,{})
         await updateItems(newItems,mainFaktor.faktorNo,oldItems)
@@ -51,6 +51,7 @@ const CheckChange=async(faktorNo,rahItems,rahOrder)=>{
             
         }*/
     }
+} catch(error){console.log(error)}
     return('')
 }
 const updateOrder = async(newOrder,newItems,id,status)=>{
