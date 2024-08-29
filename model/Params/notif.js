@@ -6,6 +6,7 @@ const notifSchema = new mongoose.Schema({
   userId:{ type: String,required:true},
   status:{type:Boolean,default:1},
   content: { type: String},
+  kind:{ type: String},
   link:{type:String, default:"#"},
   imageUrl: { type: String},
   date:{type:Date,default:Date.now()}

@@ -5,7 +5,6 @@ const newsSchema = new mongoose.Schema({
   enTitle:{type:String,unique:true},
   content: { type: String},
   abstract: { type: String},
-  kind:{ type: String},
   link:{type:String, default:"#"},
   imageUrl: { type: String},
   uploadUrl: { type: String},
