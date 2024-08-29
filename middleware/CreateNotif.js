@@ -5,6 +5,7 @@ const CreateNotif = async(data,user,type,linkRaw)=>{
     var link = linkRaw?linkRaw:"#"
     await notif.create({
         title:type+data,
+        kind:type,
         orderNo:data,
         userId:user,
         status:1,

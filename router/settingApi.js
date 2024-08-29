@@ -290,7 +290,7 @@ router.post('/update-news',jsonParser,async (req,res)=>{
             await news.updateOne({enTitle:newsCode},{$set:data})
         else
             {
-                await news.create(data)
+                await news.create(data) 
                 const customerList = await customers.find({})
                 for(var i=0;i<customerList.length;i++){
                     await CreateNotif(data.title,customerList[i]._id,"news",data.link)
