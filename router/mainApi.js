@@ -218,7 +218,9 @@ router.post('/get-faktors', async (req,res)=>{
                 await faktor.updateOne({InvoiceID:rahkaranOut[i].ID},
                     {$set:{status:"ویرایش شده",isEdit:true}}
                 )
-                await CreateNotif(faktorList[i].rahId,faktorList[i].userId,"ویرایش سفارش ")
+                await CreateNotif(faktorList[i].rahId,faktorList[i].userId,"ویرایش سفارش "
+                    ,"editOrder"
+                )
                 await sendSmsUser(faktorList[i].userId,process.env.OrderEdit,
                     faktorList[i].rahId)    
             }
@@ -231,7 +233,7 @@ router.post('/get-faktors', async (req,res)=>{
                 )
                 await CreateFaktor(rahkaranOut[i].Number)
                 await CreateNotif(faktorList[i].rahId,faktorList[i].userId,
-                    "تایید سفارش ","/orders#"+faktorList[i].rahId)
+                    "تایید سفارش ","/orders#"+faktorList[i].rahId,"acceptOrder")
             }
             if(rahkaranOut[i]&&rahkaranOut[i].State == 6){
                 
@@ -240,7 +242,7 @@ router.post('/get-faktors', async (req,res)=>{
                     {$set:{status:"باطل شده",active:false,isEdit:false}}
                 )
                 await CreateNotif(faktorList[i].rahId,faktorList[i].userId,
-                    "لغو سفارش ","/orders#"+faktorList[i].rahId)
+                    "لغو سفارش ","/orders#"+faktorList[i].rahId,"cancelOrder")
                 
             }
         }

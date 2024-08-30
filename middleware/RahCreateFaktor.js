@@ -81,7 +81,7 @@ const RahCreateFaktor=async(faktorData,RahFaktor,rahItems,userData,cookieData,re
         rahId:rahId,
         status:"در انتظار تایید"})
         await CreateNotif(rahId,userData._id,"ثبت سفارش ",
-            "/orders#"+rahId
+            "/orders#"+rahId,"regOrder"
         )
         await sendSmsUser(userData._id,process.env.OrderSubmit,rahId)    
     const newFaktorItems = await faktorItems.create(RahFaktorData.itemData)
