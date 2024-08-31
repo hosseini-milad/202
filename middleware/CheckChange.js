@@ -88,7 +88,7 @@ const updateItems=async(newItems,faktorNo,oldItems)=>{
             netPrice:newItem.NetPrice,
             originData:oldItem?oldItem.originData:{},
             price:newItem.Fee,
-            totalPrice:newItem.TotalPrice,
+            totalPrice:newItem.Price,
             count:newItem.Quantity,
             isEditPrice,isEditCount,
             totalDiscount:newItem.Reductions}
