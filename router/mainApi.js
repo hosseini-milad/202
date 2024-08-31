@@ -128,7 +128,7 @@ router.post('/get-product', async (req,res)=>{
         var notUpdateProduct = 0
         var unitIds = []
         var sepidarResult=sepidarResultRaw&&sepidarResultRaw.result
-        console.log(sepidarResult.length)
+        console.log(sepidarResultRaw)
         for(var i=0;i<sepidarResult.length;i++){
             var product = sepidarResult[i]
             var unitId = product.units&&product.units[0]&&product.units[0].unitRef
