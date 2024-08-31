@@ -11,7 +11,7 @@ const CreateNotif = async(data,user,type,linkRaw,kind)=>{
         status:1,
         content: "",
         link:link,
-        imageUrl: "",
+        imageUrl: data.imageUrl,
     })
     return({message:"Notif Created"})
 }
