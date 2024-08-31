@@ -7,6 +7,7 @@ const newsSchema = new mongoose.Schema({
   abstract: { type: String},
   link:{type:String, default:"#"},
   imageUrl: { type: String},
+  thumbUrl: { type: String},
   uploadUrl: { type: String},
   iconUrl:{ type: String},
   date:{type:Date,default:Date.now()}
