@@ -69,17 +69,21 @@ router.use('/panel/faktor', panelFaktorApi)
 router.use('/esale', esaleApi)
 
 router.use('/panel/crm',CRMPanelApi)
-schedule.scheduleJob('5 */2 * * *', async() => { 
+//schedule.scheduleJob('5 */2 * * *', async() => { 
+/*    console.log("schedule running")
+    await fetch(ONLINE_URL+"/auth-server",
+        {method: 'GET'});
     response = await fetch(ONLINE_URL+"/api/get-product",
         {method: 'GET'});
- })
+ })*/
  schedule.scheduleJob('*/3 * * * *', async() => { 
     /*response = await fetch(ONLINE_URL+"/get-faktors-auth",
         {method: 'GET'});*/
-    console.log("schedule running")
     var response = await fetch(ONLINE_URL+"/api/get-faktors",
         {method: 'POST'});
     response = await fetch(ONLINE_URL+"/api/get-customers",
+        {method: 'GET'});
+    response = await fetch(ONLINE_URL+"/api/get-product",
         {method: 'GET'});
  })
 router.get('/auth-server', async (req,res)=>{
