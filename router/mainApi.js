@@ -84,7 +84,7 @@ router.use('/panel/crm',CRMPanelApi)
     response = await fetch(ONLINE_URL+"/api/get-customers",
         {method: 'GET'});
     response = await fetch(ONLINE_URL+"/api/get-product",
-        {method: 'GET'});
+        {method: 'POST'});
  })
 router.get('/auth-server', async (req,res)=>{
     try{
