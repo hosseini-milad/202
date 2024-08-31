@@ -82,5 +82,16 @@ router.post('/list',jsonParser,async (req,res)=>{
         res.status(500).json({message: error.message})
     } 
 })
-
+router.post('/close-order',jsonParser,async (req,res)=>{
+    const orderNo= req.body.orderNo
+    try{
+        const orderClose = await faktorNo.updateOne({rahId:orderNo},
+            {$set:{isClose:1}}
+        )
+       res.json({result:orderClose,message:"سفارش بسته شد"})
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    } 
+})
 module.exports = router;

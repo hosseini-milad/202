@@ -17,6 +17,7 @@ const FaktorSchema = new Schema({
     isEdit:{type:Boolean,default:false},
     isDone:{type:Boolean,default:false},
     isOff:{type:Boolean,default:false},
+    isClose:{type:Boolean,default:false},
     isAdd:{type:Boolean,default:false},
     active:{type:Boolean},
     netPrice:{ type: String },
