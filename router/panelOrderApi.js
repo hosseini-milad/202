@@ -6,6 +6,7 @@ const auth = require("../middleware/auth");
 var ObjectID = require('mongodb').ObjectID;
 const orders = require('../models/orders/orders');
 const products = require('../models/product/products');
+const faktor = require('../models/product/faktor');
 
 router.post('/sku/find',jsonParser,async (req,res)=>{
     try{
@@ -85,7 +86,7 @@ router.post('/list',jsonParser,async (req,res)=>{
 router.post('/close-order',jsonParser,async (req,res)=>{
     const orderNo= req.body.orderNo
     try{
-        const orderClose = await faktorNo.updateOne({rahId:orderNo},
+        const orderClose = await faktor.updateOne({rahId:orderNo},
             {$set:{isClose:1}}
         )
        res.json({result:orderClose,message:"سفارش بسته شد"})
