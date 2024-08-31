@@ -120,15 +120,23 @@ router.post('/get-product', async (req,res)=>{
     var sepidarResultRaw =[]
     console.log("products list")
     try{
+        const loginData = await RahkaranLogin()
+        var cookieSGPT = '';
+        if(loginData){
+            cookieSGPT = loginData.split('SGPT=')[1]
+            cookieSGPT = cookieSGPT.split(';')[0]
+        }
+        res.cookie("sg-dummy","-")
+        res.cookie("sg-auth-SGPT",cookieSGPT)
         sepidarResultRaw = await RahkaranPOST("/Sales/ProductManagement/Services/ProductManagementService.svc/GetProducts",
-        {"PageSize":2000},cookieData)
+        {"PageSize":2000},{"sg-auth-SGPT":cookieSGPT})
         const query=[]
         var newProduct = [];
         var updateProduct = 0
         var notUpdateProduct = 0
         var unitIds = []
         var sepidarResult=sepidarResultRaw&&sepidarResultRaw.result
-        console.log(sepidarResultRaw)
+        console.log(sepidarResult.length)
         for(var i=0;i<sepidarResult.length;i++){
             var product = sepidarResult[i]
             var unitId = product.units&&product.units[0]&&product.units[0].unitRef
