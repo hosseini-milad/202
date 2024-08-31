@@ -117,6 +117,7 @@ router.get('/get-cookie', async (req,res)=>{
 router.post('/get-product', async (req,res)=>{
     const cookieData = req.cookies
     var sepidarResultRaw =[]
+    console.log("products list")
     try{
         sepidarResultRaw = await RahkaranPOST("/Sales/ProductManagement/Services/ProductManagementService.svc/GetProducts",
         {"PageSize":2000},cookieData)
