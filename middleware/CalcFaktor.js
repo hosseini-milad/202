@@ -17,7 +17,7 @@ const CalcFaktor=async(cartData,userData)=>{
         progressDate: Date.now(),
         userId:userData._id,
         customerID:userData.customerID,
-
+        totalWeight:cartData.cartDetail&&cartData.cartDetail.totalWeight,
         totalCount:cartData.cartDetail&&cartData.cartDetail.cartCount,
         totalDiscount:0,
         totalPrice:cartData.cartDetail&&cartData.cartDetail.cartPrice,
@@ -36,6 +36,9 @@ const CalcFaktor=async(cartData,userData)=>{
             price:faktorTemp.price,
             totalPrice:faktorTemp.totalPrice,
             count:faktorTemp.count,
+            
+            weight:faktorTemp.weight,
+            totalWeight:faktorTemp.totalWeight,
             discount:faktorTemp.discount,
         })
     }
