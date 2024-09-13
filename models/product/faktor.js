@@ -13,6 +13,7 @@ const FaktorSchema = new Schema({
     totalCount:{ type: String },
     totalDiscount:{ type: String },
     totalPrice:{ type: String },
+    totalWeight:{type:String},
     totalAddition:{ type: String },
     isEdit:{type:Boolean,default:false},
     isDone:{type:Boolean,default:false},

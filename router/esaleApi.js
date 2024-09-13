@@ -258,7 +258,7 @@ router.post('/update-cart-item',auth,jsonParser,async (req,res)=>{
     catch(error){
         res.status(500).json({message: error.message})
     } 
-})
+}) 
 
 router.get('/cart-to-faktor',auth,jsonParser,async (req,res)=>{
     const cookieData = req.cookies
