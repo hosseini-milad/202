@@ -320,12 +320,18 @@ router.post('/list-faktor',auth,jsonParser,async (req,res)=>{
             (parseInt(offset)+parseInt(pageSize)))
         for(var i=0;i<showFaktor.length;i++){
             var faktorList=[]
+            var totalWeight = 0
             var faktorData = showFaktor[i].faktorItems
             for(var j=0;j<faktorData.length;j++){
                 var faktorTitle = await products.findOne({sku:faktorData[j].sku})
-                faktorList.push({...faktorData[j],title:faktorTitle.title})
+                var weight = faktorTitle&&parseFloat(faktorTitle.weight)
+                var tWeight = parseInt(faktorData[j].count)*weight
+                totalWeight+=tWeight
+                faktorList.push({...faktorData[j],title:faktorTitle.title,
+                    weight:weight,totalWeight:tWeight
+                })
             }
-            finalFaktor.push({...showFaktor[i],faktorItems:faktorList})
+            finalFaktor.push({...showFaktor[i],faktorItems:faktorList,totalWeight})
         }
         
         res.status(200).json({data:finalFaktor,success:true,message:"لیست سفارشات"})
