@@ -36,8 +36,6 @@ const CalcFaktor=async(cartData,userData)=>{
             totalPrice:faktorTemp.totalPrice,
             count:faktorTemp.count,
             
-            weight:faktorTemp.weight,
-            totalWeight:faktorTemp.totalWeight,
             discount:faktorTemp.discount,
         })
     }

@@ -16,8 +16,6 @@ const FaktorItemSchema = new Schema({
     price:{type:String},
     totalPrice:{type:String},
     count:{type:Number},
-    weight:{type:String},
-    totalWeight:{type:String},
     isEditPrice:{type:Boolean},
     isEditCount:{type:Boolean},
     totalDiscount:{type:String},
