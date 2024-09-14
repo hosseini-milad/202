@@ -145,6 +145,7 @@ router.post('/get-product', async (req,res)=>{
                 title:  product.name,
                 sku: product.number,
                 unitId:unitId,
+                weight:product.weight,
                 ItemID:product.id,
                 active:product.stateTitle=="فعال"?true:false,
                 rahcatId:product.partNature, 
