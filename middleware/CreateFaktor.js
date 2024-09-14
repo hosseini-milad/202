@@ -7,6 +7,7 @@ const PersianNumber = require("./PersianNumber")
 var pdf = require("pdf-creator-node")
 var fs = require('fs');
 const customers = require("../models/auth/customers")
+const products = require("../models/product/products")
  
 const CreateFaktor = async(rahId)=>{
     const orderData = await faktor.findOne({rahId:rahId}).lean()
@@ -18,10 +19,18 @@ const CreateFaktor = async(rahId)=>{
     {$lookup:{from : "products", 
       localField: "sku", foreignField: "sku", as : "detail"}}
   ])
+  var totalWeight=0
   for(var i=0;i<orderList.length;i++){
     const unitData = await units.findOne({id:orderList[i].detail[0].unitId})
+    const productData = orderList[i].detail[0]
     orderList[i].unit = unitData&&unitData.title
-    
+    orderList[i].weight = productData.weight
+    try{
+      var tWeight = parseFloat(productData.weight)*
+      parseFloat(orderList[i].count)
+      orderList[i].totalWeight = tWeight
+      totalWeight+=tWeight
+    }catch{}
     orderList[i].index = i+1
     orderList[i].title = orderList[i].detail[0].title
     orderList[i].price = NormalPrice(orderList[i].price)
@@ -31,6 +40,7 @@ const CreateFaktor = async(rahId)=>{
   orderData.pPrice = PersianNumber(orderData.netPrice)
   orderData.totalPrice = NormalPrice(orderData.totalPrice)
   orderData.netPrice = NormalPrice(orderData.netPrice)
+  orderData.totalWeight = totalWeight
   orderData.totalAddition = NormalPrice(orderData.totalAddition)
   orderData.totalDiscount = NormalPrice(orderData.totalDiscount)
   const userData = await customers.findOne({customerID:orderData.customerID}).lean()
