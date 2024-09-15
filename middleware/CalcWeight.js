@@ -6,7 +6,8 @@ const CalcWeight=(price1,price2)=>{
     const price2Float = parseFloat(price2)
     const newPrice = price1Float*price2Float
     const RoundPrice = Math.round(newPrice)
-    return((RoundPrice).toFixed(2))
+    console.log(RoundPrice)
+    return(parseFloat(RoundPrice.toFixed(2)))
 }
 
 module.exports =CalcWeight
