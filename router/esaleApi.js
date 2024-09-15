@@ -36,6 +36,7 @@ const sendSmsUser = require('../middleware/sendSms');
 const CreateNotif = require('../middleware/CreateNotif');
 const RahCreateFaktor = require('../middleware/RahCreateFaktor');
 const RahDeleteFaktor = require('../middleware/RahDeleteFaktor');
+const CalcWeight = require('../middleware/CalcWeight');
 
 /*Product*/
 router.post('/fetch-product',jsonParser,async (req,res)=>{
@@ -325,7 +326,7 @@ router.post('/list-faktor',auth,jsonParser,async (req,res)=>{
             for(var j=0;j<faktorData.length;j++){
                 var faktorTitle = await products.findOne({sku:faktorData[j].sku})
                 var weight = faktorTitle&&parseFloat(faktorTitle.weight)
-                var tWeight = parseInt(faktorData[j].count)*weight
+                var tWeight = CalcWeight(faktorData[j].count,weight)
                 totalWeight+=tWeight
                 faktorList.push({...faktorData[j],title:faktorTitle.title,
                     weight:weight,totalWeight:tWeight

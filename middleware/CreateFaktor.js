@@ -8,6 +8,7 @@ var pdf = require("pdf-creator-node")
 var fs = require('fs');
 const customers = require("../models/auth/customers")
 const products = require("../models/product/products")
+const CalcWeight = require("./CalcWeight")
  
 const CreateFaktor = async(rahId)=>{
     const orderData = await faktor.findOne({rahId:rahId}).lean()
@@ -26,8 +27,8 @@ const CreateFaktor = async(rahId)=>{
     orderList[i].unit = unitData&&unitData.title
     orderList[i].weight = productData.weight
     try{
-      var tWeight = parseFloat(productData.weight)*
-      parseFloat(orderList[i].count)
+      var tWeight = CalcWeight(productData.weight,
+      orderList[i].count)
       orderList[i].totalWeight = tWeight
       totalWeight+=tWeight
     }catch{}
