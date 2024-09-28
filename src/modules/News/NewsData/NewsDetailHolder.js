@@ -6,7 +6,7 @@ import tabletrans from "../../../translate/tables"
 import formtrans from "../../../translate/forms"
 import NewsDetails from './NewsDetails';
 import NewsImage from './NewsImage';
-
+import ErrorAction from "../../Components/PopUps/ErrorAction"
 function NewsDetailHolder(props){
   const url = window.location.pathname.split('/')[3]
   const direction = props.lang?props.lang.dir:errortrans.defaultDir;
@@ -14,7 +14,7 @@ function NewsDetailHolder(props){
   const [error,setError] = useState({errorText:'',errorColor:"brown"})
   const [content,setContent] = useState('')
   const [catChange,setCatChange] = useState('')
-  
+  const [Alert,setAlert]=useState(false)
 
   useEffect(()=>{
     if(url==="new")return
@@ -78,6 +78,36 @@ fetch(env.siteApi + "/setting/fetch-news",postOptions)
       }
     )
   }
+  const deleteNews=()=>{
+    //if(newCustomer) {
+      var postOptions={
+          method:'post',
+          headers: {'Content-Type': 'application/json'},
+          body:JSON.stringify({newsCode:url})
+        }
+       //console.log(postOptions)
+    fetch(env.siteApi + "/setting/delete-news",postOptions)
+    .then(res => res.json())
+    .then(
+      (result) => {
+        if(result.error){
+          setError({errorText:result.error,
+            errorColor:"brown"})
+          setTimeout(()=>setError({errorText:'',
+            errorColor:"brown"}),3000)
+        }
+          else{
+            setError({errorText:result.success,
+              errorColor:"green"})
+            setTimeout(()=>window.location.href="/news",2000)
+          }
+          
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
+  }
 console.log(content)
 return(
   <div className="new-item" style={{direction:direction}}>
@@ -91,12 +121,25 @@ return(
             lang={lang} content={content}/> 
           </div>
         <div className="create-btn-wrapper">
+          <div className="save-btn delete-btn"  onClick={()=>setAlert(true)}>{formtrans.deleteNews[lang]}</div>
           <div className="save-btn" onClick={saveNews}>{formtrans.saveChanges[lang]}</div>
           <div className="cancel-btn" onClick={()=>window.location.href="/notification"}>{formtrans.cancel[lang]}</div>
         </div>
         
       </div>:<div>{env.loader}</div>}
     </div>
+    {Alert?
+    <ErrorAction 
+    status={"DELETE"} 
+    title={"حذف آیتم"} 
+    text={"آیتم انتخاب شده حذف خواهد شد. آیا مطمئن هستید؟"} 
+    linkText={""} 
+    style={{direction:"rtl"}}
+    buttonText="حذف" 
+    close={()=>setAlert()}
+    action={deleteNews}
+    />:
+    <></>}
   </div>
   )
 }

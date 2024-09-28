@@ -665,6 +665,23 @@ li.board-task {
   position: relative;
   transform: translateY(-60px);
   transition: all 0.3s ease;
+
+  .sure-checkbox label{
+    font-size: 1rem;
+    color: black;
+  }
+}
+.delete-modal .modal-backdrop .d-m-box .btn-wrappper{
+  justify-content: flex-end;
+  gap: 1rem;
+  .cancel-btn{
+  font-size: 0.85rem;
+  }
+  .del-btn{
+    background-color: red;
+    width: fit-content;
+    margin: 0;
+  }
 }
 .popTitle {
   margin-top: 0;

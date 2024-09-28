@@ -51,6 +51,10 @@ const formtrans ={
         english: "Response",
         persian: "پاسخ"
     },
+    deleteNews:{
+        english: "Delete News",
+        persian: "حذف خبر"
+    },
     roleId:{
         english: "RoleId",
         persian: "کد نقش"
