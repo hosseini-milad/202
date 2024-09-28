@@ -306,6 +306,26 @@ router.post('/update-news',jsonParser,async (req,res)=>{
         res.status(500).json({message: error.message})
     } 
 })
+
+router.post('/delete-news',jsonParser,async (req,res)=>{
+    var newsCode = req.body.newsCode
+
+    try{
+        var result = ''
+        if(newsCode)
+            await news.deleteOne({enTitle:newsCode})
+        else
+            {
+                
+            };
+        res.json(result)
+        return
+        
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    } 
+})
 router.post('/show-news',jsonParser,async (req,res)=>{
     var userId = req.headers["userid"]
     const newsCode = req.body.newsCode
