@@ -2884,8 +2884,8 @@ input:checked + .switch-label:after {
   flex-direction: column;
   transition: opacity 248ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
     transform 165ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  top: 20px;
-  right: 40px;
+  top: 60px;
+  right: -50px;
   transform-origin: 140px 0px 0px;
   color: rgb(33, 43, 54);
   transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -3009,6 +3009,7 @@ input:checked + .switch-label:after {
 }
 .more-btn {
   display: flex;
+  position: relative;
 }
 .extend-btn {
   margin: 0;
@@ -6762,4 +6763,7 @@ table {
 /* End Major Order -----------------------------------------*/
 .delete-btn{
   background-color: red;
+}
+.p-r{
+  position: relative;
 }
