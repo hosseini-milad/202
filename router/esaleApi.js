@@ -37,6 +37,7 @@ const CreateNotif = require('../middleware/CreateNotif');
 const RahCreateFaktor = require('../middleware/RahCreateFaktor');
 const RahDeleteFaktor = require('../middleware/RahDeleteFaktor');
 const CalcWeight = require('../middleware/CalcWeight');
+const customers = require('../models/auth/customers');
 
 /*Product*/
 router.post('/fetch-product',jsonParser,async (req,res)=>{
@@ -304,6 +305,11 @@ router.post('/list-faktor',auth,jsonParser,async (req,res)=>{
     var pageSize = req.body.pageSize?req.body.pageSize:"10";
     var offset = req.body.offset?(parseInt(req.body.offset)):0;
     const userId = req.headers["userid"]
+    const userData = await customers.findOne({_id:ObjectID(userId)})
+    if(!userData.access||userData.access!=="full"){
+        res.status(400).json({error:"دسترسی به این بخش ندارید"})
+        return
+    }
     const search = req.body.search
     try{
         const myFaktors = await faktor.aggregate([

@@ -143,6 +143,7 @@ router.post('/update-customer',jsonParser,async (req,res)=>{
         state:req.body.state,
         country:req.body.country,
         about:req.body.about,
+        access:req.body.access,
         roleId:req.body.roleId,
         nif:req.body.nif,
         active:req.body.active,
