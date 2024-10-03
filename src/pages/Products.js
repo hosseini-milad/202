@@ -24,7 +24,8 @@ function Products(props) {
   const [filters, setFilters] = useState(
     getFiltersFromUrl() || { active: "1" }
   );
-  const [tempProduct, setTempProduct] = useState("");
+  
+  const [update, setUpdate] = useState(0);
   const [loading, setLoading] = useState(0);
   const [counter, setCounter] = useState(0);
   const [store,setStore] = useState(-1)
@@ -158,6 +159,45 @@ function Products(props) {
         }
       );
   };
+  const updateCustomers = async (event) => {
+    const uploadFile = event.target.files[0];
+    const tempfile = await resizeFile(uploadFile);
+    const token = props.token;
+    const postOptions = {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": token && token.token,
+        userId: token && token.userId,
+      },
+      body: JSON.stringify({
+        base64image: tempfile,
+        folderName: "excel",
+        imgName: uploadFile.name.split(".")[0],
+      }),
+    };
+    fetch(env.siteApi + "/panel/product/upload", postOptions)
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          //console.log(result)
+          if (result.error) {
+          } else {
+            setUpdate(result.url);
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  };
+  const resizeFile = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+    });
   //window.scrollTo(0, 270);},[pageNumber,filters,perPage,refreshTable])
   return (
     <div className="user" style={{ direction: direction }}>
@@ -166,6 +206,14 @@ function Products(props) {
           <div className="od-header-name">
             <p>{tabletrans.products[lang]}</p>
           </div>
+          
+          <input
+            id="upFiles"
+            type="file"
+            accept=".*"
+            className="hidden"
+            onChange={updateCustomers}
+          />
         </div>
         <div className="od-header-btn">
           <div
