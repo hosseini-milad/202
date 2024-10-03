@@ -10,6 +10,7 @@ var ObjectID = require('mongodb').ObjectID;
 const { OLD_SITE_URL,API_PORT,StockId,SaleType} = process.env;
 var im = require('imagemagick');
 const resizeImg = require('resize-img');
+const xlsx = require('node-xlsx');
  
 const ServiceSchema = require('../models/product/Services');
 const ProductSchema = require('../models/product/products');
@@ -18,12 +19,10 @@ const category = require('../models/product/category');
 const { env } = require('process');
 const filterNumber = require('../middleware/Functions');
 
-const productCount = require('../models/product/productCount');
-const productPrice = require('../models/product/productPrice');
-const NormalTax = require('../middleware/NormalTax');
-const openOrders = require('../models/orders/openOrders');
 const Filters = require('../models/product/Filters');
 const factory = require('../models/product/factory');
+const multer = require('multer');
+const products = require('../models/product/products');
 
 router.post('/fetch-service',jsonParser,async (req,res)=>{
     var serviceId = req.body.serviceId?req.body.serviceId:''
@@ -583,6 +582,67 @@ router.post('/edit-factory',jsonParser,async(req,res)=>{
     catch(error){
         res.status(500).json({message: error.message})
     }
+})
+var storage = multer.diskStorage(
+    {
+        destination: '/dataset/',
+        filename: function ( req, file, cb ) {
+            cb( null, "Deep"+ '-' + Date.now()+ '-'+file.originalname);
+        }
+    }
+  );
+  const uploadImg = multer({ storage: storage ,
+    limits: { fileSize: "5mb" }})
+
+    router.post('/upload',uploadImg.single('upload'), async(req, res, next)=>{
+        const folderName = req.body.folderName?req.body.folderName:"temp"
+        try{
+            const data = (req.body.base64image)
+        // to declare some path to store your converted image
+        var matches = await data.match(/^data:([A-Za-z-+./]+);base64,(.+)$/),
+        response = {};
+        if (matches.length !== 3) {
+        return new Error('Invalid input string');
+        } 
+        response.type = matches[1];
+        response.data = new Buffer.from(matches[2], 'base64');
+        let decodedImg = response;
+        let imageBuffer = decodedImg.data;
+        let type = decodedImg.type;
+        let extension = "xlsx"
+        //try{extension = mime.extension(type);}catch{}
+        const imgName = req.body.imgName?req.body.imgName.replace(/ /g,'_'):"temp"
+        
+        let fileName = `202-${Date.now().toString()+"-"+
+            imgName+"."+extension}`;
+       var upUrl = `/uploads/${folderName}/${fileName}`
+        fs.writeFileSync("."+upUrl, imageBuffer, 'utf8');
+        return res.send({"status":"success",url:upUrl});
+        } catch (e) {
+            res.send({"status":"failed",error:e});
+        }
+    })
+
+router.post('/parse-products',jsonParser,async (req,res)=>{
+    try{
+        const url = req.body.url
+        
+        const workSheetsFromFile = xlsx.parse(
+            __dirname +"/../"+url);
+        const data = workSheetsFromFile[0].data
+        const sIndex = data[0].findIndex(item=>item=="sku")
+        const wIndex = data[0].findIndex(item=>item=="weight")
+        const pIndex = data[0].findIndex(item=>item=="price")
+        var resultOut =[]
+        for(var i=1;i<data.length;i++){
+            var query = {price:data[i][pIndex],weight:data[i][wIndex]}
+            const result = await products.updateOne({sku:data[i][sIndex]},
+                {$set:query})
+            resultOut.push(result)
+        }
+        res.json({result:resultOut})
+    }
+    catch{}
 })
 
 module.exports = router;
