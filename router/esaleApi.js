@@ -305,11 +305,6 @@ router.post('/list-faktor',auth,jsonParser,async (req,res)=>{
     var pageSize = req.body.pageSize?req.body.pageSize:"10";
     var offset = req.body.offset?(parseInt(req.body.offset)):0;
     const userId = req.headers["userid"]
-    const userData = await customers.findOne({_id:ObjectID(userId)})
-    if(!userData.access||userData.access!=="full"){
-        res.status(400).json({error:"دسترسی به این بخش ندارید"})
-        return
-    }
     const search = req.body.search
     try{
         const myFaktors = await faktor.aggregate([
@@ -351,6 +346,11 @@ router.post('/list-complete-faktor',auth,jsonParser,async (req,res)=>{
     var pageSize = req.body.pageSize?req.body.pageSize:"10";
     var offset = req.body.offset?(parseInt(req.body.offset)):0;
     const userId = req.headers["userid"]
+    const userData = await customers.findOne({_id:ObjectID(userId)})
+    if(!userData.access||userData.access!=="full"){
+        res.status(400).json({error:"دسترسی به این بخش ندارید"})
+        return
+    }
     const search = req.body.search
     try{
         const myFaktors = await faktor.aggregate([
