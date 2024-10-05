@@ -633,6 +633,7 @@ router.post('/login-customer',jsonParser, async (req,res)=>{
           {expiresIn: "12h",}
         );
         user.token = token;
+        user.isFull = user.access&&user.access=="full"
         res.status(200).json(user);
         return;
       }
