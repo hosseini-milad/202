@@ -24,12 +24,13 @@ const CheckChange=async(faktorNo,rahItems,rahOrder)=>{
         await updateItems(newItems,mainFaktor.faktorNo,oldItems)
         return({id:id,error:'تعداد آیتم ها یکسان نیستند'})
     }
-    if(CompareValue(newOrder.Additions,mainFaktor.totalAddition)==false){
+    if(CompareValue(newOrder&&newOrder.Additions,
+        mainFaktor.totalAddition)==false){
         await updateOrder(newOrder,newItems,id,{isAdd:true})
         await updateItems(newItems,mainFaktor.faktorNo,oldItems)
         return({id:id,error:"اضافات تغییر کرده است"})
     }
-    if(CompareValue(newOrder.Reductions,mainFaktor.totalDiscount)==false){
+    if(CompareValue(newOrder&&newOrder.Reductions,mainFaktor.totalDiscount)==false){
         await updateOrder(newOrder,newItems,id,{isOff:true})
         await updateItems(newItems,mainFaktor.faktorNo,oldItems)
         return({id:id,error:"تخفیفات تغییر کرده است",newDiscount:newOrder.Reductions,

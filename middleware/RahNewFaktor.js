@@ -25,6 +25,8 @@ const RahNewFaktor=async(faktorData,RahFaktor,rahItems,userData)=>{
         totalCount:faktorMainData.totalCount,
         totalPrice:faktorMainData.totalPrice,
         totalWeight:faktorMainData.totalWeight,
+        totalAddition:faktorMainData.totalAddition,
+        totalDiscount:faktorMainData.totalDiscount,
         netPrice:faktorMainData.netPrice
     }
     var faktorItemData =faktorData.faktorItems
@@ -43,6 +45,8 @@ const RahNewFaktor=async(faktorData,RahFaktor,rahItems,userData)=>{
             totalPrice:faktorItemData[i].totalPrice,
             weight:faktorItemData[i].weight,
             totalWeight:faktorItemData[i].totalWeight,
+            totalAddition:faktorItemData[i].totalAddition,
+            totalDiscount:faktorItemData[i].totalDiscountfaktorItemData,
             netPrice:faktorItemData[i].netPrice
         }
     }
