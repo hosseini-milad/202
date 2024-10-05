@@ -323,13 +323,14 @@ router.post('/list-faktor',auth,jsonParser,async (req,res)=>{
         for(var i=0;i<showFaktor.length;i++){
             var faktorList=[]
             var totalWeight = 0
+            showFaktor[i] = showFaktor[i].originData
             var faktorData = showFaktor[i].faktorItems
             for(var j=0;j<faktorData.length;j++){
                 var faktorTitle = await products.findOne({sku:faktorData[j].sku})
                 var weight = faktorTitle&&parseFloat(faktorTitle.weight)
                 var tWeight = CalcWeight(faktorData[j].count,weight)
                 totalWeight+=tWeight
-                faktorList.push({...faktorData[j],title:faktorTitle.title,
+                faktorList.push({...faktorData[j].originData,title:faktorTitle.title,
                     weight:weight,totalWeight:tWeight
                 })
             }
