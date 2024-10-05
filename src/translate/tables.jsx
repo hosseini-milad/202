@@ -73,6 +73,10 @@ const tabletrans ={
         english: "Role",
         persian: "نقش"
     },
+    access:{
+        english: "Access",
+        persian: "دسترسی"
+    },
     date:{
         english: "Date",
         persian: "تاریخ"

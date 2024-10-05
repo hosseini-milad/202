@@ -27,7 +27,7 @@ function CustomerTableRow(props){
             </td>
             <td>
               <div className="cu-role">
-                <p>{user.access}</p>
+                <p>{user.access=="customer"?"محدود":(user.access=="full")?"کامل":""}</p>
               </div>
             </td>
             <td>

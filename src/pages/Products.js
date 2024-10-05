@@ -198,7 +198,29 @@ function Products(props) {
       reader.onload = () => resolve(reader.result);
       reader.onerror = reject;
     });
-  //window.scrollTo(0, 270);},[pageNumber,filters,perPage,refreshTable])
+  
+    const SendExel = async () => {
+      const postOptions = {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": token && token.token,
+          userId: token && token.userId,
+        },
+        body: JSON.stringify({url:update }),
+      }; //URL.createObjectURL(image)
+      //console.log(postOptions)
+      await fetch(env.siteApi + "/panel/product/parse-products", postOptions)
+        .then((res) => res.json())
+        .then((result) => {
+          console.log(result);
+          window.location.reload()
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+    console.log(update)
   return (
     <div className="user" style={{ direction: direction }}>
       <div className="od-header">
@@ -207,15 +229,23 @@ function Products(props) {
             <p>{tabletrans.products[lang]}</p>
           </div>
           
-          <input
+        </div>
+        <div className="od-header-btn">
+          {update?
+          <div className="edit-btn" onClick={SendExel}>
+            بروزرسانی قیمت
+          </div>
+          :<label className="uplaod-file" htmlFor="upFiles">آپلود قیمت
+            <input
             id="upFiles"
             type="file"
             accept=".*"
             className="hidden"
             onChange={updateCustomers}
+            style={{display:"none"}}
           />
-        </div>
-        <div className="od-header-btn">
+          </label>}
+          
           <div
             className="edit-btn add-btn"
             onClick={() => (window.location.href = "/products/detail/new")}

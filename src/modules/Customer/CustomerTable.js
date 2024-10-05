@@ -20,7 +20,7 @@ function CustomerTable(props){
               <i></i>
             </th>
             <th>
-              <p>{tabletrans.role[lang]}</p>
+              <p>{tabletrans.access[lang]}</p>
               <i></i>
             </th>
             <th>

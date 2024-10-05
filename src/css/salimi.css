@@ -1417,7 +1417,7 @@ input:checked + .switch-label:after {
   cursor: pointer;
   user-select: none;
   vertical-align: middle;
-  display: flex;
+  display: none;
   justify-content: flex-start;
   align-items: center;
   min-height: 48px;
