@@ -62,9 +62,9 @@ const updateOrder = async(newOrder,newItems,id,status)=>{
     }
     var resultOrder = {
         totalCount:totalCount,
-        totalDiscount:newOrder.Reductions,
+        totalDiscount:newOrder&&newOrder.Reductions,
         totalPrice:newOrder.Price,
-        totalAddition:newOrder.Additions,
+        totalAddition:newOrder&&newOrder.Additions,
         netPrice:newOrder.NetPrice,
         ...status
     }
