@@ -63,9 +63,9 @@ const updateOrder = async(newOrder,newItems,id,status)=>{
     var resultOrder = {
         totalCount:totalCount,
         totalDiscount:newOrder&&newOrder.Reductions,
-        totalPrice:newOrder.Price,
+        totalPrice:newOrder&&newOrder.Price,
         totalAddition:newOrder&&newOrder.Additions,
-        netPrice:newOrder.NetPrice,
+        netPrice:newOrder&&newOrder.NetPrice,
         ...status
     }
     const result =await faktor.updateOne({rahId:id},{$set:resultOrder})
@@ -83,16 +83,16 @@ const updateItems=async(newItems,faktorNo,oldItems)=>{
         resultItems.push({
             faktorNo:faktorNo,
             sku:product&&product.sku,
-            totalAddition:newItem.Additions,
+            totalAddition:newItem&&newItem.Additions,
             initDate: oldItem?oldItem.initDate:Date.now(),
             progressDate: Date.now(),
-            netPrice:newItem.NetPrice,
+            netPrice:newItem&&newItem.NetPrice,
             originData:oldItem?oldItem.originData:{},
-            price:newItem.Fee,
-            totalPrice:newItem.Price,
-            count:newItem.Quantity,
+            price:newItem&&newItem.Fee,
+            totalPrice:newItem&&newItem.Price,
+            count:newItem&&newItem.Quantity,
             isEditPrice,isEditCount,
-            totalDiscount:newItem.Reductions}
+            totalDiscount:newItem&&newItem.Reductions}
 
         )
     }
