@@ -28,7 +28,7 @@ router.post('/create-report',jsonParser, async (req,res)=>{
 router.post('/create-invoice',jsonParser,auth, async (req,res)=>{
   const userId = req.headers['userid']
   const userData = await customers.findOne({_id:ObjectID(userId)})
-  if(!userData.access||userData.access!=="full"){
+  if(userData.access&&userData.access!=="full"){
     res.status(400).json({error:"دسترسی به این بخش ندارید"})
     return
 }
