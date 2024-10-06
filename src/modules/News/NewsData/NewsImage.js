@@ -4,6 +4,8 @@ import env from "../../../env";
 import tabletrans from "../../../translate/tables"
 
 function NewsImage(props){
+    const [thumb,setThumb] = useState('')
+
     const [image,setImage]= useState();
     const [upload,setUpload]= useState();
     const [imageUrl,setImageUrl] = useState('')
@@ -39,6 +41,36 @@ function NewsImage(props){
           })
 
       },[image])
+      useEffect(() => {
+        const postOptions={
+            method:'post',
+            headers: {
+                "content-type": "application/json"
+            },
+            body:JSON.stringify({base64image:thumb&&thumb.base64,
+                                imgName:thumb&&thumb.fileName,
+                              folderName:"product"})
+        }//URL.createObjectURL(image)
+        //console.log(postOptions)
+        thumb&&fetch(env.siteApi+"/panel/user/upload",postOptions)
+            .then(res => res.json())
+            .then(
+            (result) => {
+              props.setCatChange(prevState => ({
+                ...prevState,
+                thumbUrl:result.url
+              }))
+            },
+            (error) => {
+                console.log(error);
+            }
+            )
+            .catch((error)=>{
+            console.log(error)
+            })
+  
+        },[thumb])
+  
       const resizeFile = (file) =>
     new Promise((resolve,reject) => {
         const reader = new FileReader();
@@ -84,7 +116,7 @@ function NewsImage(props){
             <div className="images">
                 <h5>{tabletrans.images[props.lang]}</h5>
                 <ImageSimple cardName="Input Image" imageGallery={[]} 
-                    setImage={setImage} setImageUrl={setImageUrl} part={1}/>
+                    setImage={setImage} setImageUrl={setImageUrl} part={1} setThumb={setThumb}/>
                 <img src={props.catChange.imageUrl?env.siteApiUrl+props.catChange.imageUrl:
                   (content?(env.siteApiUrl+content.imageUrl):'')} 
                   alt={content?content.title:env.default}/>

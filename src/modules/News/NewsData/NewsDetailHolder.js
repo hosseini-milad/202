@@ -118,7 +118,7 @@ return(
           <NewsDetails direction={direction} lang={lang} content={content}
             setCatChange={setCatChange} catChange={catChange}/>
           <NewsImage setCatChange={setCatChange} catChange={catChange} 
-            lang={lang} content={content}/> 
+            lang={lang} content={content} /> 
           </div>
         <div className="create-btn-wrapper">
           <div className="save-btn delete-btn"  onClick={()=>setAlert(true)}>{formtrans.deleteNews[lang]}</div>

@@ -35,25 +35,6 @@ function CustomerGeneral(props) {
   const [stateSearch, setStateSearch] = useState("");
   const [citySearch, setCitySearch] = useState("");
 
-  useEffect(() => {
-    fetchStates();
-  }, []);
-
-  const fetchStates = () => {
-    fetch("/api/setting/list-state", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ search: search }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setStates(data.data);
-      })
-      .catch((error) => console.error("Error fetching states:", error));
-  };
-
   const handleStateChange = (e) => {
     const selectedState = e.target.value;
     // onSelect(selectedState);
@@ -326,6 +307,20 @@ function CustomerGeneral(props) {
                 setFormData((prevState) => ({
                   ...prevState,
                   activity: e,
+                }))
+              }
+            />
+            <StyleSelect
+              label="label"
+              title={"دسترسی"}
+              direction={props.direction}
+              defaultValue={userData.access=="customer"?"محدود":(userData.access=="customer")?"کامل":""}
+              class={"formInput"}
+              options={[{label:"کامل",value:"full"},{label:"محدود",value:"customer"},{label:" ",value:""}]}
+              action={(e) =>
+                setFormData((prevState) => ({
+                  ...prevState,
+                  access: e.value,
                 }))
               }
             />
