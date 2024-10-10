@@ -21,14 +21,16 @@ const RahNewFaktor=async(faktorData,RahFaktor,rahItems,userData)=>{
         rahFaktorData[0]&&rahFaktorData[0].Reductions
     faktorMainData.netPrice = rahFaktorData&&
         rahFaktorData[0]&&rahFaktorData[0].NetPrice
+    faktorMainData.originData = {
+        totalCount:faktorMainData.totalCount,
+        totalPrice:faktorMainData.totalPrice,
+        totalWeight:faktorMainData.totalWeight,
+        totalAddition:faktorMainData.totalAddition,
+        totalDiscount:faktorMainData.totalDiscount,
+        netPrice:faktorMainData.netPrice
+    }
     var faktorItemData =faktorData.faktorItems
     for(var i=0;i<rahFaktorItems.length;i++){
-        faktorItemData[i].originData = {
-            count:faktorItemData[i].count,
-            sku:faktorItemData[i].sku,
-            price:faktorItemData[i].price,
-            totalPrice:faktorItemData[i].totalPrice
-        }
         faktorItemData[i].count=rahFaktorItems[i]&&rahFaktorItems[i].Quantity
         faktorItemData[i].price=rahFaktorItems[i]&&rahFaktorItems[i].Fee
         faktorItemData[i].totalPrice=rahFaktorItems[i]&&rahFaktorItems[i].Price
@@ -36,6 +38,17 @@ const RahNewFaktor=async(faktorData,RahFaktor,rahItems,userData)=>{
         faktorItemData[i].totalDiscount=rahFaktorItems[i]&&rahFaktorItems[i].Reductions
         
         faktorItemData[i].netPrice=rahFaktorItems[i]&&rahFaktorItems[i].NetPrice
+        faktorItemData[i].originData = {
+            count:faktorItemData[i].count,
+            sku:faktorItemData[i].sku,
+            price:faktorItemData[i].price,
+            totalPrice:faktorItemData[i].totalPrice,
+            weight:faktorItemData[i].weight,
+            totalWeight:faktorItemData[i].totalWeight,
+            totalAddition:faktorItemData[i].totalAddition,
+            totalDiscount:faktorItemData[i].totalDiscountfaktorItemData,
+            netPrice:faktorItemData[i].netPrice
+        }
     }
     
     

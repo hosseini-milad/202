@@ -15,8 +15,8 @@ const CalcCart=async(userId)=>{
         var price = cartDetail[i].price&&parseInt(cartDetail[i].price)
         var weight = productDetail.weight&&parseFloat(productDetail.weight)
         if(!price){
-            cartDetail[i].price = 1250000
-            price = 1250000
+            cartDetail[i].price = 0
+            price = 0
         }
         var totalPrice = price*parseFloat(cartDetail[i].count)//parseInt
         var totalWeight = weight*parseFloat(cartDetail[i].count)

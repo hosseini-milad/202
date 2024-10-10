@@ -5,6 +5,7 @@ const CompareValue = require("./CompareValue")
 
 
 const CheckChange=async(faktorNo,rahItems,rahOrder)=>{
+    console.log(faktorNo)
     const newItems = rahItems.result
     const newOrder = rahOrder.result&&rahOrder.result[0]
     const mainFaktor = await faktor.findOne({InvoiceID:faktorNo})
@@ -24,12 +25,13 @@ const CheckChange=async(faktorNo,rahItems,rahOrder)=>{
         await updateItems(newItems,mainFaktor.faktorNo,oldItems)
         return({id:id,error:'تعداد آیتم ها یکسان نیستند'})
     }
-    if(CompareValue(newOrder.Additions,mainFaktor.totalAddition)==false){
+    if(CompareValue(newOrder&&newOrder.Additions,
+        mainFaktor.totalAddition)==false){
         await updateOrder(newOrder,newItems,id,{isAdd:true})
         await updateItems(newItems,mainFaktor.faktorNo,oldItems)
         return({id:id,error:"اضافات تغییر کرده است"})
     }
-    if(CompareValue(newOrder.Reductions,mainFaktor.totalDiscount)==false){
+    if(CompareValue(newOrder&&newOrder.Reductions,mainFaktor.totalDiscount)==false){
         await updateOrder(newOrder,newItems,id,{isOff:true})
         await updateItems(newItems,mainFaktor.faktorNo,oldItems)
         return({id:id,error:"تخفیفات تغییر کرده است",newDiscount:newOrder.Reductions,
@@ -61,10 +63,10 @@ const updateOrder = async(newOrder,newItems,id,status)=>{
     }
     var resultOrder = {
         totalCount:totalCount,
-        totalDiscount:newOrder.Reductions,
-        totalPrice:newOrder.Price,
-        totalAddition:newOrder.Additions,
-        netPrice:newOrder.NetPrice,
+        totalDiscount:newOrder&&newOrder.Reductions,
+        totalPrice:newOrder&&newOrder.Price,
+        totalAddition:newOrder&&newOrder.Additions,
+        netPrice:newOrder&&newOrder.NetPrice,
         ...status
     }
     const result =await faktor.updateOne({rahId:id},{$set:resultOrder})
@@ -82,16 +84,16 @@ const updateItems=async(newItems,faktorNo,oldItems)=>{
         resultItems.push({
             faktorNo:faktorNo,
             sku:product&&product.sku,
-            totalAddition:newItem.Additions,
+            totalAddition:newItem&&newItem.Additions,
             initDate: oldItem?oldItem.initDate:Date.now(),
             progressDate: Date.now(),
-            netPrice:newItem.NetPrice,
+            netPrice:newItem&&newItem.NetPrice,
             originData:oldItem?oldItem.originData:{},
-            price:newItem.Fee,
-            totalPrice:newItem.Price,
-            count:newItem.Quantity,
+            price:newItem&&newItem.Fee,
+            totalPrice:newItem&&newItem.Price,
+            count:newItem&&newItem.Quantity,
             isEditPrice,isEditCount,
-            totalDiscount:newItem.Reductions}
+            totalDiscount:newItem&&newItem.Reductions}
 
         )
     }

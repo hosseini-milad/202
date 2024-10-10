@@ -215,6 +215,7 @@ router.post('/get-faktors', async (req,res)=>{
                 {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":5,},{"sg-auth-SGPT":cookieSGPT})
 
             }
+            try{
             if(sepidarResult)
                 rahkaranOut.push(sepidarResult.result[0])
             else{}
@@ -224,7 +225,7 @@ router.post('/get-faktors', async (req,res)=>{
             
             var checkChangeItems =''
             if(!faktorList[i].isEdit)
-                checkChangeItems= 0&&await CheckChange(faktorList[i].InvoiceID,sepidarItemResult,sepidarResult)
+                checkChangeItems= await CheckChange(faktorList[i].InvoiceID,sepidarItemResult,sepidarResult)
             result.push(checkChangeItems)
             if(checkChangeItems){
                 await ordersLogs.create({status:"ویرایش شده",orderNo:rahkaranOut[i].ID,
@@ -239,6 +240,7 @@ router.post('/get-faktors', async (req,res)=>{
                 await sendSmsUser(faktorList[i].userId,process.env.OrderEdit,
                     faktorList[i].rahId)    
             }
+        }catch{}
         }
         for(var i=0;i<rahkaranOut.length;i++){
             if(rahkaranOut[i]&&rahkaranOut[i].State == 2){
