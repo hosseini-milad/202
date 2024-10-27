@@ -336,7 +336,11 @@ router.post('/list-faktor',auth,jsonParser,async (req,res)=>{
                 var weight = faktorTitle&&parseFloat(faktorTitle.weight)
                 var tWeight = CalcWeight(faktorData[j].count,weight)
                 totalWeight+=tWeight
+                faktorData[j].originData?
                 faktorList.push({...faktorData[j].originData,title:faktorTitle.title,
+                    weight:weight,totalWeight:tWeight
+                }):
+                faktorList.push({...faktorData[j],title:faktorTitle.title,
                     weight:weight,totalWeight:tWeight
                 })
             }
