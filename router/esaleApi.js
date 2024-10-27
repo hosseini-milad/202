@@ -323,6 +323,9 @@ router.post('/list-faktor',auth,jsonParser,async (req,res)=>{
         for(var i=0;i<showFaktor.length;i++){
             var faktorList=[]
             var totalWeight = 0
+            if(!showFaktor[i].originData){
+                showFaktor[i].originData = showFaktor[i]
+            }
             showFaktor[i].count = showFaktor[i].originData.count
             showFaktor[i].price = showFaktor[i].originData.price
             showFaktor[i].netPrice = showFaktor[i].originData.netPrice
