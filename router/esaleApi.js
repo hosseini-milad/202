@@ -323,6 +323,9 @@ router.post('/list-faktor',auth,jsonParser,async (req,res)=>{
         for(var i=0;i<showFaktor.length;i++){
             var faktorList=[]
             var totalWeight = 0
+            if(!showFaktor[i].originData){
+                showFaktor[i].originData = showFaktor[i]
+            }
             showFaktor[i].count = showFaktor[i].originData.count
             showFaktor[i].price = showFaktor[i].originData.price
             showFaktor[i].netPrice = showFaktor[i].originData.netPrice
@@ -333,7 +336,11 @@ router.post('/list-faktor',auth,jsonParser,async (req,res)=>{
                 var weight = faktorTitle&&parseFloat(faktorTitle.weight)
                 var tWeight = CalcWeight(faktorData[j].count,weight)
                 totalWeight+=tWeight
+                faktorData[j].originData?
                 faktorList.push({...faktorData[j].originData,title:faktorTitle.title,
+                    weight:weight,totalWeight:tWeight
+                }):
+                faktorList.push({...faktorData[j],title:faktorTitle.title,
                     weight:weight,totalWeight:tWeight
                 })
             }
@@ -351,10 +358,10 @@ router.post('/list-complete-faktor',auth,jsonParser,async (req,res)=>{
     var offset = req.body.offset?(parseInt(req.body.offset)):0;
     const userId = req.headers["userid"]
     const userData = await customers.findOne({_id:ObjectID(userId)})
-    if(userData.access&&userData.access!=="full"){
+    {/*if(!userData.access||userData.access!=="full"){
         res.status(400).json({error:"دسترسی به این بخش ندارید"})
         return
-    }
+    }*/}
     const search = req.body.search
     try{
         const myFaktors = await faktor.aggregate([
