@@ -201,7 +201,7 @@ router.post('/get-faktors', async (req,res)=>{
         var result = []
         for(var i=0;i<faktorList.length;i++){
             var sepidarResult = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotations",
-            {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":5,},{"sg-auth-SGPT":cookieSGPT})
+            {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":15,},{"sg-auth-SGPT":cookieSGPT})
             if(!sepidarResult) {
                 const loginData = await RahkaranLogin()
                 var cookieSGPT = '';
@@ -220,7 +220,7 @@ router.post('/get-faktors', async (req,res)=>{
                 rahkaranOut.push(sepidarResult.result[0])
             else{}
             var sepidarItemResult = await RahkaranPOST("/Sales/OrderManagement/Services/OrderManagementService.svc/GetQuotationItems",
-            {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":30,},{"sg-auth-SGPT":cookieSGPT})
+            {"MasterEntityID":faktorList[i].InvoiceID,"PageSize":100,},{"sg-auth-SGPT":cookieSGPT})
             rahkaranItemOut.push(sepidarItemResult)
             
             var checkChangeItems =''
