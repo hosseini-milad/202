@@ -11,6 +11,7 @@ const customerSchema = new mongoose.Schema({
   mobile:{type: String },
   email: { type: String},
   access:{type:String},
+  active:{type:Boolean},
   meliCode:{type:String},
   Address:{type:String},
   cityId:{type:String},
