@@ -612,7 +612,7 @@ router.post('/login-customer',jsonParser, async (req,res)=>{
         res.status(400).json({error:"رمز عبور ارسال نشده است"});
         return;
       }
-      if(user.active==="false"){
+      if(!user.active||user.active===false){
         res.status(400).json({error:"کاربر فعال نیست"});
         return;
       }
