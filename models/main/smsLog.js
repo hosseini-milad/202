@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const SmsSchema = new mongoose.Schema({
-    messageid:  Long,
+    messageid:  Number,
     message:  String,
     sender:   String,
     receptor:String,
