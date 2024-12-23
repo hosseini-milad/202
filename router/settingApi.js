@@ -16,6 +16,7 @@ const docSchema = require('../model/Params/document');
 const CreateMock = require('../middleware/CreateMocks');
 const customers = require('../models/auth/customers');
 const CreateNotif = require('../middleware/CreateNotif');
+const smsLog = require('../models/main/smsLog');
 
 
 router.post('/sliders', async (req,res)=>{
@@ -370,6 +371,18 @@ router.post('/fetch-procedure',jsonParser,async (req,res)=>{
         request.input('customerId', sql.NVarChar, data.customerId)
         const result = await request.execute('dbo.GetVoucherFullInfo')
         res.json(result)
+    } catch (err) {
+        console.log(err)
+    }
+}
+)
+
+router.post('/call-sms',jsonParser,async (req,res)=>{
+    const data = req.body
+    
+    try {
+        const callData = await smsLog.create(data)
+        res.status(200).json({message:"done",data:data,result:callData})
     } catch (err) {
         console.log(err)
     }
