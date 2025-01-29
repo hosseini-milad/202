@@ -85,7 +85,7 @@ const RahCreateFaktor=async(faktorData,RahFaktor,rahItems,userData,cookieData,re
         )
         await sendSmsUser(userData._id,process.env.OrderSubmit,rahId)    
     const newFaktorItems = await faktorItems.create(RahFaktorData.itemData)
-
+        console.log(userData)
     return({userId,faktorItemsDetail,newFaktorItems,newFaktor})
 }
 module.exports =RahCreateFaktor
